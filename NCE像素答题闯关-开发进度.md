@@ -79,21 +79,39 @@
 
 | 文件 | 作用 |
 |---|---|
-| `F:\.workbuddy\2026-10-28-22-04-47\pixel-battle-ui.html` | 游戏本体（页面逻辑单文件，题库/prompt 在共享模块） |
-| `F:\.workbuddy\2026-10-28-22-04-47\nce-shared.js` | 共享数据源（UMD）：QUESTIONS / VERB_DB / maskLeaks / FAIRY_SYS / LLM_MODEL，浏览器与 Node 共用 |
-| `F:\.workbuddy\2026-10-28-22-04-47\llm-game-server.js` | 同源代理 + 页面/共享模块服务器（:8797），/savelogs 按 sid 落盘 |
-| `F:\.workbuddy\2026-10-28-22-04-47\analyze-session.js` | 会话日志分析（require 共享模块，零漂移） |
-| `F:\.workbuddy\2026-10-28-22-04-47\question-audit.js` | 题库深度审计（正确性/重复/拼写/难度/覆盖/双解，`node question-audit.js` 复跑） |
-| `F:\.workbuddy\2026-10-28-22-04-47\fairy-audit.js` | 精灵台词审计（require 共享模块，零漂移） |
+| `pixel-battle-ui.html` | 游戏本体（页面逻辑单文件，题库/prompt 在共享模块；战斗纯逻辑在 src/game-core.js） |
+| `nce-shared.js` | 共享数据源（UMD）：QUESTIONS（198 题，带稳定 id/knowledge 标签/动词题 explanation）/ VERB_DB（58 动词）/ maskLeaks / FAIRY_SYS / LLM_MODEL，浏览器与 Node 共用 |
+| `src/game-core.js` | 战斗核心纯逻辑（UMD）：洗牌/字母解析/毒结算/续力条/守卫/题面快照，可注入 RNG，node:test 覆盖 |
+| `server/server.js` | 同源代理 + 页面服务器（:8797），/savelogs 按 sid 落盘；环境变量配置 PORT/HOST/LLM_HOST/LLM_PORT/LLM_TIMEOUT_MS/LLM_MODEL_EXPECT/LOG_DIR；/llm 上游超时 504；健康检查校验所需模型 |
+| `tools/analyze-session.js` | 会话日志分析（`node tools/analyze-session.js [player日志] [fairy日志]`，路径参数化） |
+| `tools/audits/question-audit.js` | 题库深度审计（正确性/重复/拼写/难度/覆盖/双解） |
+| `tools/audits/fairy-audit.js` | 精灵台词审计（`--out` 参数化输出，不再写死 D: 盘） |
+| `tests/` | node:test 单元测试（game-core 纯逻辑 + 题库契约），`npm test` |
+| `package.json` | 标准命令：start / test / audit / check |
+| `docs/plan/refactor-plan-v26.md` | 渐进式改造计划 v26（阶段 1+2 已实施，状态表在内） |
 | `D:\UserData\WorkBuddy-Cache\intermediate\pdf-read.*\` | 两份 PDF 的提取文本（出题素材） |
-| 实验日志 | `log-fairy-{sid}.json` / `log-player-{sid}.json` + `log-index.json`（索引含 model/nohint 元信息） |
-| 预览地址 | `http://127.0.0.1:8797/`（需先 `node llm-game-server.js`） |
+| 实验日志 | `log-fairy-{sid}.json` / `log-player-{sid}.json` + `log-index.json`（索引含 model/nohint 元信息；目录可用 LOG_DIR 配置） |
+| 预览地址 | `http://127.0.0.1:8797/`（先 `npm start`） |
 
 ## 八、复现/继续开发入口
 
-1. 启动：`cd F:\.workbuddy\2026-10-28-22-04-47 && node llm-game-server.js` → 打开 `http://127.0.0.1:8797/`
+1. 启动：`cd G:\code\pixie-quest && npm start` → 打开 `http://127.0.0.1:8797/`（仓库已迁至 G:\code\pixie-quest，GitHub: 176516424/pixie-quest）
 2. 手玩：地图页点章节卡片；LLM 玩：`?ap=1`（有提示）/ `?ap=1&nohint=1`（无提示对照组）；`&fresh=1` 清空日志
-3. 改题：改 `nce-shared.js` 里的 `QUESTIONS`（格式 `{d:难度, s:'出处', q:'题干', o:[四个选项], a:0}`）或 `VERB_DB`（每行 `[原形,过去式,过去分词,分类]`，`buildVerbQuestions` 自动出三考点题并去重）；疑问句型素材全量在 `D:\UserData\WorkBuddy-Cache\intermediate\pdf-read.XKY85a\questions.md`
-4. 改精灵人设/教学策略：改 `nce-shared.js` 的 `FAIRY_SYS`（游戏与审计工具同步生效）；改模型：同文件 `LLM_MODEL` 一处
-5. 错题本数据：localStorage 键 `nce_battle_wrong`；关卡进度键 `nce_battle_progress`
-6. 装备/技能数值：搜 `EQUIP_TIERS`（装备四槽三等级加成表）、`castMonsterSkill`（怪兽技能施放与特效，注意其「不占用 busy」是设计非 bug）
+3. 测试与审计：`npm test`（25 个用例）/ `npm run audit`（题库审计）/ `npm run check`（语法）
+4. 改题：改 `nce-shared.js` 里的 `QUESTIONS`（格式 `{d:难度, s:'出处', q:'题干', o:[四个选项], a:0}`，id/knowledge/explanation 构建期自动补齐）或 `VERB_DB`（每行 `[原形,过去式,过去分词,分类]`，`buildVerbQuestions` 自动出三考点题并去重）；疑问句型素材全量在 `D:\UserData\WorkBuddy-Cache\intermediate\pdf-read.XKY85a\questions.md`
+5. 改精灵人设/教学策略：改 `nce-shared.js` 的 `FAIRY_SYS`（游戏与审计工具同步生效）；改模型：同文件 `LLM_MODEL` 一处
+6. 错题本数据：localStorage 键 `nce_battle_wrong`；关卡进度键 `nce_battle_progress`
+7. 装备/技能数值：搜 `EQUIP_TIERS`（装备四槽三等级加成表）、`castMonsterSkill`（怪兽技能施放与特效，注意其「不占用 busy」是设计非 bug）
+8. 战斗规则改动：优先改 `src/game-core.js` 纯函数并补测试——规则不碰 DOM，界面只渲染
+
+## 九、v26 改造记录（2026-10-29 深夜 · 渐进式改造阶段 1+2）
+
+按外部评审计划实施（全文与状态表见 `docs/plan/refactor-plan-v26.md`）：
+
+**阶段 1 稳定性**：修复中毒最后一跳致死漏判（死亡判定先于回合耗尽，结算走 `game-core.poisonTickStep`）；补 `SK_EN.freeze='Absolute Freeze'`（此前发给模型 undefined）；精灵打码改用**事件瞬间的完整题面快照**（`fairyEvent` 入队即 `quizSnapshot`，修掉"请求返回时题面已切走→给新题打码、旧题答案外泄"的时序风险）；模型输出不再进 innerHTML（气泡与日志渲染 textContent 化）；`gotoMap` 补 `clearStatus` 防残留计时器；`answer()` 守卫收敛为 `game-core.canAnswer`（状态机口径：map → battle → charging/transition → gameOver，非法状态拒绝输入）。
+
+**回归防线**：`package.json`（start/test/audit/check 标准命令）；`src/game-core.js` 纯逻辑模块（UMD，RNG 可注入）；`tests/` 25 个 node:test 用例（洗牌均匀性/字母解析边界/毒结算死亡/续力条/守卫/快照/打码名单/题库契约）。
+
+**阶段 2 整理**：服务器移至 `server/server.js` 并环境变量化，/llm 上游超时返回 504，/llmhealth 实际校验所需模型在列（?model= 可指定），日志目录 `LOG_DIR` 可配置且写失败返回 500；分析/审计工具移入 `tools/`，日志路径参数化，移除 `/206`、`15s`、`D:` 盘等机器专属硬编码；题目构建期统一赋稳定 id（内容哈希）+ knowledge 标签 + 动词题 explanation。
+
+**暂缓项**（下一版本）：全量 src/ 拆分（待测试防线覆盖战斗主流程后进行）、错题本掌握度规则（阶段 3）、存档 version/迁移（阶段 3）、移动端/键盘/a11y（阶段 4）。

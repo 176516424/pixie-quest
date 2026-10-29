@@ -1,0 +1,18 @@
+{
+  "name": "pixie-quest",
+  "version": "26.0.0",
+  "description": "A pixel-art quiz RPG for New Concept English Book 1 - fight grammar monsters, with a local LLM hero and her fairy-mom tutor. 像素风答题闯关 + 本地 LLM 实验场。",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "node --test",
+    "audit": "node tools/audits/question-audit.js",
+    "audit:fairy": "node tools/audits/fairy-audit.js",
+    "analyze": "node tools/analyze-session.js",
+    "check": "node tools/syntax-check.js"
+  }
+}

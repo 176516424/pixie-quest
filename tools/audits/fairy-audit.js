@@ -1,8 +1,8 @@
 'use strict';
 /* 🧚 精灵台词审计工具：直接 require 共享模块拿真实 system prompt（与线上一字不差），
    重放 16 个典型战场事件，收集她的每句台词并做"教学相关性"分类 */
-const fs=require('fs'), http=require('http');
-const {VERB_DB, maskLeaks, FAIRY_SYS:sys, LLM_MODEL}=require('./nce-shared.js');
+const fs=require('fs'), path=require('path'), http=require('http');
+const {VERB_DB, maskLeaks, FAIRY_SYS:sys, LLM_MODEL}=require('../../nce-shared.js');
 
 function buildMaskOpts(quiz, optTexts){
   let maskOpts=(quiz&&typeof quiz.a==='number')?[String(quiz.o[quiz.a])]:optTexts.slice();
@@ -96,11 +96,13 @@ function classify(line){
   const withTag=ok.filter(x=>x.mood);
   const teachN=ok.filter(x=>x.teach).length;
   const leakN=ok.filter(x=>x.leak).length;
-  const fs2=require('fs');
-  const CACHE='D:/UserData/WorkBuddy-Cache/intermediate';
-  fs2.mkdirSync(CACHE,{recursive:true});
-  fs2.writeFileSync(CACHE+'/fairy-audit.json', JSON.stringify(out,null,1));
+  /* 输出路径参数化：--out <file>，缺省写到仓库根（不再依赖机器专属 D: 盘路径） */
+  const outIdx=Math.max(process.argv.indexOf('--out'),process.argv.indexOf('-o'));
+  const OUT=outIdx>0?path.resolve(process.argv[outIdx+1]):path.resolve(__dirname,'../../fairy-audit-result.json');
+  fs2.mkdirSync(path.dirname(OUT),{recursive:true});
+  fs2.writeFileSync(OUT, JSON.stringify(out,null,1));
   console.log('\n===== 审计汇总 =====');
+  console.log('结果已写入: '+OUT);
   console.log('事件数: '+out.length+'  成功应答: '+ok.length);
   console.log('心情标签合规: '+withTag.length+'/'+ok.length);
   console.log('含教学相关词: '+teachN+'/'+ok.length+' ('+Math.round(teachN/ok.length*100)+'%)');

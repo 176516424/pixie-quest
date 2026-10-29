@@ -4,7 +4,7 @@
 const fs=require('fs'), path=require('path');
 const DIR=__dirname;
 /* 2026-10-29 重构后：题库唯一权威源在 nce-shared.js（UMD，Node 直接 require） */
-const {LLM_MODEL, QUESTIONS, VERB_DB}=require('./nce-shared.js');
+const {LLM_MODEL, QUESTIONS, VERB_DB}=require('../../nce-shared.js');
 const BANK=QUESTIONS;
 
 /* ============ 权威参照表（标准英式不规则动词，NCE 口径） ============ */

@@ -423,6 +423,7 @@
 </div>
 
 <script src="nce-shared.js"></script>
+<script src="src/game-core.js"></script>
 <script>
 /* 前后端分离守卫：本页面必须由游戏服务器(:8797)提供，直开 file:// 无 LLM 后端 */
 if(location.protocol==='file:'){
@@ -717,11 +718,14 @@ function applyPoison(turns, pdmg){
   poisonTick=setInterval(()=>{
     if(gameOver){ clearInterval(poisonTick); return; }
     if(!poison){ clearInterval(poisonTick); return; }
-    heroHP=Math.max(0,heroHP-poison.dmg);
+    /* 结算走 game-core 纯函数：死亡判定先于回合耗尽——修复 P0
+       「最后一跳致死走 turns<=0 分支、漏调 heroDown」的漏判 */
+    const st=BATTLE_CORE.poisonTickStep({hp:heroHP, turns:poison.turns, dmg:poison.dmg});
+    heroHP=st.hp; poison.turns=st.turns;
     dmgText(centerOf($('heroSpr')), '-'+poison.dmg+' ☠','poison');
-    poison.turns--; updateBars(); renderStatus();
-    if(poison.turns<=0){ poison=null; renderStatus(); clearInterval(poisonTick); }
-    else if(heroHP<=0){ clearInterval(poisonTick); heroDown(); }
+    updateBars(); renderStatus();
+    if(st.dead){ clearInterval(poisonTick); heroDown(); return; }
+    if(st.done){ poison=null; renderStatus(); clearInterval(poisonTick); }
   },2800);
 }
 async function doFreeze(sec){
@@ -776,12 +780,12 @@ function startCharge(sk){
     const fill=document.getElementById('chargefill'), txt=document.getElementById('chargetxt');
     if(left<=0){
       clearInterval(iv); const sk2=charging.sk; stopCharge();
-      /* 大招落地后 monTimer 归位到 3s：续力期间 monTimer 已被 1s 计时器减成负数，
-         不归位会在大招动画结束瞬间立刻补一发普攻，形成"吃了大招还连吃刀"的连招 */
-      if(!busy&&!gameOver&&monHP>0){ castMonsterSkill(sk2); monTimer=Math.max(monTimer,3); }
+      /* 大招落地后 monTimer 归位（game-core.afterSkillMonTimer，测试覆盖）：
+         续力期间 monTimer 已被 1s 计时器减成负数，不归位会立刻补一发普攻形成连招 */
+      if(!busy&&!gameOver&&monHP>0){ castMonsterSkill(sk2); monTimer=BATTLE_CORE.afterSkillMonTimer(monTimer); }
     }else{
-      /* 分母 40 = 续力时长 4000ms/100：条从 0% 涨到 100%（旧公式分母 100 会让条从 60% 起跳） */
-      if(fill) fill.style.width=(100-(charging.until-Date.now())/40)+'%';
+      /* 续力条公式实现在 game-core（4 秒从 0% 涨到 100%，测试覆盖） */
+      if(fill) fill.style.width=BATTLE_CORE.chargeFillPct(charging.until,Date.now())+'%';
       if(txt) txt.textContent='⚡ 续力中 '+left+'s — 攻击可打断！';
     }
   },200);
@@ -1091,9 +1095,8 @@ function nextQuestion(){
   $('qsrc').textContent='出处：'+q.s;
   $('question').textContent=q.q;
   curQ=q;
-  /* Fisher-Yates 均匀洗牌（sort(()=>Math.random()-.5) 是带偏洗牌，答案位置分布会失衡） */
-  const order=[0,1,2,3];
-  for(let i=order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=order[i]; order[i]=order[j]; order[j]=t; }
+  /* Fisher-Yates 均匀洗牌：实现在 game-core（可注入 rng，测试覆盖均匀性） */
+  const order=BATTLE_CORE.shuffle4();
   const box=$('opts'); box.innerHTML='';
   order.forEach(i=>{
     const b=document.createElement('button'); b.className='opt'; b.textContent=q.o[i];
@@ -1103,9 +1106,10 @@ function nextQuestion(){
   if(fairyOn) fairyStart();   /* 🧚 出题即介入：实时渐进式英语提示 */
 }
 async function answer(btn, correct){
-  /* 守卫：出招中 / 已结束 / 怪兽已死（换怪空档）/ 答题区被冻结时一律忽略，防止重复结算 */
-  if(busy||gameOver||monHP<=0) return;
-  if(Date.now()<frozenUntil) return;
+  /* 状态机口径：map → battle → charging/transition → gameOver。
+     守卫走 game-core.canAnswer（测试覆盖）：出招中 / 已结束 / 怪兽已死（换怪空档）/
+     答题区冻结 一律拒绝输入，防止重复结算与空档误触 */
+  if(!BATTLE_CORE.canAnswer({busy, gameOver, monHP, frozenUntil})) return;
   document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
   btn.classList.add(correct?'ok':'bad');
   if(correct){
@@ -1171,6 +1175,7 @@ setInterval(()=>{
 ================================================================ */
 function gotoMap(){
   stopFairy(); gameOver=true; hideOverlay();
+  clearStatus(); stopCharge();   /* 回地图必须清干净毒/冻结/续力，别让旧战斗的定时器在后台留活口 */
   $('gamescreen').style.display='none';
   $('mapscreen').style.display='flex';
   renderMap();
@@ -1302,7 +1307,7 @@ const MON_EN={'草原史莱姆':'Grass Slime','野菇小妖':'Mushroom Imp','史
   '洞穴蝙蝠':'Cave Bat','岩石傀儡':'Rock Golem','熔岩巨人 👑BOSS':'Lava Giant (BOSS)',
   '冰霜史莱姆':'Frost Slime','寒晶飞蝠':'Ice Crystal Bat','冰霜魔王 👑BOSS':'Frost Demon King (BOSS)'};
 const CH_EN=['Chapter 1 · Grassland','Chapter 2 · Lava Cave','Chapter 3 · Frozen Throne'];
-const SK_EN={poison:'Poison Mist', acid:'Acid Swallow', ember:'Flame Breath', quake:'Earthquake Slam', lava:'Lava Rain', frost:'Frost Breath'};
+const SK_EN={poison:'Poison Mist', acid:'Acid Swallow', ember:'Flame Breath', quake:'Earthquake Slam', lava:'Lava Rain', frost:'Frost Breath', freeze:'Absolute Freeze'};
 
 /* 🎭 实时心情系统：LLM 每次开口先报心情标签，徽章+光晕实时跟随 */
 const MOODS={happy:'😊',love:'🥰',proud:'😎',worried:'😟',panic:'😱',sad:'😢',angry:'😠',surprised:'😲',sleepy:'😴'};
@@ -1342,7 +1347,7 @@ function battlefield(evDesc){
   return s;
 }
 
-async function askFairy(evDesc){
+async function askFairy(evDesc, quizSnap){
   fairyCtl=new AbortController(); const ctl=fairyCtl;
   const to=setTimeout(()=>{ try{ctl.abort();}catch(e){} },150000);
   const t0=Date.now();
@@ -1374,16 +1379,12 @@ async function askFairy(evDesc){
     /* 兜底：抹掉意外带出的答案句，再过泄漏打码 */
     text=text.replace(/^\s*(hint|answer)\s*[：:]\s*/i,'')
              .replace(/\b[A-D]\s+(is|was)\s+(the\s+)?(correct|right)\b.*$/i,'');
-    /* 打码名单：正确选项 + 从题干提取动词后经 VERB_DB 展开的全部不规则形式（防旁敲侧击泄题） */
-    let maskOpts=(curQ&&typeof curQ.a==='number')?[String(curQ.o[curQ.a])]:fairyLastOpts.slice();
-    try{
-      if(curQ){
-        const words=((curQ.q||'')+' '+(curQ.o||[]).join(' ')).toLowerCase().match(/[a-z][a-z'-]{1,}/g)||[];
-        VERB_DB.forEach(v=>{
-          if(words.indexOf(String(v[0]).toLowerCase())>=0) maskOpts.push(String(v[1]),String(v[2]));
-        });
-      }
-    }catch(e){}
+    /* 打码依据「事件发生瞬间」的题面快照（P1 修复）：LLM 思考的几秒里题面可能已切走，
+       用请求返回时的 curQ 会给新题打码、漏掉旧题——正好把旧题答案原样泄出来。
+       名单构建走 game-core 纯函数（测试覆盖） */
+    const snap=quizSnap||BATTLE_CORE.quizSnapshot(curQ);
+    const maskOpts=BATTLE_CORE.buildMaskOpts(snap, VERB_DB);
+    if(!maskOpts.length&&fairyLastOpts.length) maskOpts.push(fairyLastOpts[0]);
     text=maskLeaks(text, maskOpts).replace(/^["']|["']$/g,'').slice(0,220);
     return {text, mood, sec:(Date.now()-t0)/1000};
   }catch(e){
@@ -1392,15 +1393,17 @@ async function askFairy(evDesc){
 }
 
 /* 实时思维核心：事件驱动 + 挤压排队；忙时只记最新事件，稍后补想。
-   quizSnap：事件发生瞬间的题面快照——LLM 思考的 ~2s 里题面可能已切换，日志必须记事件当时的题 */
+   quizSnap：事件发生瞬间的完整题面快照（题干+选项+正确项文本，game-core.quizSnapshot 产出）
+   ——LLM 思考的 ~2s 里题面可能已切换，打码与日志必须用事件当时的题 */
 async function fairyThink(evDesc, quizSnap, hold){
   if(!fairyOn||gameOver) return;
-  const quizAtEv = quizSnap!==undefined ? quizSnap : (curQ?curQ.q:'');
-  if(fairyBusy){ fairyPendingEv={evDesc,quizSnap:quizAtEv,hold:!!hold}; return; }
+  const snap=quizSnap!==undefined?quizSnap:BATTLE_CORE.quizSnapshot(curQ);
+  const quizAtEv=snap?snap.q:'';
+  if(fairyBusy){ fairyPendingEv={evDesc, quizSnap:snap, hold:!!hold}; return; }
   fairyBusy=true; freezeTimer=!!hold; fairyLastThink=Date.now();   /* 仅教学重讲时暂停怪兽计时，夸奖/警告不暂停 */
   fairyShow(); fairySay('… 💭', true);
   $('fairyMood').textContent='💭';
-  const r=await askFairy(evDesc);
+  const r=await askFairy(evDesc, snap);
   freezeTimer=false; fairyBusy=false; fairyCtl=null;
   if(r.err==='abort'){ fairyPendingEv=null; return; }   /* 勇者抢先作答，安静退场 */
   if(!r.text){
@@ -1410,7 +1413,12 @@ async function fairyThink(evDesc, quizSnap, hold){
     else fairyHide();
   }else{
     fairySetMood(r.mood, true);   /* 心情徽章弹跳 + 光晕变色 */
-    fairySay(r.text+' <span class="sys">('+r.sec.toFixed(1)+'s)</span>');
+    /* 模型输出不得进 innerHTML（注入面）：textContent 写正文，耗时用独立节点 */
+    const b=$('fairyBubble');
+    b.textContent=''; b.classList.remove('think');
+    b.appendChild(document.createTextNode(r.text));
+    const sp=document.createElement('span'); sp.className='sys'; sp.textContent='('+r.sec.toFixed(1)+'s)';
+    b.appendChild(sp);
     logFairy(evDesc, r.mood, r.text, quizAtEv);
   }
   if(fairyPendingEv){
@@ -1418,8 +1426,10 @@ async function fairyThink(evDesc, quizSnap, hold){
     if(fairyOn&&!gameOver) fairyThink(p.evDesc, p.quizSnap, p.hold);   /* 处理被挤压的最新事件 */
   }
 }
-/* 战斗代码里的事件入口：入队瞬间快照题面；hold=true 表示教学重讲（怪兽计时暂停） */
-function fairyEvent(evDesc, hold){ if(fairyOn&&!gameOver) fairyThink(evDesc, curQ?curQ.q:'', hold); }
+/* 战斗代码里的事件入口：入队瞬间快照完整题面（打码/日志都以事件当时为准）；hold=true 表示教学重讲 */
+function fairyEvent(evDesc, hold){
+  if(fairyOn&&!gameOver) fairyThink(evDesc, BATTLE_CORE.quizSnapshot(curQ), hold);
+}
 
 /* 出题即介入 */
 async function fairyStart(){
@@ -1473,11 +1483,13 @@ function renderFairyLog(){
   l.slice().reverse().forEach(e=>{
     const d=document.createElement('div'); d.className='flitem';
     const dt=new Date(e.t); const pad=n=>String(n).padStart(2,'0');
-    const short=e.ev.replace(/^JUST HAPPENED: /,'').slice(0,64);
-    d.innerHTML='<div class="flhead">'+pad(dt.getHours())+':'+pad(dt.getMinutes())+':'+pad(dt.getSeconds())
-      +' · '+(MOODS[e.mood]||'❔')+' '+(e.mood||'?')+' · 事件: '+short+'</div>'
-      +'<div class="flsay">'+e.text+'</div>'
-      +(e.quiz?'<div class="flq">当前题目: '+e.quiz+'</div>':'');
+    /* 日志里的 text/quiz/ev 都可能含模型输出，一律 textContent 防 HTML 注入 */
+    const head=document.createElement('div'); head.className='flhead';
+    head.textContent=pad(dt.getHours())+':'+pad(dt.getMinutes())+':'+pad(dt.getSeconds())
+      +' · '+(MOODS[e.mood]||'❔')+' '+(e.mood||'?')+' · 事件: '+e.ev.replace(/^JUST HAPPENED: /,'').slice(0,64);
+    const say=document.createElement('div'); say.className='flsay'; say.textContent=e.text||'';
+    d.appendChild(head); d.appendChild(say);
+    if(e.quiz){ const q=document.createElement('div'); q.className='flq'; q.textContent='当前题目: '+e.quiz; d.appendChild(q); }
     box.appendChild(d);
   });
 }
@@ -1559,16 +1571,8 @@ renderMap();
       return {text:((m.content||'')+'').trim(),sec:(Date.now()-t0)/1000};
     }catch(e){ return {text:'',err:e.message,sec:(Date.now()-t0)/1000}; }
   }
-  /* 勇者答案字母解析：优先认「(answer|choice|pick): X」式明确表达，独立裸字母兜底；
-     都没有返回 null（调用方记 no-pick）。旧写法 match(/[ABCD]/) 抓第一个大写字母，
-     模型多说一句 "I think…" 就可能抓错 */
-  function parsePick(t){
-    t=(t||'').trim();
-    let m=t.match(/(?:^|\b(?:answer|choice|pick)\s*[：:]?\s*)([ABCD])\b/i);
-    if(m) return m[1].toUpperCase();
-    m=t.match(/\b([ABCD])\b/);
-    return m?m[1]:null;
-  }
+  /* 勇者答案字母解析：实现在 game-core（测试覆盖边界），这里只做委托 */
+  const parsePick=t=>BATTLE_CORE.parsePick(t);
   /* 勇者决策：读题 + 读精灵妈妈的提示，真选一个（只回字母） */
   async function heroDecide(q,opts,hint,retry,dTxt){
     const sys='You are the HERO in a pixel quiz battle. You are a young English learner fighting monsters by answering grammar questions.'

@@ -277,5 +277,47 @@ function maskLeaks(text, optTexts){
   return t.trim();
 }
 
+/* ================================================================
+   题目增稳（v26 阶段 2）：稳定 id / knowledge 标签 / explanation
+   - id：题干+选项的内容哈希（base36）——题库增删、重排顺序都不变，
+     错题本与日志从此可按 id 而不是题干文本定位一道题
+   - knowledge：知识点标签数组（动词类按考点细分；句型题 question-pattern）
+   - explanation：动词题构建期自动生成（讲规则+给出三形）；句型题讲解
+     随阶段 3「学习闭环」补充，不硬造
+================================================================ */
+const VERB_MAP={};
+VERB_DB.forEach(([b,p,pp,c])=>{ VERB_MAP[b]={past:p, pp, cat:c}; });
+function qid(q){
+  let h=5381;
+  const s=q.q+'|'+q.o.join('|');
+  for(let i=0;i<s.length;i++){ h=((h<<5)+h+s.charCodeAt(i))>>>0; }
+  return 'q'+h.toString(36);
+}
+function qKnowledge(qq){
+  if(/的过去式(是|拼写)/.test(qq)) return ['verb','irregular','past'];
+  if(/的过去分词是？$/.test(qq)||/中哪个是过去分词/.test(qq)) return ['verb','irregular','past-participle'];
+  if(/的三种形式是？$/.test(qq)||/补全三形？$/.test(qq)) return ['verb','irregular','three-forms'];
+  if(qq.includes('属于哪种')&&qq.includes('变形')) return ['verb','irregular','pattern-family'];
+  return ['question-pattern'];
+}
+function qExplanation(qq, stem){
+  const m=stem.match(/^([a-z]+)/);
+  const v=m&&VERB_MAP[m[1]];
+  if(!v) return '';
+  if(/的过去式/.test(stem)) return m[1]+' 的过去式是不规则变化 '+v.past+'。';
+  if(/的过去分词/.test(stem)) return m[1]+' 的过去分词是 '+v.pp+'。';
+  if(/中哪个是过去分词/.test(stem)) return '三个形式依次是「原形 — 过去式 — 过去分词」，过去分词是 '+v.pp+'。';
+  if(/的三种形式/.test(stem)) return '完整三形是 '+m[1]+' — '+v.past+' — '+v.pp+'。';
+  if(stem.includes('属于哪种')) return '先比较后两个形式是否相同，再比较第一和第三个——本词三形为 '+m[1]+' — '+v.past+' — '+v.pp+'（'+v.cat+'）。';
+  if(/补全三形/.test(stem)) return '完整三形是 '+m[1]+' — '+v.past+' — '+v.pp+'。';
+  return '';
+}
+QUESTIONS.forEach(q=>{
+  q.id=qid(q);
+  q.knowledge=qKnowledge(q.q);
+  const ex=qExplanation(q, q.q.replace(/[？?]\s*$/,''));
+  if(ex) q.explanation=ex;
+});
+
 return {LLM_MODEL, QUESTIONS, VERB_DB, FAIRY_SYS, maskLeaks};
 });

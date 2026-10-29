@@ -1,11 +1,14 @@
-/* 全量日志分析：题目曝光 / 玩家表现 / 精灵台词质检 / 泄题复查 / 数据质量问题 */
+/* 全量日志分析：题目曝光 / 玩家表现 / 精灵台词质检 / 泄题复查 / 数据质量问题
+   用法：node tools/analyze-session.js [player-log.json] [fairy-log.json]
+   缺省用 1029 实验快照（仓库根目录）；实时日志传 log-player-{sid}.json / log-fairy-{sid}.json */
 const fs=require('fs');
 const path=require('path');
-const DIR=__dirname;
+const ROOT=path.resolve(__dirname,'..');
+const DIR=ROOT;
 
 /* ---- 载入题库（require 共享模块 nce-shared.js：与游戏同一份源，结构级零漂移，
         不再从 HTML 做字符串切片 + eval——改 HTML 布局也不会碎） ---- */
-const {QUESTIONS:BANK, VERB_DB:VERBS}=require('./nce-shared.js');
+const {QUESTIONS:BANK, VERB_DB:VERBS}=require('../nce-shared.js');
 const qtype=q=>{ /* 参数：题干字符串（口径与 question-audit.js 的 qtype2 一致：
   兼容"变形/不规则变形"变体与"过去式拼写"等措辞，旧正则把 6 道变体分类题错记进句型桶） */
   if(/的过去式(是|拼写)？$/.test(q))return '动词·过去式';
@@ -22,9 +25,11 @@ console.log('总数',BANK.length,'| 按类型',
   '| 按难度',
   JSON.stringify(BANK.reduce((a,q)=>(a['d'+q.d]=(a['d'+q.d]||0)+1,a),{})));
 
-/* ---- 载入日志 ---- */
-const player=JSON.parse(fs.readFileSync(path.join(DIR,'player-session-1029.json'),'utf8'));
-const fairy=JSON.parse(fs.readFileSync(path.join(DIR,'fairy-session-1029.json'),'utf8'));
+/* ---- 载入日志（路径参数化） ---- */
+const playerPath=process.argv[2]||path.join(DIR,'player-session-1029.json');
+const fairyPath =process.argv[3]||path.join(DIR,'fairy-session-1029.json');
+const player=JSON.parse(fs.readFileSync(playerPath,'utf8'));
+const fairy=JSON.parse(fs.readFileSync(fairyPath,'utf8'));
 const picks=player.filter(e=>['pick','retry-pick'].includes(e.ev));
 const fmt=t=>new Date(t).toTimeString().slice(0,8);
 
@@ -57,7 +62,7 @@ picks.forEach(e=>{
   if(q&&q.o[q.a]!==e.pickText)seen[e.q].wrong++;
 });
 const uniq=Object.keys(seen).length;
-console.log(' 唯一题目:',uniq,'/ 206 | 总作答',picks.length,'次（重做',picks.length-uniq,'）');
+console.log(' 唯一题目:',uniq,'/',BANK.length,'| 总作答',picks.length,'次（重做',picks.length-uniq,'）');
 const byCh={};
 picks.forEach(e=>{byCh[e.chapter]=byCh[e.chapter]||{n:0,ok:0};
   const q=BANK.find(x=>x.q===e.q&&x.o.includes(e.pickText));
@@ -99,7 +104,7 @@ fairy.forEach(e=>{
 console.log(' quiz字段疑似时序错位:',mism+'/'+checked,'条（praise/wrong 台词在打完动画后才落 log，题面已切到下一题）');
 /* 3c 心跳观察缺席 */
 const hb=fairy.filter(e=>/Quiet watching/i.test(e.ev)).length;
-console.log(' 15s 心跳观察触发次数:',hb,'（事件密集时正常被挤掉）');
+console.log(' 心跳观察触发次数:',hb,'（事件密集时正常被挤掉；阈值 30s 见页面 FAIRY_HEARTBEAT_MS）');
 /* 3d 心情-事件匹配 sanity */
 const moodByEv={};
 fairy.forEach(e=>{const k=e.ev.startsWith('Your boy answered CO')?'答对':e.ev.startsWith('Your boy just picked')?'答错':e.ev.startsWith('A NEW')?'出题':'战斗事件';
