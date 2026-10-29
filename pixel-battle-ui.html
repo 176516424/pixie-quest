@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>NCE 像素答题闯关</title>
+<style>
+  :root{
+    --outline:#1a1c2c; --panel:#29366f; --panel-hi:#3b5dc9; --panel-lo:#20244d;
+    --gold:#feae34; --red:#e43b44; --green:#63c74d; --blue:#2ce8f5;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:#0d0d1a; color:#f4f4f4;
+    font-family:"Courier New",monospace; font-weight:bold;
+    display:flex; flex-direction:column; align-items:center;
+    padding:18px 10px 40px; letter-spacing:1px;
+    image-rendering:pixelated;
+  }
+  h1{font-size:16px; color:var(--gold); text-shadow:2px 2px 0 var(--outline); margin-bottom:12px;}
+  #game{width:720px; max-width:96vw;}
+
+  .panel{
+    background:var(--panel); border:4px solid var(--outline);
+    box-shadow:inset -4px -4px 0 var(--panel-lo), inset 4px 4px 0 var(--panel-hi);
+    position:relative;
+  }
+
+  /* ================= 关卡地图 ================= */
+  #mapscreen{width:720px; max-width:96vw; display:flex; flex-direction:column; align-items:center;}
+  #maparea{width:100%; height:360px; overflow:hidden;}
+  .zone{position:absolute; top:0; bottom:0;}
+  .zone span{position:absolute; bottom:6px; left:50%; transform:translateX(-50%);
+    font-size:11px; color:rgba(255,255,255,.75); text-shadow:1px 1px 0 #000; white-space:nowrap;}
+  .z0{left:0; width:33.4%; background:linear-gradient(#0d2b45 30%, #2a5e35 100%);}
+  .z1{left:33.4%; width:33.3%; background:linear-gradient(#1a0f1e 30%, #3a1c1c 100%);}
+  .z2{left:66.7%; width:33.3%; background:linear-gradient(#1b3a5c 30%, #3d6a8f 100%);}
+  .lvnode{
+    position:absolute; width:130px; padding:6px; text-align:center; cursor:pointer;
+    background:var(--panel); border:4px solid var(--outline);
+    box-shadow:inset -3px -3px 0 var(--panel-lo), inset 3px 3px 0 var(--panel-hi);
+    transform:translate(-50%,-50%); transition:transform .1s;
+  }
+  .lvnode:hover{transform:translate(-50%,-50%) scale(1.06);}
+  .lvnode canvas{width:48px; height:40px;}
+  .lvnode .lvname{font-size:12px; color:#fff; margin-top:2px;}
+  .lvnode .lvdesc{font-size:9px; color:#9fb4d8; margin:2px 0;}
+  .lvnode .lvstat{font-size:11px; color:var(--gold);}
+  .lvnode.locked{filter:grayscale(1) brightness(.6); cursor:not-allowed;}
+  .lvnode.cleared{border-color:var(--gold);}
+  .lvnode.cleared .lvstat{color:#fff;}
+  #maphint{font-size:11px; color:#9aa; margin-top:10px; text-align:center;}
+
+  /* ================= 顶栏 ================= */
+  #gamescreen{display:none;}
+  #topbar{display:flex; gap:8px; padding:10px; margin-bottom:8px; align-items:stretch;}
+  #heroCard{flex:1.4; display:flex; gap:10px; align-items:center;}
+  .portrait{width:64px; height:64px; border:3px solid var(--outline); background:#181425; flex:none;}
+  .bars{flex:1; min-width:0;}
+  .barrow{display:flex; align-items:center; gap:6px; margin:4px 0;}
+  .barlabel{width:26px; font-size:11px; color:#dadada;}
+  .bar{flex:1; height:14px; background:#181425; border:2px solid var(--outline); position:relative;}
+  .bar>i{display:block; height:100%; width:100%; transition:width .35s steps(8);}
+  .hp>i{background:linear-gradient(#ff6b6b,#c92a3a);}
+  .mp>i{background:linear-gradient(#5fd9e7,#2b7ec4);}
+  .xp>i{background:linear-gradient(#63c74d,#3e8948);}
+  .bar.xp{height:9px;}
+  .barval{font-size:10px; width:64px; text-align:right;}
+  #heroname{font-size:12px; color:var(--gold); margin-bottom:2px;}
+  #lvtag{font-size:10px; color:#9fb4d8;}
+
+  #equip{display:grid; grid-template-columns:repeat(2,44px); grid-template-rows:repeat(2,44px); gap:6px; align-content:center;}
+  .slot{width:44px; height:44px; background:#181425; border:3px solid var(--outline);
+        box-shadow:inset 2px 2px 0 #000, inset -2px -2px 0 #3a3a5e; display:flex; align-items:center; justify-content:center;}
+  .slot canvas{width:32px; height:32px;}
+
+  #skills{flex:1.2; display:grid; grid-template-columns:1fr 1fr; gap:6px; align-content:center;}
+  .skill{
+    display:flex; align-items:center; gap:6px; padding:6px 8px;
+    background:#495d63; border:3px solid var(--outline); cursor:pointer;
+    box-shadow:inset -3px -3px 0 #2e484f, inset 3px 3px 0 #8595a1;
+    color:#fff; font-family:inherit; font-weight:bold; font-size:11px;
+  }
+  .skill:active:not(:disabled){transform:translate(2px,2px); box-shadow:inset 3px 3px 0 #2e484f;}
+  .skill:disabled{opacity:.45; cursor:not-allowed;}
+  .skill canvas{width:20px; height:20px; flex:none;}
+  .skill .mpcost{color:#7ee0ff; font-size:10px;}
+
+  /* ================= 问题区域 ================= */
+  #qzone{padding:12px; margin-bottom:8px; text-align:center;}
+  #qzone::before{content:""; position:absolute; inset:4px; pointer-events:none;
+    border:2px dashed rgba(255,255,255,.15);}
+  #qmeta{margin-bottom:6px;}
+  #llmStatus{font-size:11px; color:#7ee0ff; margin-bottom:6px; min-height:14px;}
+  /* ================= 🧚 小精灵导师 ================= */
+  #fairyBar{display:flex; gap:8px; align-items:flex-start; margin:4px 0 8px;}
+  #fairyFace{font-size:26px; line-height:1.1; filter:drop-shadow(0 0 6px #7ee0ff); animation:fairyfloat 2.2s ease-in-out infinite;}
+  @keyframes fairyfloat{50%{transform:translateY(-4px) rotate(-6deg);}}
+  #fairyBubble{flex:1; background:#0e2437; border:2px solid #3ba1c9; border-radius:8px; padding:7px 10px;
+    font-size:12.5px; line-height:1.6; color:#cfefff; min-height:32px; position:relative; word-break:break-word;}
+  #fairyBubble::before{content:''; position:absolute; left:-9px; top:9px; border:5px solid transparent; border-right-color:#3ba1c9;}
+  #fairyBubble.think{color:#7ee0ff; font-style:italic; animation:pulse 1.2s ease-in-out infinite;}
+  @keyframes pulse{50%{opacity:.55;}}
+  #fairyBubble .sys{opacity:.6; font-size:10.5px; color:#9fb8c9;}
+  #fairyFaceWrap{position:relative; width:34px; flex:none;}
+  #fairyMood{position:absolute; right:-9px; top:-8px; font-size:16px; line-height:1;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.7)); transition:transform .2s; cursor:default;}
+  #fairyMood.pop{animation:moodpop .5s ease;}
+  @keyframes moodpop{40%{transform:scale(1.8) rotate(14deg);}70%{transform:scale(.9);}}
+  #fairyFace.mood-happy{filter:drop-shadow(0 0 8px #7ee0ff);}
+  #fairyFace.mood-love{filter:drop-shadow(0 0 9px #ff6fae);}
+  #fairyFace.mood-proud{filter:drop-shadow(0 0 9px #ffd23e);}
+  #fairyFace.mood-worried{filter:drop-shadow(0 0 8px #ffa23e);}
+  #fairyFace.mood-panic{animation:fairyfloat 2.2s ease-in-out infinite, fairytremble .16s linear infinite; filter:drop-shadow(0 0 9px #ff4b4b);}
+  #fairyFace.mood-sad{filter:drop-shadow(0 0 8px #5a8dd6);}
+  #fairyFace.mood-angry{filter:drop-shadow(0 0 8px #d64b4b);}
+  #fairyFace.mood-surprised{filter:drop-shadow(0 0 8px #b06fff);}
+  #fairyFace.mood-sleepy{filter:drop-shadow(0 0 6px #9a9ab0); animation-duration:4s;}
+  @keyframes fairytremble{25%{transform:translate(1px,-1px);}50%{transform:translate(-1px,-1px);}75%{transform:translate(1px,1px);}}
+  /* ================= 🧚 精灵日志（审计她说的每句话） ================= */
+  #flwrap{position:fixed; inset:0; background:rgba(10,10,20,.72); display:none; align-items:center; justify-content:center; z-index:300;}
+  #flwrap.show{display:flex;}
+  #flpanel{background:#2a2a3e; border:4px solid #7ee0ff; box-shadow:0 0 0 4px #1a1a2e, 6px 6px 0 rgba(0,0,0,.5); width:min(700px,92vw); padding:16px; color:#e8e8f0;}
+  #fltitle{font-size:18px; font-weight:700; color:#7ee0ff; margin-bottom:6px;}
+  #flstats{font-size:11px; color:#9fb8c9; margin-bottom:8px;}
+  #fllist{max-height:52vh; overflow-y:auto; display:flex; flex-direction:column; gap:8px; margin-bottom:12px;}
+  .flitem{background:#1e1e30; border:2px solid #3a5a6e; padding:8px 10px; font-size:12px;}
+  .flitem .flhead{color:#8a8aa8; font-size:11px; margin-bottom:3px;}
+  .flitem .flsay{color:#eaf6ff;}
+  .flitem .flq{color:#ffd93b; font-size:11px; margin-top:3px;}
+  #flbtns{display:flex; gap:10px; flex-wrap:wrap;}
+  #qdiff{font-size:10px; padding:2px 8px; border:2px solid var(--outline); margin-right:6px;}
+  .d1{background:#2e8f3c;} .d2{background:#c96f2c;} .d3{background:#a82e3a;}
+  #qsrc{font-size:10px; color:#9fb4d8;}
+  #question{font-size:18px; color:#fff; text-shadow:2px 2px 0 var(--outline); margin-bottom:12px;}
+  #opts{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+  .opt{
+    padding:9px 6px; font-size:14px; font-family:inherit; font-weight:bold; color:#fff;
+    background:#7b4ca0; border:3px solid var(--outline); cursor:pointer;
+    box-shadow:inset -3px -3px 0 #5a2f7a, inset 3px 3px 0 #b06fd0;
+  }
+  .opt:hover:not(:disabled){filter:brightness(1.15);}
+  .opt:active:not(:disabled){transform:translate(2px,2px); box-shadow:none;}
+  .opt.ok{background:#2e8f3c; box-shadow:inset -3px -3px 0 #1c5c26, inset 3px 3px 0 #63c74d;}
+  .opt.bad{background:#8f2e2e; box-shadow:inset -3px -3px 0 #5c1c1c, inset 3px 3px 0 #c96363;}
+  .opt:disabled{cursor:default;}
+
+  /* ================= 战斗场景 ================= */
+  #battle{height:280px; overflow:hidden; margin-bottom:8px; user-select:none;}
+  #battle.shake{animation:scrshake .25s steps(4);}
+  @keyframes scrshake{25%{transform:translate(-5px,3px)} 50%{transform:translate(4px,-4px)} 75%{transform:translate(-3px,-2px)}}
+  #sky{position:absolute; inset:0;}
+  .star{position:absolute; width:3px; height:3px; background:#f4f4f4; opacity:.8;}
+  .cloud{position:absolute; height:12px; background:#cbe3ea; box-shadow:8px -6px 0 #cbe3ea,16px 0 0 #cbe3ea;
+         animation:drift 26s linear infinite;}
+  @keyframes drift{from{left:-80px} to{left:110%}}
+  #battle:not(.theme-grass) .cloud{display:none;}
+  #ground{position:absolute; left:0; right:0; bottom:0; height:64px; border-top:6px solid #265c33;}
+  #ground::after{content:""; position:absolute; inset:0;
+    background:repeating-linear-gradient(0deg,rgba(0,0,0,.12) 0 8px,transparent 8px 16px);}
+
+  .theme-grass #sky{background:linear-gradient(#0d2b45 0%,#20395e 55%,#34495e 100%);}
+  .theme-grass #ground{background:repeating-linear-gradient(90deg,#3e8948 0 16px,#34853f 16px 32px);}
+  .theme-cave #sky{background:linear-gradient(#170d1c 0%,#2e1430 55%,#3a1c1c 100%);}
+  .theme-cave #ground{background:repeating-linear-gradient(90deg,#4a2418 0 16px,#38190f 16px 32px); border-top-color:#e4593b;}
+  .theme-ice #sky{background:linear-gradient(#1b3a5c 0%,#2c5578 55%,#3d6a8f 100%);}
+  .theme-ice #ground{background:repeating-linear-gradient(90deg,#cfe8f5 0 16px,#b8d8ea 16px 32px); border-top-color:#8fb8d8;}
+
+  .fighter{position:absolute; bottom:52px; display:flex; flex-direction:column; align-items:center; gap:4px;}
+  #hero{left:70px;}
+  #monster{right:70px;}
+  .sprite{animation:bob 1s steps(2) infinite;}
+  @keyframes bob{50%{transform:translateY(-4px)}}
+  .sprite.hitflash{animation:none; filter:brightness(9) saturate(0);}
+  .sprite.knock{animation:knock .3s steps(4);}
+  @keyframes knock{30%{transform:translateX(14px)} 60%{transform:translateX(8px)}}
+  .sprite.mhit{animation:mhit .35s steps(5);}
+  @keyframes mhit{20%{transform:translateX(-12px)} 40%{transform:translateX(10px)} 60%{transform:translateX(-7px)} 80%{transform:translateX(4px)}}
+  .sprite.laugh{animation:laugh .3s steps(2) 5;}
+  @keyframes laugh{50%{transform:translateY(-9px) rotate(-5deg)}}
+
+  .mhpbar{width:90px; height:10px; background:#181425; border:2px solid var(--outline);}
+  .mhpbar>i{display:block; height:100%; width:100%; background:linear-gradient(#ff8f5f,#e43b44); transition:width .35s steps(8);}
+  .mname{font-size:10px; color:#ffb3b3; text-shadow:1px 1px 0 #000;}
+  .mname.boss{color:var(--gold); font-size:12px;}
+
+  #banner{position:absolute; left:0; right:0; top:38%; text-align:center; font-size:26px;
+    color:var(--gold); text-shadow:3px 3px 0 #000; z-index:15; opacity:0; pointer-events:none;
+    transition:opacity .3s;}
+  #banner.show{opacity:1;}
+
+  .dmg{
+    position:absolute; font-size:20px; color:#fff; text-shadow:2px 2px 0 #000;
+    animation:floatup .8s steps(8) forwards; pointer-events:none; z-index:9;
+  }
+  .dmg.crit{color:var(--gold); font-size:26px;}
+  .dmg.heal{color:#7bfa6c;}
+  .dmg.miss{color:#9aa5b5; font-size:18px;}
+  @keyframes floatup{to{transform:translateY(-44px); opacity:0;}}
+
+  .bubble{
+    position:absolute; z-index:10; background:#f4f4f4; color:#1a1c2c;
+    font-size:11px; padding:6px 8px; border:3px solid var(--outline);
+    animation:floatup 1.8s steps(10) forwards; white-space:nowrap;
+  }
+  .bubble::after{content:""; position:absolute; left:50%; bottom:-9px; margin-left:-5px;
+    width:8px; height:8px; background:#f4f4f4; border:2px solid var(--outline); border-top:none; border-left:none;}
+
+  .fx{position:absolute; pointer-events:none; z-index:8;}
+  .slash{width:70px; height:70px;}
+  .slash::before,.slash::after{content:""; position:absolute; left:8px; top:30px; width:54px; height:8px; background:#fff; box-shadow:0 0 0 2px #a7f070;}
+  .slash::before{transform:rotate(35deg);}
+  .slash::after{transform:rotate(-15deg); background:#feae34;}
+  .slash.go{animation:slashgo .22s steps(3) forwards;}
+  @keyframes slashgo{from{transform:scale(.4); opacity:1} to{transform:scale(1.4) rotate(20deg); opacity:0}}
+
+  .fireball{width:26px; height:26px; border-radius:50%;
+    background:radial-gradient(circle,#fff 15%,#feae34 45%,#e43b44 80%);
+    box-shadow:0 0 12px 4px rgba(254,174,52,.6);}
+  .boom{width:20px; height:20px; border-radius:50%;
+    background:radial-gradient(circle,#fff 10%,#feae34 40%,#e43b44 75%,transparent 90%);}
+  .boom.go{animation:boomgo .4s steps(5) forwards;}
+  @keyframes boomgo{to{transform:scale(4); opacity:0;}}
+
+  .claw{width:64px; height:64px;}
+  .claw::before,.claw::after{content:""; position:absolute; width:56px; height:6px; background:#ff6b6b; box-shadow:0 0 0 2px #7a1f2b;}
+  .claw::before{transform:rotate(25deg);}
+  .claw::after{transform:rotate(-20deg); top:36px;}
+  .claw.go{animation:slashgo .22s steps(3) forwards;}
+
+  /* ================= 装备与状态 ================= */
+  .slot{position:relative;}
+  .slot .tbadge{position:absolute; bottom:-4px; right:-4px; font-size:9px; background:var(--gold);
+    color:#1a1c2c; padding:0 3px; border:2px solid var(--outline); display:none; z-index:2;}
+  .slot.eq{border-color:var(--gold); box-shadow:0 0 8px rgba(254,174,52,.65), inset 2px 2px 0 #000;}
+  .slot.eq.t2{border-color:#2ce8f5; box-shadow:0 0 10px rgba(44,232,245,.7), inset 2px 2px 0 #000;}
+  .slot.eq.t3{border-color:#e43b44; box-shadow:0 0 12px rgba(254,174,52,.85), inset 2px 2px 0 #000; animation:tier3pulse 1.2s steps(2) infinite;}
+  @keyframes tier3pulse{50%{box-shadow:0 0 16px rgba(228,59,68,.95), inset 2px 2px 0 #000;}}
+  .slot.eq .tbadge{display:block;}
+  .slot.newdrop{animation:dropglow .35s steps(2) 4;}
+  @keyframes dropglow{50%{border-color:#fff; box-shadow:0 0 18px #fff, inset 2px 2px 0 #000;}}
+  #statRow{font-size:10px; min-height:16px; margin-top:3px;}
+  #statRow span{margin-right:6px; border:2px solid var(--outline); padding:0 4px; background:#181425; color:#ff9ff3;}
+
+  /* ---- 怪兽技能特效 ---- */
+  .sprite.charge{animation:charge .16s steps(2) infinite; filter:brightness(1.6) drop-shadow(0 0 10px #e43b44);}
+  /* 大招 4 秒续力：持续蓄能发光抖动 + 倒计时条 */
+  .sprite.charging{animation:chargegroove .5s steps(2) infinite; filter:brightness(1.5) saturate(1.6) drop-shadow(0 0 12px #feae34);}
+  @keyframes chargegroove{50%{transform:scale(1.09) translateY(-5px); filter:brightness(1.85) saturate(2) drop-shadow(0 0 18px #e43b44);}}
+  .chargebar{position:absolute; top:10px; left:50%; transform:translateX(-50%); text-align:center; z-index:6;}
+  .chargebar .cbar{width:220px; height:10px; background:#181425; border:2px solid #e43b44; margin:0 auto 3px; box-shadow:0 0 8px rgba(228,59,68,.6);}
+  .chargebar .cbar>i{display:block; height:100%; width:0; background:linear-gradient(90deg,#feae34,#e43b44);}
+  .chargebar b{font-size:11px; color:#ffd23b; background:#181425; border:2px solid #e43b44; padding:1px 8px; animation:chargeblink .5s steps(2) infinite;}
+  @keyframes chargeblink{50%{color:#ff6b6b;}}
+  @keyframes charge{50%{transform:translateX(4px) scale(1.06);}}
+  #monSpr.bossaura{animation:aura 1.1s steps(2) infinite;}
+  @keyframes aura{50%{filter:drop-shadow(0 0 12px rgba(255,90,90,.85)) brightness(1.15);}}
+  .flashfx{position:absolute; inset:0; z-index:12; pointer-events:none; animation:flashfade .75s forwards;}
+  @keyframes flashfade{from{opacity:.6;} to{opacity:0;}}
+  .f-green{background:radial-gradient(circle at 70% 60%,#b6f56c 0%,rgba(99,199,77,.55) 45%,transparent 80%);}
+  .f-orange{background:radial-gradient(circle at 70% 60%,#ffd23b 0%,rgba(228,89,59,.6) 45%,transparent 80%);}
+  .f-blue{background:radial-gradient(circle at 70% 60%,#e8fbff 0%,rgba(95,217,231,.6) 45%,transparent 80%);}
+  .f-white{background:radial-gradient(circle at 70% 60%,#ffffff 0%,rgba(255,255,255,.45) 45%,transparent 80%);}
+  .acidball{width:22px; height:22px; border-radius:50%;
+    background:radial-gradient(circle,#eaffb0 15%,#7bfa6c 45%,#3e8948 80%);
+    box-shadow:0 0 12px 4px rgba(123,250,108,.6);}
+  .lavarock{width:18px; height:14px;
+    background:linear-gradient(#ffd23b,#e4593b 55%,#7a1f2b);
+    box-shadow:0 0 10px 3px rgba(228,89,59,.65); border:2px solid #1a1c2c;}
+  .iceshard{width:14px; height:22px; transform:rotate(45deg);
+    background:linear-gradient(#e8fbff,#5fd9e7 60%,#2b7ec4);
+    box-shadow:0 0 10px 3px rgba(126,224,255,.7); border:2px solid #1a1c2c;}
+  .dmg.poison{color:#7bfa6c;}
+  .dmg.mp{color:#5fd9e7; font-size:16px;}
+  .sfx{position:absolute; font-size:15px; color:#ffd93b; text-shadow:2px 2px 0 #000; z-index:11;
+    animation:floatup 1s steps(8) forwards; pointer-events:none;}
+
+  /* ---- 冻结的答题区 ---- */
+  #qzone.frozen{border-color:#7ee0ff; box-shadow:inset -4px -4px 0 #1e4a66, inset 4px 4px 0 #3f7fa6, 0 0 14px rgba(95,217,231,.6);}
+  #qzone.frozen #opts{filter:grayscale(.6) brightness(.75) hue-rotate(160deg);}
+  #frozenLab{font-size:13px; color:#7ee0ff; min-height:16px; margin-bottom:4px; text-shadow:1px 1px 0 #000;}
+
+  /* ================= 底部与浮层 ================= */
+  #footer{display:flex; gap:8px; align-items:center; font-size:11px; color:#9aa;}
+  #monTimerLab{color:#ff8f5f;}
+  .pbtn{
+    padding:8px 14px; font-family:inherit; font-weight:bold; font-size:12px; color:#fff;
+    background:#495d63; border:3px solid var(--outline); cursor:pointer;
+    box-shadow:inset -3px -3px 0 #2e484f, inset 3px 3px 0 #8595a1;
+  }
+  .pbtn:active{transform:translate(2px,2px); box-shadow:none;}
+
+  #overlay{position:absolute; inset:0; background:rgba(13,13,26,.82); display:none;
+    align-items:center; justify-content:center; flex-direction:column; gap:14px; z-index:20;}
+  #overlay.show{display:flex;}
+  #ovtitle{font-size:26px; color:var(--gold); text-shadow:3px 3px 0 #000; text-align:center;}
+  #ovbtns{display:flex; gap:10px;}
+  /* ---- 错题本 ---- */
+  #wbwrap{position:fixed; inset:0; background:rgba(10,10,20,.72); display:none; align-items:center; justify-content:center; z-index:300;}
+  #wbwrap.show{display:flex;}
+  #wbpanel{background:#2a2a3e; border:4px solid #f4f4f4; box-shadow:0 0 0 4px #1a1a2e, 6px 6px 0 rgba(0,0,0,.5); width:min(680px,92vw); padding:16px; color:#e8e8f0; image-rendering:pixelated;}
+  #wbtitle{font-size:18px; font-weight:700; color:#ffd93b; margin-bottom:10px;}
+  #wblist{max-height:52vh; overflow-y:auto; display:flex; flex-direction:column; gap:8px; margin-bottom:12px;}
+  .wbitem{background:#1e1e30; border:2px solid #4a4a66; padding:8px 10px; font-size:12px;}
+  .wbitem .wbq{color:#f4f4f4; font-weight:700; margin-bottom:3px;}
+  .wbitem .wbok{color:#7bfa6c;}
+  .wbitem .wbwrong{color:#ff6b81; text-decoration:line-through;}
+  .wbitem .wbsrc{color:#8a8aa8; margin-top:3px; font-size:11px;}
+  .wbempty{color:#8a8aa8; text-align:center; padding:24px 0;}
+  #wbbtns{display:flex; gap:10px; flex-wrap:wrap;}
+</style>
+</head>
+<body>
+
+<!-- ============ 关卡地图 ============ -->
+<div id="mapscreen">
+  <h1>⚔ NCE 像素答题闯关</h1>
+  <div id="maparea" class="panel">
+    <div class="zone z0"><span>① 新手草原 · 动词过去式</span></div>
+    <div class="zone z1"><span>② 熔岩洞穴 · 三形与句型</span></div>
+    <div class="zone z2"><span>③ 寒冰王座 · 反意与难词</span></div>
+    <div class="lvnode" id="node0" style="left:17%; top:52%;"></div>
+    <div class="lvnode" id="node1" style="left:50%; top:38%;"></div>
+    <div class="lvnode" id="node2" style="left:83%; top:50%;"></div>
+  </div>
+  <div id="maphint">每章：2 只小怪 → 1 只 Boss。答对出招（10% 被闪开），答错落空被嘲笑！装备品阶改变攻击特效（徒手朴素→屠龙金红爆发）；怪兽放大招前会续力 4 秒——期间答对出招可打断（伤害+30%）！答对/击杀得 XP，升级永久+1 防御。</div>
+  <button class="pbtn" id="btnFairy" style="margin-top:10px">🧚 召唤小精灵妈妈（实时英语陪伴 · 本地 LLM）</button>
+  <button class="pbtn" id="btnFairyLog" style="margin-top:10px;background:#1f3a4a;">🧚 精灵日志</button>
+  <button class="pbtn" id="btnWrong" style="margin-top:10px; background:#3d2a52;">📖 错题本</button>
+</div>
+
+<!-- ============ 游戏界面 ============ -->
+<div id="game">
+<div id="gamescreen">
+
+  <!-- ① 顶栏：血量 + 装备 + 技能 -->
+  <div id="topbar" class="panel">
+    <div id="heroCard">
+      <canvas class="portrait" id="portrait"></canvas>
+      <div class="bars">
+        <div id="heroname">勇者 · Lv.1</div>
+        <div id="equiplab" style="font-size:10px; color:#9adfef; margin-bottom:2px;"></div>
+        <div id="lvtag">第一章 · 新手草原</div>
+        <div class="barrow"><span class="barlabel">XP</span>
+          <div class="bar xp"><i id="xpbar"></i></div><span class="barval" id="xpval">0/20</span></div>
+        <div class="barrow"><span class="barlabel">HP</span>
+          <div class="bar hp"><i id="hpbar"></i></div><span class="barval" id="hpval">100/100</span></div>
+        <div class="barrow"><span class="barlabel">MP</span>
+          <div class="bar mp"><i id="mpbar"></i></div><span class="barval" id="mpval">50/50</span></div>
+        <div id="statRow"></div>
+      </div>
+    </div>
+    <div id="equip">
+      <div class="slot" id="slotWeapon" title="武器"><canvas id="icSword"></canvas><b class="tbadge" id="bdgWeapon"></b></div>
+      <div class="slot" id="slotShield" title="盾牌"><canvas id="icShield"></canvas><b class="tbadge" id="bdgShield"></b></div>
+      <div class="slot" id="slotHelm" title="头盔"><canvas id="icHelm"></canvas><b class="tbadge" id="bdgHelm"></b></div>
+      <div class="slot" id="slotPotion" title="药水"><canvas id="icPotion"></canvas><b class="tbadge" id="bdgPotion"></b></div>
+    </div>
+    <div id="skills">
+      <button class="skill" id="skHeavy"><canvas></canvas><span>重击 <span class="mpcost">MP20</span></span></button>
+      <button class="skill" id="skFire"><canvas></canvas><span>火球 <span class="mpcost">MP35</span></span></button>
+      <button class="skill" id="skHeal"><canvas></canvas><span>治疗 <span class="mpcost">MP25</span></span></button>
+      <button class="skill" id="skMap"><canvas></canvas><span>返回地图</span></button>
+    </div>
+  </div>
+
+  <!-- ② 问题区域 -->
+  <div id="qzone" class="panel">
+    <div id="qmeta"><span id="qdiff"></span><span id="qsrc"></span></div>
+    <div id="fairyBar" style="display:none">
+      <div id="fairyFaceWrap"><div id="fairyFace">🧚</div><div id="fairyMood">💬</div></div>
+      <div id="fairyBubble"></div>
+    </div>
+    <div id="frozenLab"></div>
+    <div id="question">……</div>
+    <div id="opts"></div>
+  </div>
+
+  <!-- ③ 战斗场景：左主角 右怪兽 -->
+  <div id="battle" class="panel theme-grass">
+    <div id="sky"></div>
+    <div class="cloud" style="top:30px"></div>
+    <div class="cloud" style="top:70px; animation-delay:-13s"></div>
+    <div id="ground"></div>
+    <div id="banner"></div>
+
+    <div class="fighter" id="hero">
+      <canvas class="sprite" id="heroSpr"></canvas>
+    </div>
+
+    <div class="fighter" id="monster">
+      <div class="mname" id="monName">史莱姆</div>
+      <div class="mhpbar"><i id="mhpbar"></i></div>
+      <canvas class="sprite" id="monSpr"></canvas>
+    </div>
+
+    <div id="overlay"><div id="ovtitle"></div><div id="ovbtns"></div></div>
+    <div id="wbwrap"><div id="wbpanel">
+      <div id="wbtitle">📖 错题本 <span id="wbcount" style="font-size:13px;color:#8a8aa8"></span></div>
+      <div id="wblist"></div>
+      <div id="wbbtns">
+        <button class="pbtn" id="wbExport">⬇ 导出 Markdown 复习清单</button>
+        <button class="pbtn" id="wbClear" style="background:#5a2333;">🗑 清空</button>
+        <button class="pbtn" id="wbClose">关闭</button>
+      </div>
+    </div></div>
+    <div id="flwrap"><div id="flpanel">
+      <div id="fltitle">🧚 精灵日志 <span id="flcount" style="font-size:13px;color:#8a8aa8"></span></div>
+      <div id="flstats"></div>
+      <div id="fllist"></div>
+      <div id="flbtns">
+        <button class="pbtn" id="flExport">⬇ 导出 Markdown</button>
+        <button class="pbtn" id="flClear" style="background:#5a2333;">🗑 清空</button>
+        <button class="pbtn" id="flClose">关闭</button>
+      </div>
+    </div></div>
+  </div>
+
+  <div id="footer">
+    <span id="monTimerLab">⏱ 怪兽下次攻击: 15s</span>
+    <span id="progLab">小怪 1/2</span>
+  </div>
+</div>
+</div>
+
+<script src="nce-shared.js"></script>
+<script>
+/* 前后端分离守卫：本页面必须由游戏服务器(:8797)提供，直开 file:// 无 LLM 后端 */
+if(location.protocol==='file:'){
+  document.body.innerHTML='<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:monospace;color:#f4f4f4;background:#1a1c2c;text-align:center;padding:24px">'
+   +'<div style="font-size:40px">🧚</div>'
+   +'<h2 style="color:#ffcd75;margin:12px 0">请从游戏服务器打开本页面</h2>'
+   +'<p style="line-height:1.8">前后端分离：本 HTML 是纯前端界面，LLM 小精灵/玩家大脑都在后端。</p>'
+   +'<p>启动后端：<code>node llm-game-server.js</code></p>'
+   +'<p>然后在浏览器访问：<a style="color:#feae34" href="http://127.0.0.1:8797/">http://127.0.0.1:8797/</a></p></div>';
+  throw new Error('open via http://127.0.0.1:8797/');
+}
+/* ================================================================
+   像素精灵（字符画逐像素绘制）
+================================================================ */
+const P = {K:'#1a1c2c', S:'#ffcd75', H:'#94b0c2', E:'#1a1c2c', A:'#414686',
+           G:'#feae34', W:'#f4f4f4', R:'#e43b44', P:'#8b5a2b', B:'#3e2723',
+           N:'#f4f4f4', M:'#63c74d', D:'#3e8948', O:'#feae34'};
+
+const HERO = [
+"......RRR.......",
+".....RRRR.......",
+"....HHHHHH......",
+"....HHHHHHK.....",
+"....HSESEK......",
+"....HSSSSK......",
+".....SSSK.......",
+"....AAAAA..W....",
+"...AAAAAAW.W....",
+"...AAGGAAW.W....",
+"...SAAAASW.W....",
+"....AAAA...W....",
+"....P..P...G....",
+"....P..P........",
+"....B..B........",
+"...KK..KK......."];
+
+const SLIME = [
+"..N..........N..",
+"..NN........NN..",
+"...NMMMMMMMMN...",
+"..NMMMMMMMMMMN..",
+"..NMWWMMMMWWMM..",
+"..NMWKMMMMWKMM..",
+"..MMMMMMMMMMMM..",
+"..MMDDMMMMDDMM..",
+"..MMMMMMMMMMMM..",
+"...MMMMMMMMMM...",
+"..NMM.MMMM.MMN..",
+"..NN...NN...NN.."];
+
+const BAT = [
+"..K..........K..",
+".KWK........KWK.",
+".KWWK......KWWK.",
+"..KWWK....KWWK..",
+"..KWWWWPPWWWWK..",
+"...KWWPRPPWRK...",
+"....KPPPPPPK....",
+".....KPPPPK.....",
+"....KPK..KPK....",
+"....K......K...."];
+
+const GOLEM = [
+".....KKKKKK.....",
+"....KSSSSSSK....",
+"...KSRSSSSRSK...",
+"...KSSSSSSSSK...",
+"..KKSSSSSSSKK...",
+".KSSKSSSSSKSSK..",
+"KSSKSSSSSSSKSSK.",
+"KKKSSSSSSSSSKKK.",
+".KSSSSSSSSSSSK..",
+"..KSSK....KSSK..",
+"..KSSK....KSSK..",
+".KSSSK....KSSSK.",
+".KKKK......KKKK."];
+
+const MONPAL = {
+ grass:{N:'#f4f4f4',M:'#63c74d',D:'#3e8948',W:'#ffffff',K:'#1a1c2c'},
+ mush:{N:'#f4f4f4',M:'#feae34',D:'#c96f2c',W:'#ffffff',K:'#1a1c2c'},
+ boss1:{N:'#ffffff',M:'#2ea94f',D:'#1c7a38',W:'#ffffff',K:'#1a1c2c'},
+ bat:{K:'#1a1c2c',W:'#5a3e8f',P:'#8b5fb0',R:'#e43b44'},
+ rock:{K:'#1a1c2c',S:'#8a8a9a',R:'#e43b44'},
+ lava:{K:'#1a1c2c',S:'#e4593b',R:'#fff7b0'},
+ ice:{N:'#f4f4f4',M:'#7bd4e8',D:'#4a9bc4',W:'#ffffff',K:'#1a1c2c'},
+ icebat:{K:'#1a1c2c',W:'#b8d8ea',P:'#8fb8d8',R:'#2ce8f5'},
+ frost:{K:'#1a1c2c',S:'#5a8fc4',R:'#2ce8f5'},
+};
+
+function drawSpr(canvas, map, pal, scale){
+  const ctx = canvas.getContext('2d');
+  canvas.width = 16*scale; canvas.height = map.length*scale;
+  map.forEach((row,y)=>{ [...row].forEach((ch,x)=>{
+    if(pal[ch]){ ctx.fillStyle=pal[ch]; ctx.fillRect(x*scale,y*scale,scale,scale); }
+  });});
+}
+function drawIcon(canvas, rows, pal, scale){
+  const ctx = canvas.getContext('2d');
+  canvas.width = 8*scale; canvas.height = 8*scale;
+  rows.forEach((row,y)=>{ [...row].forEach((ch,x)=>{
+    if(pal[ch]){ ctx.fillStyle=pal[ch]; ctx.fillRect(x*scale,y*scale,scale,scale); }
+  });});
+}
+
+/* ================================================================
+   题库 / 动词表 / 打码 / 精灵人设提示词 —— 唯一权威源在 nce-shared.js（UMD）
+   浏览器由页面顶部 <script src="nce-shared.js"> 载入（游戏服务器提供该文件），
+   Node 分析工具 require 同一份文件。改题、改 prompt 只改那边，游戏与分析零漂移。
+================================================================ */
+const {LLM_MODEL, QUESTIONS, VERB_DB, FAIRY_SYS, maskLeaks}=window.NCE_SHARED;
+
+/* ================================================================
+   关卡配置：3 张地图，先小怪后 Boss
+================================================================ */
+const SPR={slime:SLIME, bat:BAT, golem:GOLEM};
+const LEVELS=[
+ {name:'第一章 · 新手草原', theme:'grass', diff:1,
+  monsters:[
+   {name:'草原史莱姆', spr:'slime', pal:'grass', hp:80,  dmg:[8,14],  timer:15, scale:6,
+    skill:{id:'poison', name:'毒雾喷射', chance:.25}},
+   {name:'野菇小妖',   spr:'slime', pal:'mush',  hp:100, dmg:[10,15], timer:14, scale:6,
+    skill:{id:'poison', name:'孢子毒雾', chance:.25}},
+   {name:'史莱姆王 👑BOSS', spr:'slime', pal:'boss1', hp:160, dmg:[13,18], timer:12, scale:8, boss:true,
+    skill:{id:'acid',   name:'酸液吞噬', chance:.45}},
+  ]},
+ {name:'第二章 · 熔岩洞穴', theme:'cave', diff:2,
+  monsters:[
+   {name:'洞穴蝙蝠', spr:'bat', pal:'bat',  hp:110, dmg:[12,17], timer:14, scale:6,
+    skill:{id:'ember',  name:'火焰吐息', chance:.25}},
+   {name:'岩石傀儡', spr:'golem', pal:'rock', hp:140, dmg:[13,18], timer:13, scale:6,
+    skill:{id:'quake',  name:'地震猛击', chance:.25}},
+   {name:'熔岩巨人 👑BOSS', spr:'golem', pal:'lava', hp:200, dmg:[15,21], timer:12, scale:8, boss:true,
+    skill:{id:'lava',   name:'熔岩天降', chance:.45}},
+  ]},
+ {name:'第三章 · 寒冰王座', theme:'ice', diff:3,
+  monsters:[
+   {name:'冰霜史莱姆', spr:'slime', pal:'ice', hp:130, dmg:[14,19], timer:13, scale:6,
+    skill:{id:'frost',  name:'冰霜吐息', chance:.25}},
+   {name:'寒晶飞蝠',   spr:'bat', pal:'icebat', hp:150, dmg:[15,20], timer:13, scale:6,
+    skill:{id:'frost',  name:'寒晶穿刺', chance:.25}},
+   {name:'冰霜魔王 👑BOSS', spr:'golem', pal:'frost', hp:260, dmg:[17,24], timer:11, scale:8, boss:true,
+    skill:{id:'freeze', name:'绝对冰冻', chance:.45}},
+  ]},
+];
+
+/* ================================================================
+   状态与工具
+================================================================ */
+let heroHP=100, heroMP=50, monHP=0, monHPmax=1, busy=false;
+let curLevel=0, monsterIdx=0, monTimer=15, gameOver=false;
+let pool=[], askedIdx=[]; let curQ=null;
+
+/* ---- 装备系统：4 槽位 × 3 等级，击杀掉落 ---- */
+let equip={weapon:0, shield:0, helm:0, potion:0};
+const EQUIP_TIERS=[
+ {n:'',     atk:0,  red:0, mp:0,  heal:0},
+ {n:'精铁', atk:6,  red:2, mp:4,  heal:8},
+ {n:'秘银', atk:12, red:4, mp:8,  heal:16},
+ {n:'屠龙', atk:20, red:6, mp:12, heal:24},
+];
+/* 装备图标像素画（按品阶换色重绘） */
+const EQUIP_ICONS={
+ sword: [[".......W"],["......W."],[".....W.."],[".W..W..."],["..WW...."],["..W....."],[".OOO...."],["O..O...."]],
+ shield:[["WWWWWWWW"],["W..HH..W"],["W.HHHH.W"],["W.HGGH.W"],["W.HHHH.W"],["W..HH..W"],["...HH..."],["........"]],
+ helm:  [["..HHHH.."],[".HHHHHH."],["HH.HH.HH"],["H.HHHH.H"],["HHHHHHHH"],["HHHHHHHH"],[".HHHHHH."],["..HHHH.."]],
+ potion:[["...WW..."],["...WW..."],["..RRRR.."],[".RRWWRR."],[".RRWWRR."],[".RRRRRR."],["..RRRR.."],["........"]],
+};
+/* 品阶配色：0 未装备亮灰（槽位深底上必须可见）/ 1 精铁银灰 / 2 秘银青蓝 / 3 屠龙金红 */
+const TIER_PAL=[
+ {m:'#9a9ab2', a:'#8a8aa2', b:'#6a6a85', g:'#b8b8c8'},
+ {m:'#c0cbdc', a:'#94b0c2', b:'#5a6988', g:'#f4f4f4'},
+ {m:'#2ce8f5', a:'#00a2c2', b:'#136e7a', g:'#b8fff4'},
+ {m:'#feae34', a:'#e43b44', b:'#b13e53', g:'#fff7b0'},
+];
+function redrawEquipIcons(){
+  drawIcon($('icSword'),  EQUIP_ICONS.sword,  {W:TIER_PAL[equip.weapon].m, O:TIER_PAL[equip.weapon].b}, 4);
+  drawIcon($('icShield'), EQUIP_ICONS.shield, {W:TIER_PAL[equip.shield].a, H:TIER_PAL[equip.shield].m, G:TIER_PAL[equip.shield].g}, 4);
+  drawIcon($('icHelm'),   EQUIP_ICONS.helm,   {H:TIER_PAL[equip.helm].m}, 4);
+  drawIcon($('icPotion'), EQUIP_ICONS.potion, {W:TIER_PAL[equip.potion].g, R:TIER_PAL[equip.potion].a}, 4);
+  /* 品阶光晕：秘银青光 / 屠龙橙光 */
+  [['slotWeapon','weapon'],['slotShield','shield'],['slotHelm','helm'],['slotPotion','potion']].forEach(([id,k])=>{
+    const el=$(id), ti=equip[k];
+    el.classList.remove('t1','t2','t3');
+    if(ti>0) el.classList.add('t'+ti);
+  });
+}
+
+/* ---- 勇者等级：答对得经验，升级永久增强防御（减伤+1/级） ---- */
+let heroLv=1, heroXp=0;
+const xpNeed=lv=>20+(lv-1)*10;
+function heroDef(){ return EQUIP_TIERS[equip.shield].red + (heroLv-1); }
+function gainXp(n, at){
+  heroXp+=n;
+  while(heroXp>=xpNeed(heroLv)){
+    heroXp-=xpNeed(heroLv); heroLv++;
+    const a=at||centerOf($('heroSpr'));
+    dmgText(a,'⬆ Lv'+heroLv,'heal');
+    dropBubble(a,'⬆ 升级！防御永久 +1（当前减伤 '+heroDef()+'）');
+    flash('heal');
+  }
+  updateBars();
+}
+
+/* ---- 异常状态：中毒 / 冻结 ---- */
+let poison=null, poisonTick=null, frozenUntil=0, freezeTick=null;
+const $=id=>document.getElementById(id);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+
+function loadProgress(){
+  try{ return JSON.parse(localStorage.getItem('nce_battle_progress'))||{cleared:[0,0,0]}; }
+  catch(e){ return {cleared:[0,0,0]}; }
+}
+function saveProgress(p){ try{ localStorage.setItem('nce_battle_progress', JSON.stringify(p)); }catch(e){} }
+function clearProgress(){ try{ localStorage.removeItem('nce_battle_progress'); }catch(e){} }
+
+function centerOf(el){
+  const s=$('battle').getBoundingClientRect(), r=el.getBoundingClientRect();
+  return {x:r.left-s.left+r.width/2, y:r.top-s.top+r.height/2};
+}
+function fx(cls, at, life=500){
+  const d=document.createElement('div'); d.className='fx '+cls;
+  d.style.left=(at.x-35)+'px'; d.style.top=(at.y-35)+'px';
+  $('battle').appendChild(d); setTimeout(()=>d.remove(),life); return d;
+}
+function dmgText(at, txt, cls=''){
+  const d=document.createElement('div'); d.className='dmg '+cls; d.textContent=txt;
+  d.style.left=(at.x-20)+'px'; d.style.top=(at.y-56)+'px';
+  $('battle').appendChild(d); setTimeout(()=>d.remove(),850);
+}
+function banner(txt, ms=1400){
+  const b=$('banner'); b.textContent=txt; b.classList.add('show');
+  setTimeout(()=>b.classList.remove('show'), ms);
+}
+async function shakeScene(){ $('battle').classList.add('shake'); await sleep(260); $('battle').classList.remove('shake'); }
+
+/* ================================================================
+   装备掉落 / 异常状态 / 怪兽技能（方案 B 核心）
+================================================================ */
+function dropBubble(at, txt){
+  const b=document.createElement('div'); b.className='bubble'; b.textContent=txt;
+  b.style.left=Math.max(8,at.x-60)+'px'; b.style.top=(at.y-140)+'px';
+  $('battle').appendChild(b); setTimeout(()=>b.remove(),2100);
+}
+function updateEquip(changed){
+  redrawEquipIcons();
+  const meta={weapon:['slotWeapon','bdgWeapon','长剑','攻击+'], shield:['slotShield','bdgShield','盾牌','减伤-'],
+              helm:['slotHelm','bdgHelm','头盔','答对MP+'], potion:['slotPotion','bdgPotion','药水','治疗+']};
+  Object.keys(meta).forEach(k=>{
+    const [slotId,bdgId,label,statName]=meta[k], t=EQUIP_TIERS[equip[k]];
+    const slot=$(slotId);
+    slot.classList.toggle('eq', equip[k]>0);
+    $(bdgId).textContent=equip[k]?t.n:'';
+    slot.title=equip[k]?(t.n+label+' · '+statName+t[k==='shield'?'red':k==='weapon'?'atk':k==='helm'?'mp':'heal']):label+'（未装备 · 击杀怪有机会掉落）';
+    if(k===changed&&equip[k]>0){ slot.classList.remove('newdrop'); void slot.offsetWidth; slot.classList.add('newdrop'); }
+  });
+}
+function rollDrop(isBoss){
+  if(Math.random()>(isBoss?1:0.55)) return;
+  const defs=[['weapon','长剑','⚔'],['shield','盾牌','🛡'],['helm','头盔','⛑'],['potion','药水','🧪']];
+  const d=defs[rnd(0,3)];
+  const tier=isBoss?rnd(2,3):rnd(1,2);
+  const at=centerOf($('monSpr'));
+  if(tier<=equip[d[0]]){
+    heroMP=Math.min(50,heroMP+10);
+    dmgText(at,'🎁 MP+10','heal'); dropBubble(at,'🎁 重复装备 → 转化为 MP+10');
+    updateBars(); return;
+  }
+  equip[d[0]]=tier;
+  const t=EQUIP_TIERS[tier];
+  const statTxt={weapon:'攻击+'+t.atk, shield:'减伤-'+t.red, helm:'答对MP+'+t.mp, potion:'治疗+'+t.heal}[d[0]];
+  dmgText(at,'🎁 '+d[2]+t.n+d[1],'crit');
+  dropBubble(at,'🎁 掉落「'+t.n+d[1]+'」 '+statTxt+'！');
+  updateEquip(d[0]);
+}
+function renderStatus(){
+  const parts=[];
+  if(poison) parts.push('☠ 中毒 ×'+poison.turns);
+  if(Date.now()<frozenUntil) parts.push('❄ 冻结');
+  $('statRow').innerHTML=parts.map(s=>'<span>'+s+'</span>').join('');
+}
+function clearStatus(){
+  poison=null; clearInterval(poisonTick);
+  frozenUntil=0; clearInterval(freezeTick);
+  $('qzone').classList.remove('frozen'); $('frozenLab').textContent='';
+  renderStatus();
+}
+function applyPoison(turns, pdmg){
+  poison={turns, dmg:pdmg}; renderStatus();
+  if(fairyOn&&!gameOver) fairyEvent('Your boy got POISONED! He will lose '+pdmg+' HP every few seconds for '+turns+' ticks. Show your motherly worry!');
+  clearInterval(poisonTick);
+  poisonTick=setInterval(()=>{
+    if(gameOver){ clearInterval(poisonTick); return; }
+    if(!poison){ clearInterval(poisonTick); return; }
+    heroHP=Math.max(0,heroHP-poison.dmg);
+    dmgText(centerOf($('heroSpr')), '-'+poison.dmg+' ☠','poison');
+    poison.turns--; updateBars(); renderStatus();
+    if(poison.turns<=0){ poison=null; renderStatus(); clearInterval(poisonTick); }
+    else if(heroHP<=0){ clearInterval(poisonTick); heroDown(); }
+  },2800);
+}
+async function doFreeze(sec){
+  frozenUntil=Date.now()+sec*1000;
+  $('qzone').classList.add('frozen');
+  document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+  renderStatus();
+  if(fairyOn&&!gameOver) fairyEvent('The quiz area just got FROZEN for '+sec+' seconds and the enemy timer keeps running! Warn your boy to stay calm!');
+  clearInterval(freezeTick);
+  freezeTick=setInterval(()=>{
+    const left=Math.ceil((frozenUntil-Date.now())/1000);
+    if(left<=0){
+      clearInterval(freezeTick); frozenUntil=0;
+      $('qzone').classList.remove('frozen'); $('frozenLab').textContent='';
+      if(!busy&&!gameOver&&monHP>0) document.querySelectorAll('.opt').forEach(b=>b.disabled=false);
+      renderStatus();
+    }else{
+      $('frozenLab').textContent='❄ 答题区被冻结！还剩 '+left+' 秒（怪兽计时仍在走！）';
+    }
+  },250);
+}
+function flash(cls){
+  const d=document.createElement('div'); d.className='flashfx '+cls;
+  $('battle').appendChild(d); setTimeout(()=>d.remove(),800);
+}
+async function hitHero(dmg, note){
+  const heroSpr=$('heroSpr');
+  heroSpr.classList.add('hitflash','mhit'); shakeScene();
+  dmgText(centerOf(heroSpr), '-'+dmg+(note||''));
+  heroHP=Math.max(0,heroHP-dmg); updateBars();
+  await sleep(320); heroSpr.classList.remove('hitflash','mhit');
+  /* 🧚 儿子挨打了，妈妈实时紧张 */
+  if(fairyOn&&!gameOver){
+    const mood=heroHP<=25?' He is CRITICAL — panic and beg him to heal!':(heroHP<=50?' He is badly hurt — worry about him!':'');
+    fairyEvent('The enemy '+monEn(curMon())+' just ATTACKED your boy for -'+dmg+' HP (now '+heroHP+'/100).'+mood);
+  }
+}
+/* ---- 大招 4 秒续力：倒计时条 + 蓄能动画；勇者答对出招可打断 ---- */
+let charging=null;   /* {sk, until, tick, barEl} */
+function startCharge(sk){
+  const monSpr=$('monSpr');
+  monSpr.classList.add('charging');
+  const bar=document.createElement('div'); bar.className='chargebar';
+  bar.innerHTML='<div class="cbar"><i id="chargefill"></i></div><b id="chargetxt">⚡ '+curMon().name+' 续力中 4s — 攻击可打断！</b>';
+  $('battle').appendChild(bar);
+  charging={sk, until:Date.now()+4000, tick:null, barEl:bar};
+  banner('⚠ '+curMon().name+' 正在为「'+sk.name+'」续力 4 秒！出招可打断！',2400);
+  if(fairyOn&&!gameOver) fairyEvent('DANGER! The enemy '+monEn(curMon())+' is CHARGING the skill '+SK_EN[sk.id]+' for 4 quick seconds! Your boy can INTERRUPT it by answering correctly and striking RIGHT NOW! Warn him to hurry!');
+  const iv=setInterval(()=>{
+    if(!charging||gameOver||monHP<=0){ clearInterval(iv); stopCharge(); return; }
+    const left=Math.ceil((charging.until-Date.now())/1000);
+    const fill=document.getElementById('chargefill'), txt=document.getElementById('chargetxt');
+    if(left<=0){
+      clearInterval(iv); const sk2=charging.sk; stopCharge();
+      /* 大招落地后 monTimer 归位到 3s：续力期间 monTimer 已被 1s 计时器减成负数，
+         不归位会在大招动画结束瞬间立刻补一发普攻，形成"吃了大招还连吃刀"的连招 */
+      if(!busy&&!gameOver&&monHP>0){ castMonsterSkill(sk2); monTimer=Math.max(monTimer,3); }
+    }else{
+      /* 分母 40 = 续力时长 4000ms/100：条从 0% 涨到 100%（旧公式分母 100 会让条从 60% 起跳） */
+      if(fill) fill.style.width=(100-(charging.until-Date.now())/40)+'%';
+      if(txt) txt.textContent='⚡ 续力中 '+left+'s — 攻击可打断！';
+    }
+  },200);
+  charging.tick=iv;
+}
+function stopCharge(){
+  if(!charging) return;
+  clearInterval(charging.tick);
+  if(charging.barEl) charging.barEl.remove();
+  charging=null;
+  $('monSpr').classList.remove('charging');
+}
+/* 【设计，非 bug】技能动画不占用 busy：演出期间勇者仍可答题（冰冻中等抢答之类的
+   高手向操作全靠这个窗口）。别把它"顺手"加 busy 锁修掉——那会堵死答题窗口。 */
+async function castMonsterSkill(sk){
+  const monSpr=$('monSpr'), heroSpr=$('heroSpr');
+  const at=centerOf(heroSpr), from=centerOf(monSpr);
+  const red=Math.max(0, heroDef() - Math.floor((heroLv-1)*0.6));   /* 蓄力已外置为 4 秒可打断续力（startCharge），此处直接施放；技能减伤被等级成长部分对冲 */
+
+  if(sk.id==='poison'||sk.id==='acid'){
+    flash('f-green');
+    const fb=fx('acidball',from,700); fb.style.left=(from.x-11)+'px'; fb.style.top=(from.y-11)+'px';
+    fb.style.transition='left .35s linear, top .35s linear';
+    requestAnimationFrame(()=>{ fb.style.left=(at.x-11)+'px'; fb.style.top=(at.y-11)+'px'; });
+    await sleep(380); fb.remove();
+    await hitHero(Math.max(1,(sk.id==='acid'?rnd(10,14):rnd(6,10))-(red>>1)));
+    const acid=sk.id==='acid';
+    dmgText(at, acid?'☠ 强力毒素!':'☠ 中毒!','poison');
+    applyPoison(acid?4:3, acid?rnd(6,8):rnd(3,5));
+    await sleep(300);
+  }else if(sk.id==='ember'){
+    flash('f-orange');
+    for(let i=0;i<3;i++){
+      const fb=fx('fireball',from,420); fb.style.left=(from.x-13)+'px'; fb.style.top=(from.y-13)+'px';
+      fb.style.transition='left .3s linear, top .3s linear';
+      const tx=at.x+rnd(-34,34), ty=at.y+rnd(-24,24);
+      requestAnimationFrame(()=>{ fb.style.left=(tx-13)+'px'; fb.style.top=(ty-13)+'px'; });
+      await sleep(220); fb.remove();
+    }
+    await hitHero(Math.max(1,rnd(6,10)-(red>>1)));
+    const burn=Math.min(heroMP,10);
+    if(burn>0){ heroMP-=burn; dmgText(at,'-'+burn+' MP','mp'); updateBars(); }
+    await sleep(300);
+  }else if(sk.id==='quake'){
+    banner('💥 大地震颤!!',1200);
+    await sleep(800);
+    for(let i=0;i<3;i++) await shakeScene();
+    await hitHero(Math.max(1,rnd(12,17)-red));
+    await sleep(300);
+  }else if(sk.id==='lava'){
+    flash('f-orange'); banner('🌋 熔岩天降!!',1500);
+    const heroX=centerOf(heroSpr).x;
+    for(let i=0;i<6;i++){
+      const x=rnd(90,610);
+      const rock=document.createElement('div'); rock.className='fx lavarock';
+      rock.style.left=x+'px'; rock.style.top='-24px';
+      $('battle').appendChild(rock);
+      requestAnimationFrame(()=>{ rock.style.transition='top .55s linear'; rock.style.top='224px'; });
+      setTimeout(()=>rock.remove(),600);
+      await sleep(130);
+    }
+    await sleep(480);
+    await hitHero(Math.max(1,rnd(16,22)-red));
+    const burn=Math.min(heroMP,15);
+    if(burn>0){ heroMP-=burn; dmgText(at,'-'+burn+' MP','mp'); }
+    updateBars(); await sleep(300);
+  }else if(sk.id==='frost'||sk.id==='freeze'){
+    flash('f-blue');
+    const big=sk.id==='freeze';
+    for(let i=0;i<(big?6:4);i++){
+      const sh=document.createElement('div'); sh.className='fx iceshard';
+      sh.style.left=(at.x+rnd(-70,70))+'px'; sh.style.top=(at.y-90+rnd(-34,34))+'px';
+      $('battle').appendChild(sh); setTimeout(()=>sh.remove(),750);
+      await sleep(95);
+    }
+    await hitHero(Math.max(1,(big?rnd(8,12):rnd(5,9))-(red>>1)));
+    await doFreeze(big?6:4);
+    await sleep(300);
+  }
+}
+
+function updateBars(){
+  $('hpbar').style.width=Math.max(0,heroHP)+'%';
+  $('hpval').textContent=Math.max(0,heroHP)+'/100';
+  $('mpbar').style.width=Math.max(0,heroMP*2)+'%';
+  $('mpval').textContent=heroMP+'/50';
+  $('heroname').textContent='勇者 · Lv.'+heroLv+'（防-'+heroDef()+'）';
+  /* 装备总加成一行可见 */
+  const ET=EQUIP_TIERS, wt2=ET[equip.weapon], st2=ET[equip.shield], ht2=ET[equip.helm], pt2=ET[equip.potion];
+  $('equiplab').textContent='⚔+'+wt2.atk+'  🛡-'+st2.red+'  ⛑'+ht2.mp+'  🧪+'+pt2.heal
+    +(equip.weapon||equip.shield||equip.helm||equip.potion?'':'（空装 · 击杀怪掉落）');
+  $('xpbar').style.width=Math.min(100,heroXp/xpNeed(heroLv)*100)+'%';
+  $('xpval').textContent=heroXp+'/'+xpNeed(heroLv);
+  $('mhpbar').style.width=Math.max(0,monHP/monHPmax*100)+'%';
+  $('skHeavy').disabled = busy||gameOver||heroMP<20||monHP<=0;
+  $('skFire').disabled  = busy||gameOver||heroMP<35||monHP<=0;
+  $('skHeal').disabled  = busy||gameOver||monHP<=0||(heroMP<25 && !(heroHP<=20&&heroMP>0));
+}
+
+/* ================================================================
+   出招 / 落空 / 嘲笑 / 怪兽攻击
+================================================================ */
+async function heroStrike(dmg, kind){
+  busy=true; updateBars();
+  const hero=$('hero'), heroSpr=$('heroSpr'), monSpr=$('monSpr');
+
+  if(kind==='fire'){
+    const at=centerOf(heroSpr), to=centerOf(monSpr);
+    const fb=fx('fireball', at, 400); fb.style.left=(at.x-13)+'px'; fb.style.top=(at.y-13)+'px';
+    fb.style.transition='left .32s linear, top .32s linear';
+    requestAnimationFrame(()=>{ fb.style.left=(to.x-13)+'px'; fb.style.top=(to.y-13)+'px'; });
+    await sleep(330); fb.remove();
+    const boom=fx('boom', to, 450); boom.style.left=(to.x-10)+'px'; boom.style.top=(to.y-10)+'px'; boom.classList.add('go');
+  }else{
+    hero.style.transition='left .28s steps(5)';
+    hero.style.left='170px'; await sleep(300);
+    /* 装备品阶决定攻击表现：徒手朴素 / 精铁白闪 / 秘银青蓝闪屏 / 屠龙金红爆发+震屏 */
+    const sl=fx('slash go', centerOf(monSpr), 260), wt=equip.weapon;
+    if(wt===1){ sl.style.filter='brightness(1.8) drop-shadow(0 0 6px #fff)'; flash('f-white'); }
+    else if(wt===2){ sl.style.filter='hue-rotate(150deg) saturate(1.7) brightness(1.35)'; flash('f-blue'); shakeScene(); }
+    else if(wt===3){ sl.style.filter='hue-rotate(-30deg) saturate(2.2) brightness(1.4)'; flash('f-orange'); shakeScene(); }
+  }
+
+  /* 随机 Miss：普攻/重击 10%，火球 5% —— 怪兽灵巧闪开 */
+  if(Math.random()<(kind==='fire'?0.05:0.10)){
+    dmgText(centerOf(monSpr), '被闪开了!', 'miss');
+    monSpr.classList.add('laugh');
+    await sleep(450); monSpr.classList.remove('laugh');
+    if(kind!=='fire'){ hero.style.left='70px'; await sleep(300); hero.style.transition=''; }
+    busy=false; updateBars(); return;
+  }
+
+  /* 打断续力：+30% 伤害，大招作废 */
+  let interTxt='';
+  if(charging){
+    stopCharge();
+    dmg=Math.round(dmg*1.3);
+    flash('f-orange');
+    dmgText(centerOf(monSpr),'💥 打断成功! 伤害+30%','crit');
+    interTxt='（打断+30%）';
+    if(fairyOn&&!gameOver) fairyEvent('INCREDIBLE! Your boy STRUCK right while the enemy was charging and INTERRUPTED the skill completely! The huge attack is cancelled! Explode with motherly pride!');
+  }
+
+  monSpr.classList.add('hitflash','knock'); shakeScene();
+  if(kind!=='fire') dmgText(centerOf(monSpr), '-'+dmg+interTxt, dmg>=40?'crit':'');
+  else dmgText(centerOf(monSpr), '-'+dmg+interTxt+' 🔥', 'crit');
+  monHP=Math.max(0,monHP-dmg); updateBars();
+  await sleep(320); monSpr.classList.remove('hitflash','knock');
+
+  if(kind!=='fire'){
+    hero.style.left='70px'; await sleep(300); hero.style.transition='';
+  }
+  busy=false; updateBars();
+
+  if(monHP<=0){ await sleep(300); return monsterDefeated(); }
+}
+
+/* 答错：攻击落空 + 怪兽嘲笑 */
+async function heroMiss(){
+  busy=true; updateBars();
+  const hero=$('hero'), heroSpr=$('heroSpr'), monSpr=$('monSpr');
+  hero.style.transition='left .28s steps(5)';
+  hero.style.left='170px'; await sleep(300);
+  fx('slash go', centerOf(monSpr), 260);
+  await sleep(180);
+  dmgText(centerOf(monSpr), '打击失败!', 'miss');
+  hero.style.left='70px'; await sleep(300); hero.style.transition='';
+  busy=false; updateBars();
+
+  const at=centerOf(monSpr);
+  const b=document.createElement('div'); b.className='bubble'; b.textContent='嘻嘻嘻~ 打不中！';
+  b.style.left=(at.x-58)+'px'; b.style.top=(at.y-118)+'px';
+  $('battle').appendChild(b); setTimeout(()=>b.remove(),1850);
+  monSpr.classList.add('laugh');
+  await sleep(1500); monSpr.classList.remove('laugh');
+}
+
+async function monsterTurn(){
+  if(gameOver||monHP<=0) return;
+  if(charging){ updateBars(); return; }   /* 续力期间全力蓄能，不再普攻 */
+  busy=true; monTimer=curMon().timer; updateBars();
+  const sk=curMon().skill;
+  if(sk && Math.random()<sk.chance){
+    /* 大招改为 4 秒续力：期间答题出招可打断；不占用 busy（勇者仍可答题，见 castMonsterSkill 注释） */
+    busy=false; startCharge(sk); return;
+  }else{
+    const monWrap=$('monster'), heroSpr=$('heroSpr');
+    monWrap.style.transition='right .28s steps(5)';
+    monWrap.style.right='150px'; await sleep(300);
+    /* 15% 随机 Miss：勇者闪避，怪兽落空 */
+    if(Math.random()<0.15){
+      fx('claw', centerOf(heroSpr), 260);
+      dmgText(centerOf(heroSpr),'MISS','heal');
+      monWrap.style.right='70px'; await sleep(300); monWrap.style.transition='';
+      if(fairyOn&&!gameOver) fairyEvent('The monster swung at your boy but he DODGED it completely! Nothing happened! Show your motherly relief and celebrate his agility!');
+      busy=false; updateBars(); return;
+    }
+    /* 怪兽伤害随勇者等级成长（每级 +0.6），防御再多也有压力 */
+    const dmg=Math.max(1, rnd(...curMon().dmg) + Math.floor((heroLv-1)*0.6) - heroDef()),
+          redTxt=(heroDef()>0||heroLv>1)?'（防-'+heroDef()+'）':'';
+    fx('claw go', centerOf(heroSpr), 260);
+    await hitHero(dmg, redTxt);
+    monWrap.style.right='70px'; await sleep(300); monWrap.style.transition='';
+  }
+  busy=false; updateBars();
+  if(heroHP<=0) heroDown();
+}
+
+/* ================================================================
+   关卡流程
+================================================================ */
+function curMon(){ return LEVELS[curLevel].monsters[monsterIdx]; }
+
+function startLevel(i){
+  curLevel=i; monsterIdx=0; heroHP=100; heroMP=50; gameOver=false;
+  stopCharge();
+  clearStatus(); updateEquip();
+  $('mapscreen').style.display='none';
+  $('gamescreen').style.display='block';
+  const lv=LEVELS[i];
+  $('battle').className='panel theme-'+lv.theme;
+  $('lvtag').textContent=lv.name;
+  rebuildPool(lv.diff);
+  $('battle').querySelectorAll('.star').forEach(s=>s.remove());
+  for(let k=0;k<26;k++){
+    const s=document.createElement('div'); s.className='star';
+    s.style.left=Math.random()*100+'%'; s.style.top=Math.random()*55+'%';
+    $('sky').appendChild(s);
+  }
+  spawnMonster(true);
+  nextQuestion();
+}
+
+function spawnMonster(first){
+  const m=curMon(); monHPmax=m.hp; monHP=m.hp;
+  drawSpr($('monSpr'), SPR[m.spr], MONPAL[m.pal], m.scale);
+  $('monSpr').classList.toggle('bossaura', !!m.boss);
+  $('monName').textContent=m.name;
+  $('monName').className='mname'+(m.boss?' boss':'');
+  monTimer=m.timer;
+  $('progLab').textContent=m.boss?'BOSS 战!':('小怪 '+(monsterIdx+1)+'/2');
+  updateBars();
+  banner(m.boss?'⚠ BOSS 出现!! ⚠':(first?'第 '+(curLevel+1)+' 章 · 战斗开始!':'下一只小怪出现!'), m.boss?1800:1200);
+}
+
+function monsterDefeated(){
+  /* 立即锁死选项，防止空档期误触（技能击杀时选项可能仍是活的） */
+  document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+  stopCharge();
+  clearStatus();
+  const m=curMon();
+  if(fairyOn) fairyEvent(m.boss
+    ? ('YOUR BOY JUST DEFEATED THE BOSS '+monEn(m)+'!! Burst with motherly pride and joy! 🎉')
+    : ('Your boy just defeated '+monEn(m)+'! Praise him proudly and tell him to rest before the next fight.'));
+  rollDrop(m.boss);
+  gainXp(m.boss?15:6);
+  if(!m.boss){
+    monsterIdx++;
+    const heal=30, mp=15;
+    heroHP=Math.min(100,heroHP+heal); heroMP=Math.min(50,heroMP+mp);
+    dmgText(centerOf($('heroSpr')),'+'+heal,'heal');
+    updateBars();
+    setTimeout(()=>{ if(!gameOver && $('gamescreen').style.display!=='none'){ spawnMonster(false); nextQuestion(); } }, 900);
+  }else{
+    const p=loadProgress(); p.cleared[curLevel]=1; saveProgress(p);
+    banner('🏆 章节通关!!', 1700);
+    if(curLevel < LEVELS.length-1){
+      /* 通关后自动进入下一章（满血满蓝重新开始） */
+      const next=curLevel+1;
+      setTimeout(()=>{
+        if(gameOver || $('gamescreen').style.display==='none') return;
+        startLevel(next);
+      },1900);
+    }else{
+      /* 最终章通关 */
+      setTimeout(()=>{
+        stopFairy();
+        showOverlay('🏆 恭喜！你击败了冰霜魔王，通关全部三章！',
+          [{t:'返回地图',fn:gotoMap},{t:'重玩本章',fn:()=>{hideOverlay();startLevel(curLevel);}}]);
+      },2100);
+    }
+  }
+}
+
+function heroDown(){
+  gameOver=true;
+  stopCharge();
+  showOverlay('💀 你被 '+curMon().name+' 击倒了…',
+    [{t:'重试本章',fn:()=>{hideOverlay();startLevel(curLevel);}},{t:'返回地图',fn:gotoMap}]);
+}
+
+/* ================================================================
+   答题（按当前章节难度抽题，不重复直到抽完）
+================================================================ */
+function rebuildPool(diff){
+  pool=QUESTIONS.map((q,i)=>({q,i})).filter(x=>x.q.d===diff);
+  askedIdx=[];
+}
+function nextQuestion(){
+  if(askedIdx.length>=pool.length) askedIdx=[];
+  let pick;
+  do{ pick=pool[rnd(0,pool.length-1)]; }while(askedIdx.includes(pick.i)&&askedIdx.length<pool.length);
+  askedIdx.push(pick.i);
+  const q=pick.q;
+  $('qdiff').textContent=['','★ 简单','★★ 中等','★★★ 困难'][q.d];
+  $('qdiff').className='d'+q.d;
+  $('qsrc').textContent='出处：'+q.s;
+  $('question').textContent=q.q;
+  curQ=q;
+  /* Fisher-Yates 均匀洗牌（sort(()=>Math.random()-.5) 是带偏洗牌，答案位置分布会失衡） */
+  const order=[0,1,2,3];
+  for(let i=order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=order[i]; order[i]=order[j]; order[j]=t; }
+  const box=$('opts'); box.innerHTML='';
+  order.forEach(i=>{
+    const b=document.createElement('button'); b.className='opt'; b.textContent=q.o[i];
+    b.onclick=()=>answer(b, i===q.a);
+    box.appendChild(b);
+  });
+  if(fairyOn) fairyStart();   /* 🧚 出题即介入：实时渐进式英语提示 */
+}
+async function answer(btn, correct){
+  /* 守卫：出招中 / 已结束 / 怪兽已死（换怪空档）/ 答题区被冻结时一律忽略，防止重复结算 */
+  if(busy||gameOver||monHP<=0) return;
+  if(Date.now()<frozenUntil) return;
+  document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+  btn.classList.add(correct?'ok':'bad');
+  if(correct){
+    if(masterWrong(curQ)) dmgText(centerOf($('question')),'📖 已掌握','heal');
+    heroMP=Math.min(50,heroMP+12+EQUIP_TIERS[equip.helm].mp);
+    if(fairyOn) fairyEvent('Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!');
+    gainXp(8);
+    await heroStrike(rnd(18,26)+EQUIP_TIERS[equip.weapon].atk, 'normal');
+  }else{
+    recordWrong(curQ, btn.textContent);
+    await heroMiss();
+    if(fairyOn && !gameOver && monHP>0){
+      /* 🧚 教学模式：跳下一级提示/定向重讲，勇者对同一题重试（选错的选项保持禁用） */
+      btn.disabled=true;
+      fairyWrong(btn.textContent).then(()=>{
+        if(gameOver||monHP<=0) return;
+        document.querySelectorAll('.opt').forEach(b=>{ if(!b.classList.contains('bad')) b.disabled=false; });
+      });
+      return;
+    }
+  }
+  if(!gameOver && monHP>0) nextQuestion();
+  /* 击杀小怪后的下一题由 monsterDefeated 在新怪刷出时出，避免选项被误禁用 */
+}
+
+/* ================================================================
+   技能
+================================================================ */
+$('skHeavy').onclick=()=>{ if(busy||gameOver||heroMP<20||monHP<=0)return; heroMP-=20; updateBars(); heroStrike(rnd(32,42)+EQUIP_TIERS[equip.weapon].atk,'heavy'); };
+$('skFire').onclick =()=>{ if(busy||gameOver||heroMP<35||monHP<=0)return; heroMP-=35; updateBars(); heroStrike(rnd(46,60)+Math.floor(EQUIP_TIERS[equip.weapon].atk*0.7),'fire'); };
+$('skHeal').onclick =async()=>{ if(busy||gameOver||monHP<=0)return;
+  /* 濒死急救：HP≤20 且蓝不足 25 时，可把剩余蓝全部换成等量血（防 Boss 烧蓝后的死局） */
+  const emerg = heroMP<25 && heroMP>0 && heroHP<=20;
+  if(heroMP<25 && !emerg) return;
+  busy=true;
+  const heal = emerg ? heroMP : rnd(25,35)+EQUIP_TIERS[equip.potion].heal;
+  heroMP = emerg ? 0 : heroMP-25;
+  updateBars();
+  heroHP=Math.min(100,heroHP+heal);
+  dmgText(centerOf($('heroSpr')),'+'+heal+(emerg?' ⛑!':''),'heal'); updateBars();
+  if(fairyOn) fairyEvent('Your boy used '+(emerg?'an EMERGENCY heal — he poured ALL his remaining magic into it! ':'a healing potion and ')+'recovered +'+heal+' HP (now '+heroHP+'/100). Show your motherly relief and joy!');
+  await sleep(600); busy=false; updateBars(); };
+$('skMap').onclick  =()=>{ if(!busy) gotoMap(); };
+
+/* ================================================================
+   怪兽定时攻击（按当前怪兽的 timer）
+================================================================ */
+setInterval(()=>{
+  if(gameOver||$('gamescreen').style.display==='none') return;
+  if(freezeTimer){ $('monTimerLab').textContent='⏸ 怪兽计时暂停（🧚 小精灵思考中，不算时间）'; return; }
+  monTimer--;
+  if(monTimer<=0){
+    if(!busy && monHP>0 && heroHP>0){ monsterTurn(); }
+    else monTimer=1;
+  }
+  $('monTimerLab').textContent=charging
+    ?'⚡ '+curMon().name+' 续力中 — 答对出招可打断！'
+    :'⏱ '+curMon().name+' 下次攻击: '+Math.max(0,monTimer)+'s';
+},1000);
+
+/* ================================================================
+   关卡地图渲染
+================================================================ */
+function gotoMap(){
+  stopFairy(); gameOver=true; hideOverlay();
+  $('gamescreen').style.display='none';
+  $('mapscreen').style.display='flex';
+  renderMap();
+}
+function renderMap(){
+  const p=loadProgress();
+  const wn=loadWrong().length;
+  $('btnWrong').textContent='📖 错题本'+(wn?('（'+wn+'）'):'');
+  const fl=fairyLogAll().length;
+  $('btnFairyLog').textContent='🧚 精灵日志'+(fl?('（'+fl+'）'):'');
+  LEVELS.forEach((lv,i)=>{
+    const node=$('node'+i);
+    const unlocked=i===0||p.cleared[i-1]===1;
+    node.className='lvnode'+(unlocked?'':' locked')+(p.cleared[i]===1?' cleared':'');
+    const bossLv=lv.monsters[2];
+    node.innerHTML=
+      '<div class="lvname">'+lv.name+'</div>'+
+      '<div class="lvdesc">'+['','★ 简单 · 动词过去式','★★ 中等 · 三形/句型','★★★ 困难 · 反意/难词'][lv.diff]+
+      ' · 2小怪+Boss</div>'+
+      '<div class="lvstat">'+(p.cleared[i]===1?'⭐ 已通关':(unlocked?'▶ 进入战斗':'🔒 未解锁'))+'</div>';
+    node.onclick=unlocked?()=>startLevel(i):null;
+  });
+}
+
+/* ================================================================
+   浮层
+================================================================ */
+function showOverlay(title, btns){
+  $('ovtitle').textContent=title;
+  const box=$('ovbtns'); box.innerHTML='';
+  btns.forEach(b=>{
+    const el=document.createElement('button'); el.className='pbtn'; el.textContent=b.t;
+    el.onclick=b.fn; box.appendChild(el);
+  });
+  $('overlay').classList.add('show');
+}
+function hideOverlay(){ $('overlay').classList.remove('show'); }
+
+/* ================================================================
+   错题本：答错自动收录 · 答对同题视为已掌握并移除 · 可导出 Markdown
+================================================================ */
+function loadWrong(){ try{ return JSON.parse(localStorage.getItem('nce_battle_wrong')||'[]'); }catch(e){ return []; } }
+function saveWrong(a){ try{ localStorage.setItem('nce_battle_wrong', JSON.stringify(a)); }catch(e){} }
+function recordWrong(q, wrongOpt){
+  if(!q) return;
+  const list=loadWrong();
+  const hit=list.find(x=>x.q===q.q);
+  if(hit){ hit.wrong=wrongOpt; hit.count=(hit.count||1)+1; hit.t=Date.now(); }
+  else list.push({q:q.q, s:q.s, ok:q.o[q.a], wrong:wrongOpt, count:1, t:Date.now()});
+  saveWrong(list);
+}
+function masterWrong(q){
+  if(!q) return false;
+  const list=loadWrong(); const n=list.length;
+  saveWrong(list.filter(x=>x.q!==q.q));
+  return list.length<n;
+}
+function openWrongBook(){
+  renderWrongBook();
+  $('wbwrap').classList.add('show');
+}
+function renderWrongBook(){
+  const list=loadWrong();
+  $('wbcount').textContent=list.length?('共 '+list.length+' 题'):'';
+  const box=$('wblist'); box.innerHTML='';
+  if(!list.length){ box.innerHTML='<div class="wbempty">还没有错题，继续保持！</div>'; return; }
+  list.slice().sort((a,b)=>b.t-a.t).forEach(e=>{
+    const d=new Date(e.t), pad=n=>String(n).padStart(2,'0');
+    const div=document.createElement('div'); div.className='wbitem';
+    div.innerHTML='<div class="wbq">'+e.q+'</div>'+
+      '<div>正确答案：<span class="wbok">'+e.ok+'</span>　你答的：<span class="wbwrong">'+e.wrong+'</span>'+(e.count>1?'　<span style="color:#ffd93b">✖'+e.count+' 次</span>':'')+'</div>'+
+      '<div class="wbsrc">出处：'+e.s+' · '+d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'</div>';
+    box.appendChild(div);
+  });
+}
+function exportWrongBook(){
+  const list=loadWrong();
+  if(!list.length){ alert('错题本是空的，先去战斗吧！'); return; }
+  const pad=n=>String(n).padStart(2,'0'); const now=new Date();
+  let md='# NCE 像素答题闯关 · 错题本\n\n> 导出时间：'+now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+
+    ' '+pad(now.getHours())+':'+pad(now.getMinutes())+'\n> 共 '+list.length+' 题 · 来源：《新概念第一册·动词速查表》《疑问句型速查表》\n\n---\n\n';
+  list.slice().sort((a,b)=>b.t-a.t).forEach((e,i)=>{
+    md+='## '+(i+1)+'. '+e.q+'\n\n'+
+      '- ✅ **正确答案**：'+e.ok+'\n'+
+      '- ❌ 你的错误：'+e.wrong+(e.count>1?('（错了 '+e.count+' 次）'):'')+'\n'+
+      '- 📚 出处：'+e.s+'\n'+
+      '- 🕐 记录时间：'+new Date(e.t).toLocaleString('zh-CN')+'\n\n';
+  });
+  const blob=new Blob([md],{type:'text/markdown;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='NCE错题本_'+now.getFullYear()+pad(now.getMonth()+1)+pad(now.getDate())+'.md';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+$('btnWrong').onclick=openWrongBook;
+$('wbClose').onclick=()=>$('wbwrap').classList.remove('show');
+$('wbExport').onclick=exportWrongBook;
+$('wbClear').onclick=()=>{ saveWrong([]); renderWrongBook(); };
+
+/* ================================================================
+   初始化
+================================================================ */
+drawSpr($('heroSpr'), HERO, P, 6);
+drawSpr($('portrait'), HERO, P, 4);
+/* 等级不持久化：每次刷新/重开都从 Lv.1 开始（用户要求，2026-10-29） */
+redrawEquipIcons();
+document.querySelector('#skHeavy canvas') && drawIcon(document.querySelector('#skHeavy canvas'), [["..OO...."],[".OOOO..."],["OOOOOO.."],[".OOOO..."],["..OO..W."],["..O..WW."],[".....W.."],["....W..."]], {O:'#feae34',W:'#f4f4f4'}, 3);
+document.querySelector('#skFire canvas') && drawIcon(document.querySelector('#skFire canvas'), [["...R...."],["..RR.R.."],[".RROOR.."],["ROOYYOR."],[".ROOYR.."],["..ROR.R."],["...R...."],["........"]], {R:'#e43b44',O:'#feae34',Y:'#fff7b0'}, 3);
+document.querySelector('#skHeal canvas') && drawIcon(document.querySelector('#skHeal canvas'), [["....W..."],["...WW..."],["..GWGG.."],[".GGGGGG."],[".GGGGGG."],["..GGGG.."],["...GG..."],["........"]], {G:'#63c74d',W:'#f4f4f4'}, 3);
+document.querySelector('#skMap canvas') && drawIcon(document.querySelector('#skMap canvas'), ["...WWW..","..WW....",".WWWWW..","...WW...","..WW....",".WW.....","..W.....","........"].map(r=>[r]), {W:'#2ce8f5'}, 3);
+
+/* ================================================================
+   🧚 Pixie 小精灵妈妈（本地 LLM · 只说英语 + Emoji · 实时自主思考）
+   - 召唤门禁：LM Studio 不在线时无法召唤（/llmhealth 探测）
+   - 实时思维：她看得到整个战场（章节/怪兽血量/勇者血蓝/攻击倒计时/
+     中毒/冻结/错题记录），每个关键事件都会自主思考并开口：
+     出题 / 答错 / 勇者被打 / 怪兽蓄力 / 中毒 / 冻结 / 治疗 /
+     答对 / 击杀；另有心跳观察（30s 无事也会主动说话）
+   - 人设：把勇者当亲儿子疼的妈妈精灵——掉血紧张、危险着急、
+     通关骄傲；同时是英语老师，帮勇者理解题目
+   - 严格不泄答案：提示词 STRICT RULE + maskLeaks 代码层强制打码
+   - 思考期间怪兽计时冻结；勇者抢先作答则 abort 静默退场
+================================================================ */
+let fairyOn=false, fairyBusy=false, fairyCtl=null, freezeTimer=false;
+let fairyLastThink=0, fairyWrongPicks=[], fairyHeartbeat=null, fairyPendingEv=null, fairyLastOpts=[];
+
+const MON_EN={'草原史莱姆':'Grass Slime','野菇小妖':'Mushroom Imp','史莱姆王 👑BOSS':'Slime King (BOSS)',
+  '洞穴蝙蝠':'Cave Bat','岩石傀儡':'Rock Golem','熔岩巨人 👑BOSS':'Lava Giant (BOSS)',
+  '冰霜史莱姆':'Frost Slime','寒晶飞蝠':'Ice Crystal Bat','冰霜魔王 👑BOSS':'Frost Demon King (BOSS)'};
+const CH_EN=['Chapter 1 · Grassland','Chapter 2 · Lava Cave','Chapter 3 · Frozen Throne'];
+const SK_EN={poison:'Poison Mist', acid:'Acid Swallow', ember:'Flame Breath', quake:'Earthquake Slam', lava:'Lava Rain', frost:'Frost Breath'};
+
+/* 🎭 实时心情系统：LLM 每次开口先报心情标签，徽章+光晕实时跟随 */
+const MOODS={happy:'😊',love:'🥰',proud:'😎',worried:'😟',panic:'😱',sad:'😢',angry:'😠',surprised:'😲',sleepy:'😴'};
+function fairySetMood(tag, pop){
+  const key=MOODS[tag]?tag:'happy';
+  $('fairyFace').className='mood-'+key;
+  const md=$('fairyMood');
+  md.textContent=MOODS[key];
+  if(pop){ md.classList.remove('pop'); void md.offsetWidth; md.classList.add('pop'); }
+}
+
+function monEn(m){ return MON_EN[m.name]||'the monster'; }
+function fairySay(html, think){ const b=$('fairyBubble'); b.innerHTML=html; b.classList.toggle('think',!!think); }
+function fairyShow(){ $('fairyBar').style.display='flex'; }
+function fairyHide(){ $('fairyBar').style.display='none'; }
+function stopFairy(){
+  if(fairyHeartbeat){ clearInterval(fairyHeartbeat); fairyHeartbeat=null; }
+  if(fairyCtl){ try{fairyCtl.abort();}catch(e){} fairyCtl=null; }
+  fairyBusy=false; freezeTimer=false; fairyPendingEv=null; fairyHide();
+}
+
+/* 战场实况速览 —— 喂给模型的全部实时条件 */
+function battlefield(evDesc){
+  const m=curMon();
+  let s='=== BATTLEFIELD (you see everything in real time) ===\n';
+  s+='Chapter: '+CH_EN[curLevel]+'\n';
+  s+='Enemy: '+monEn(m)+' — HP '+Math.max(0,monHP)+'/'+m.hp+' ('+Math.round(Math.max(0,monHP)/m.hp*100)+'% left)\n';
+  s+='YOUR BOY: HP '+heroHP+'/100'+(heroHP<=25?' ⚠ CRITICAL!':heroHP<=50?' (badly hurt)':' (okay)')+', MP '+heroMP+'/50\n';
+  s+='Enemy next attack in ~'+Math.max(0,monTimer)+'s\n';
+  if(poison) s+='Your boy is POISONED and losing HP over time!\n';
+  if(Date.now()<frozenUntil) s+='Quiz area is FROZEN for '+Math.ceil((frozenUntil-Date.now())/1000)+'s more!\n';
+  if(equip.weapon||equip.shield||equip.helm||equip.potion) s+='He wears: '+(equip.weapon?'sword T'+equip.weapon+' ':'')+(equip.shield?'shield T'+equip.shield+' ':'')+(equip.helm?'helm T'+equip.helm+' ':'')+(equip.potion?'potion T'+equip.potion:'')+'\n';
+  if(fairyWrongPicks.length) s+='His wrong picks on this question: '+fairyWrongPicks.join(', ')+'\n';
+  if(fairyLastOpts.length) s+='Current quiz: '+$('question').textContent+'\n'+fairyLastOpts.map((o,i)=>String.fromCharCode(65+i)+'. '+o).join('\n')+'\n';
+  /* JUST HAPPENED 放最后：易变内容后置，恒定前缀最大化，LM Studio 的 prefix caching 才能命中 */
+  s+='JUST HAPPENED: '+evDesc+'\n';
+  return s;
+}
+
+async function askFairy(evDesc){
+  fairyCtl=new AbortController(); const ctl=fairyCtl;
+  const to=setTimeout(()=>{ try{ctl.abort();}catch(e){} },150000);
+  const t0=Date.now();
+  const sys=FAIRY_SYS;   /* 唯一权威源在 nce-shared.js，与 fairy-audit.js 审计工具共用 */
+  try{
+    const res=await fetch('/llm',{method:'POST',headers:{'Content-Type':'application/json'},
+      signal:ctl.signal,
+      body:JSON.stringify({model:LLM_MODEL,temperature:0.85,max_tokens:120,messages:[
+        {role:'system',content:sys},
+        {role:'user',content:battlefield(evDesc)},
+        {role:'assistant',content:'<think>\n\n</think>'}
+      ]})});
+    const d=await res.json();
+    const msg=(d.choices&&d.choices[0]&&d.choices[0].message)||{};
+    let text=(msg.content||'').trim();
+    if(!text && msg.reasoning_content) text=(''+msg.reasoning_content).slice(-200).trim();
+    /* 解析心情标签 [xxx] */
+    let mood=null;
+    text=text.replace(/^\s*\[([a-z]+)\]\s*/i,(mm,tag)=>{ mood=tag.toLowerCase(); return ''; });
+    /* 兜底：万一模型忘报标签，按关键词猜心情 */
+    if(!MOODS[mood]){
+      const t2=text.toLowerCase();
+      mood = /oh no|please|hurry|watch out|danger|critical|dodge/.test(t2)?'worried'
+           : /proud|well done|amazing|excellent|clever/.test(t2)?'proud'
+           : /love|sweet|my dear|my boy/.test(t2)?'love'
+           : /oops|missed|wrong/.test(t2)?'sad'
+           : 'happy';
+    }
+    /* 兜底：抹掉意外带出的答案句，再过泄漏打码 */
+    text=text.replace(/^\s*(hint|answer)\s*[：:]\s*/i,'')
+             .replace(/\b[A-D]\s+(is|was)\s+(the\s+)?(correct|right)\b.*$/i,'');
+    /* 打码名单：正确选项 + 从题干提取动词后经 VERB_DB 展开的全部不规则形式（防旁敲侧击泄题） */
+    let maskOpts=(curQ&&typeof curQ.a==='number')?[String(curQ.o[curQ.a])]:fairyLastOpts.slice();
+    try{
+      if(curQ){
+        const words=((curQ.q||'')+' '+(curQ.o||[]).join(' ')).toLowerCase().match(/[a-z][a-z'-]{1,}/g)||[];
+        VERB_DB.forEach(v=>{
+          if(words.indexOf(String(v[0]).toLowerCase())>=0) maskOpts.push(String(v[1]),String(v[2]));
+        });
+      }
+    }catch(e){}
+    text=maskLeaks(text, maskOpts).replace(/^["']|["']$/g,'').slice(0,220);
+    return {text, mood, sec:(Date.now()-t0)/1000};
+  }catch(e){
+    return {text:'', err:e.name==='AbortError'?'abort':e.message, sec:(Date.now()-t0)/1000};
+  }finally{ clearTimeout(to); }
+}
+
+/* 实时思维核心：事件驱动 + 挤压排队；忙时只记最新事件，稍后补想。
+   quizSnap：事件发生瞬间的题面快照——LLM 思考的 ~2s 里题面可能已切换，日志必须记事件当时的题 */
+async function fairyThink(evDesc, quizSnap, hold){
+  if(!fairyOn||gameOver) return;
+  const quizAtEv = quizSnap!==undefined ? quizSnap : (curQ?curQ.q:'');
+  if(fairyBusy){ fairyPendingEv={evDesc,quizSnap:quizAtEv,hold:!!hold}; return; }
+  fairyBusy=true; freezeTimer=!!hold; fairyLastThink=Date.now();   /* 仅教学重讲时暂停怪兽计时，夸奖/警告不暂停 */
+  fairyShow(); fairySay('… 💭', true);
+  $('fairyMood').textContent='💭';
+  const r=await askFairy(evDesc);
+  freezeTimer=false; fairyBusy=false; fairyCtl=null;
+  if(r.err==='abort'){ fairyPendingEv=null; return; }   /* 勇者抢先作答，安静退场 */
+  if(!r.text){
+    fairySetMood('sad');
+    logFairy(evDesc,'sad',':( My magic link is down…',quizAtEv);
+    if(r.err) fairySay(':( My magic link is down… <span class="sys">（LM Studio 未就绪：请开启 Local Server :1234）</span>');
+    else fairyHide();
+  }else{
+    fairySetMood(r.mood, true);   /* 心情徽章弹跳 + 光晕变色 */
+    fairySay(r.text+' <span class="sys">('+r.sec.toFixed(1)+'s)</span>');
+    logFairy(evDesc, r.mood, r.text, quizAtEv);
+  }
+  if(fairyPendingEv){
+    const p=fairyPendingEv; fairyPendingEv=null;
+    if(fairyOn&&!gameOver) fairyThink(p.evDesc, p.quizSnap, p.hold);   /* 处理被挤压的最新事件 */
+  }
+}
+/* 战斗代码里的事件入口：入队瞬间快照题面；hold=true 表示教学重讲（怪兽计时暂停） */
+function fairyEvent(evDesc, hold){ if(fairyOn&&!gameOver) fairyThink(evDesc, curQ?curQ.q:'', hold); }
+
+/* 出题即介入 */
+async function fairyStart(){
+  fairyWrongPicks=[];
+  const opts=[...document.querySelectorAll('.opt')];
+  if(opts.length===4) fairyLastOpts=opts.map(b=>b.textContent);
+  fairyEvent('A NEW quiz question just appeared. Watch over your boy and start helping him understand it.');
+}
+
+/* 答错：把错误选择记入战况，让妈妈心疼地重讲 */
+async function fairyWrong(wrongChoice){
+  if(!fairyOn) return;
+  fairyWrongPicks.push('"'+wrongChoice+'"');
+  fairyEvent('Your boy just picked a WRONG answer ("'+wrongChoice+'") and his attack missed! Be sad but supportive, then teach the RULE behind this quiz again in EASIER English — describe the rule only, never name any option word or the correct form.', true);
+}
+
+/* 心跳观察：30 秒没事件也主动开口（像妈妈一直在旁边看着）。
+   旧值 15s 实测 0 次触发——事件太密（5~6s 一个），心跳永远被挤掉等于死代码；
+   调到 30s 后"安静陪伴"分支才真正有机会说话。 */
+const FAIRY_HEARTBEAT_MS=30000;
+function fairyStartHeartbeat(){
+  stopHeartbeat();
+  fairyHeartbeat=setInterval(()=>{
+    if(!fairyOn||gameOver||fairyBusy||fairyPendingEv) return;
+    if(monHP<=0||!curQ) return;
+    if(Date.now()-fairyLastThink<FAIRY_HEARTBEAT_MS) return;
+    const opts=[...document.querySelectorAll('.opt')];
+    if(opts.length===4) fairyLastOpts=opts.map(b=>b.textContent);
+    fairyThink('Quiet watching: your boy is still thinking about the quiz. Say something motherly — encourage him, remind the grammar topic, or warn about the enemy attack timer. Vary your tone.');
+  },5000);
+}
+function stopHeartbeat(){ if(fairyHeartbeat){ clearInterval(fairyHeartbeat); fairyHeartbeat=null; } }
+
+/* 🧚 精灵日志：审计她说过的每句话（事件/心情/台词/当前题目） */
+function fairyLogAll(){ try{ return JSON.parse(localStorage.getItem('nce_fairy_log')||'[]'); }catch(e){ return []; } }
+function fairyLogSave(l){ try{ localStorage.setItem('nce_fairy_log', JSON.stringify(l.slice(-300))); }catch(e){} }
+function logFairy(evDesc, mood, text, quizSnap){
+  /* model/sysVer 落进每条日志：换模型做 A/B（路线图 C）时两批数据才分得开 */
+  const e={t:Date.now(), model:LLM_MODEL, sysVer:2, ev:evDesc, mood:mood||'?', text:text||'',
+           quiz:quizSnap!==undefined?quizSnap:(curQ&&$('gamescreen').style.display!=='none')?$('question').textContent:''};
+  const l=fairyLogAll(); l.push(e); fairyLogSave(l);
+  console.log('FAIRY_LOG', JSON.stringify(e));
+}
+function renderFairyLog(){
+  const l=fairyLogAll();
+  $('flcount').textContent='（'+l.length+' 条）';
+  const byMood={}; l.forEach(e=>{ byMood[e.mood]=(byMood[e.mood]||0)+1; });
+  $('flstats').textContent='心情分布：'+(Object.entries(byMood).map(([k,v])=>(MOODS[k]||'❔')+'×'+v).join('  ')||'—');
+  const box=$('fllist'); box.innerHTML='';
+  if(!l.length){ box.innerHTML='<div class="flitem" style="text-align:center;color:#8a8aa8">还没有记录 —— 召唤小精灵去战斗吧！</div>'; return; }
+  l.slice().reverse().forEach(e=>{
+    const d=document.createElement('div'); d.className='flitem';
+    const dt=new Date(e.t); const pad=n=>String(n).padStart(2,'0');
+    const short=e.ev.replace(/^JUST HAPPENED: /,'').slice(0,64);
+    d.innerHTML='<div class="flhead">'+pad(dt.getHours())+':'+pad(dt.getMinutes())+':'+pad(dt.getSeconds())
+      +' · '+(MOODS[e.mood]||'❔')+' '+(e.mood||'?')+' · 事件: '+short+'</div>'
+      +'<div class="flsay">'+e.text+'</div>'
+      +(e.quiz?'<div class="flq">当前题目: '+e.quiz+'</div>':'');
+    box.appendChild(d);
+  });
+}
+function exportFairyLog(){
+  const l=fairyLogAll();
+  if(!l.length){ alert('精灵日志是空的！'); return; }
+  const pad=n=>String(n).padStart(2,'0'); const now=new Date();
+  let md='# 🧚 精灵日志\n\n> 导出时间：'+now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())
+    +' '+pad(now.getHours())+':'+pad(now.getMinutes())+' · 共 '+l.length+' 条\n\n---\n\n';
+  l.forEach(e=>{
+    const dt=new Date(e.t);
+    md+='- **'+pad(dt.getHours())+':'+pad(dt.getMinutes())+':'+pad(dt.getSeconds())+'** '+(MOODS[e.mood]||'❔')+' `'+(e.mood||'?')+'` · 事件：'+e.ev+'\n';
+    md+='  - 💬 '+e.text+'\n';
+    if(e.quiz) md+='  - 📖 当前题目：'+e.quiz+'\n';
+  });
+  const blob=new Blob([md],{type:'text/markdown'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='NCE精灵日志_'+now.getFullYear()+pad(now.getMonth()+1)+pad(now.getDate())+'.md'; a.click();
+  URL.revokeObjectURL(a.href);
+}
+$('btnFairyLog').onclick=()=>{ renderFairyLog(); $('flwrap').classList.add('show'); };
+$('flClose').onclick=()=>$('flwrap').classList.remove('show');
+$('flExport').onclick=exportFairyLog;
+$('flClear').onclick=()=>{ fairyLogSave([]); renderFairyLog(); };
+
+/* 🔒 泄漏打码 maskLeaks 已抽到 nce-shared.js：游戏与审计工具共用同一份实现 */
+
+/* 召唤门禁：LM Studio 不在线就召不出来 */
+$('btnFairy').onclick=async()=>{
+  const btn=$('btnFairy');
+  if(fairyOn){ fairyOn=false; stopFairy();
+    btn.textContent='🧚 召唤小精灵妈妈（实时英语陪伴 · 本地 LLM）'; return; }
+  btn.disabled=true; btn.textContent='🧚 正在探测魔法链接…';
+  let ok=false;
+  try{ const r=await fetch('/llmhealth'); ok=(await r.json()).ok===true; }catch(e){}
+  btn.disabled=false;
+  if(!ok){
+    btn.textContent='🧚 召唤失败：LM Studio 未启动（:1234）';
+    setTimeout(()=>{ if(!fairyOn) btn.textContent='🧚 召唤小精灵妈妈（实时英语陪伴 · 本地 LLM）'; },3000);
+    return;
+  }
+  fairyOn=true;
+  fairyStartHeartbeat();
+  btn.textContent='🧚 小精灵妈妈已就位（再点一次送走她）';
+};
+
+renderMap();
+
+/* ================================================================
+   🤖 AUTOPILOT（?ap=1 激活）：LLM 玩家亲自玩游戏，小精灵实时陪伴
+   —— 行为全部落 nce_player_log，每 20s 连同精灵日志上报 /savelogs
+================================================================ */
+(function(){
+  if(!/[?&]ap=1/.test(location.search)) return;
+  /* nohint=1：无提示对照组。不召唤精灵、不等提示，测勇者「自身能力」；
+     与默认跑法（自身能力 × 提示增益）各跑一趟，才能拆出精灵提示的净贡献 */
+  const NOHINT=/[?&]nohint=1/.test(location.search);
+  if(window.__autopilot) return; window.__autopilot=true;
+  try{ if(/[?&]fresh=1/.test(location.search)){ localStorage.removeItem('nce_fairy_log'); localStorage.removeItem('nce_player_log'); } }catch(e){}
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  const $=id=>document.getElementById(id);
+  const qsel=s=>[...document.querySelectorAll(s)];
+  const AP={stop:false,sid:Date.now(),stats:{picks:0,correct:0,wrong:0,heals:0,deaths:0},start:Date.now()};
+  let lastClick=0;
+  window.AP=AP;
+  function plog(o){
+    o.t=Date.now(); o.model=LLM_MODEL; o.sysVer=2; o.nohint=NOHINT;   /* 换模型/改 prompt 做 A/B 时两批数据可分 */
+    try{ const l=JSON.parse(localStorage.getItem('nce_player_log')||'[]');
+      l.push(o); localStorage.setItem('nce_player_log',JSON.stringify(l.slice(-800))); }catch(e){}
+    console.log('PLAYER_LOG',JSON.stringify(o));
+  }
+  async function llm(messages,maxTok,temp){
+    const t0=Date.now();
+    try{
+      const res=await fetch('/llm',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:LLM_MODEL,temperature:temp,max_tokens:maxTok,messages})});
+      const d=await res.json();
+      const m=(d.choices&&d.choices[0]&&d.choices[0].message)||{};
+      return {text:((m.content||'')+'').trim(),sec:(Date.now()-t0)/1000};
+    }catch(e){ return {text:'',err:e.message,sec:(Date.now()-t0)/1000}; }
+  }
+  /* 勇者答案字母解析：优先认「(answer|choice|pick): X」式明确表达，独立裸字母兜底；
+     都没有返回 null（调用方记 no-pick）。旧写法 match(/[ABCD]/) 抓第一个大写字母，
+     模型多说一句 "I think…" 就可能抓错 */
+  function parsePick(t){
+    t=(t||'').trim();
+    let m=t.match(/(?:^|\b(?:answer|choice|pick)\s*[：:]?\s*)([ABCD])\b/i);
+    if(m) return m[1].toUpperCase();
+    m=t.match(/\b([ABCD])\b/);
+    return m?m[1]:null;
+  }
+  /* 勇者决策：读题 + 读精灵妈妈的提示，真选一个（只回字母） */
+  async function heroDecide(q,opts,hint,retry,dTxt){
+    const sys='You are the HERO in a pixel quiz battle. You are a young English learner fighting monsters by answering grammar questions.'
+      +(hint?' Your fairy mother flies beside you and just gave you a hint. Trust her advice, think briefly, then pick the option you believe is correct.'
+            :' No hints this time - rely on your own knowledge.')
+      +'\nSTRATEGY for pattern-family questions (the options are AAA/ABA/ABB/ABC-style codes describing three verb forms): FIRST check whether the LAST TWO forms are identical (= the code where past form equals past participle); if they differ, check whether the FIRST and THIRD forms are identical (= the code where base form equals past participle); if ALL THREE forms are identical pick that code; if NONE are identical pick the all-different code. Match your observation to the code meaning written in the option text.\n'+
+      'Reply with ONLY one letter: A, B, C or D.';
+    const user='Question: '+q+'\n'+opts.map((o,i)=>String.fromCharCode(65+i)+'. '+o).join('\n')
+      +(retry?'\n(Some options you already tried are disabled.)':'')
+      +(hint?'\n\nYour fairy mother says: "'+hint+'"':'')
+      +(dTxt?'\n'+dTxt:'')
+      +'\n\nYour HP: '+heroHP+'/100, MP: '+heroMP+'/50. The monster attacks soon - be quick!\nReply with ONLY the letter.';
+    const r=await llm([{role:'system',content:sys},{role:'user',content:user},{role:'assistant',content:'<think>\n\n</think>'}],8,0.6);
+    return {letter:parsePick(r.text),raw:r.text,sec:r.sec,err:r.err};
+  }
+  async function upload(){
+    try{
+      const res=await fetch('/savelogs',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({tag:'v2',sid:AP.sid,nohint:NOHINT,model:LLM_MODEL,sysVer:2,fairy:fairyLogAll(),player:(function(){try{return JSON.parse(localStorage.getItem('nce_player_log')||'[]')}catch(e){return []}})()})});
+      const d=await res.json(); AP.lastUpload=d;
+    }catch(e){}
+  }
+  setInterval(()=>{ if(AP.start && Date.now()-AP.start>20000) upload(); },20000);
+  window.APupload=upload;
+
+  let lastQ='',lastMon='',healedBattle=false;
+  async function loop(){
+    /* 先召唤小精灵（等健康检查通过）；nohint 对照组不召唤，保留勇者裸能力口径 */
+    if(!NOHINT){
+      $('btnFairy').click();
+      for(let i=0;i<20&&!fairyOn;i++) await sleep(500);
+    }
+    plog({ev:'autopilot-start',fairyOn:fairyOn,nohint:NOHINT});
+    await sleep(800); startLevel(0);
+    while(!AP.stop){
+      try{
+        await sleep(1000);
+        if(Date.now()-AP.start>1000*60*35){ plog({ev:'time-up'}); upload(); break; }
+        if(gameOver||heroHP<=0){
+          AP.stats.deaths++;
+          plog({ev:'hero-down',chapter:curLevel+1,hp:heroHP,mon:lastMon,stats:{...AP.stats},mins:+((Date.now()-AP.start)/60000).toFixed(1)});
+        /* 用户要求：玩输了就停，不自动重开——保留失败现场供分析 */
+        AP.stop=true;
+        plog({ev:'autopilot-defeat',stats:{...AP.stats},chapter:curLevel+1,mon:lastMon});
+        await upload();
+        break;
+        }
+        if($('gamescreen').style.display==='none'){ plog({ev:'left-battle'}); break; }
+        if(busy||monHP<=0) continue;
+        const btns=qsel('.opt');
+        if(btns.length!==4) continue;
+        if(curMon().name!==lastMon){ lastMon=curMon().name; healedBattle=false; lastQ=''; }
+        const disabled=btns.map(b=>b.disabled);
+        if(!disabled.includes(false)) continue;
+        const q=$('question').textContent;
+        const isRetry=disabled.some(Boolean);
+        /* 同题去重：点击后 6 秒内不重复答；超过 6 秒同题仍可答 = 上次点击被 busy 守卫吞掉，重试 */
+        if(!isRetry&&q===lastQ&&Date.now()-lastClick<6000) continue;
+        lastQ=q;
+        /* 像真孩子一样先听精灵妈妈把提示说完（nohint 对照组跳过，hint 留空） */
+        let hint='';
+        if(fairyOn){
+          let waited=0;
+          while($('fairyBubble').classList.contains('think')&&waited<25000){
+            await sleep(700); waited+=700; if(busy||monHP<=0) break;
+          }
+          if(busy||monHP<=0) continue;
+          hint=($('fairyBubble').textContent||'').replace(/\s*\(\d+\.\d+s\)\s*$/,'').trim();
+        }
+        if(busy||monHP<=0) continue;
+        /* 喝药两级：① 濒死急救 HP≤20——蓝剩多少都点（游戏支持急救换血），不受每场一次限制；
+                       ② 主动喝 HP≤45——每场怪兽一次，防 Boss 连招 */
+        if(heroHP<=20&&heroMP>0){
+          $('skHeal').click(); AP.stats.heals++;
+          plog({ev:'emergency-heal',hp:heroHP,mp:heroMP,mon:lastMon});
+          await sleep(1400); continue;
+        }
+        if(heroHP<=45&&heroMP>=25&&!healedBattle){
+          healedBattle=true; $('skHeal').click(); AP.stats.heals++;
+          plog({ev:'heal',hp:heroHP,mp:heroMP,mon:lastMon});
+          await sleep(1400); continue;
+        }
+        const opts=btns.map(b=>b.textContent);
+        /* 渲染已洗牌：真实答案按「文本匹配数据索引」换算成 DOM 字母，日志口径才正确 */
+        const truthIdx=opts.indexOf(String(curQ.o[curQ.a]));
+        const truth=truthIdx>=0?String.fromCharCode(65+truthIdx):'?';
+        const dTxt=disabled.map((d,i)=>d?(String.fromCharCode(65+i)+' was WRONG, do not pick it.'):'').filter(Boolean).join(' ');
+        const d=await heroDecide(q,opts,hint,isRetry,dTxt);
+        if(AP.stop) break;
+        if(!d.letter){ plog({ev:'no-pick',q,raw:d.raw,err:d.err}); continue; }
+        const bi=d.letter.charCodeAt(0)-65;
+        if(disabled[bi]){ plog({ev:'pick-disabled',q,pick:d.letter}); continue; }
+        const correct=bi===truthIdx;
+        AP.stats.picks++; if(correct)AP.stats.correct++; else AP.stats.wrong++;
+        plog({ev:isRetry?'retry-pick':'pick',chapter:curLevel+1,mon:lastMon,q,opts,pick:d.letter,
+          pickText:opts[bi],hint:hint.slice(0,160),truth,correct,hp:heroHP,mp:heroMP,
+          monPct:Math.round(Math.max(0,monHP)/curMon().hp*100),latency:d.sec,raw:(d.raw||'').slice(0,60)});
+        /* LLM 决策耗时长（CPU 推理数秒），期间怪兽可能开打：等 busy 清零再落子，防 answer() 守卫吞点击 */
+        let w2=0;
+        while(busy&&!gameOver&&w2<12000){ await sleep(400); w2+=400; }
+        if(busy||gameOver||monHP<=0){ plog({ev:'click-deferred',q,qHP:heroHP}); continue; }
+        lastClick=Date.now();
+        btns[bi].click();
+        await sleep(3800);
+      }catch(e){ plog({ev:'driver-err',msg:e.message}); await sleep(2000); }
+    }
+    plog({ev:'autopilot-stop',stats:AP.stats,mins:Math.round((Date.now()-AP.start)/60000)});
+    upload();
+    window.__apDone=true;
+  }
+  setTimeout(loop,1200);
+})();
+</script>
+</body>
+</html>

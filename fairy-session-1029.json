@@ -1,0 +1,660 @@
+[
+ {
+  "t": 1793251622490,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "panic",
+  "text": "Oh my dear, that Slime is strong! Remember, look for the completely new word in the past list, not one with 'ed' or just adding 'd'. 🧚‍♀️⚡📖",
+  "quiz": "take 的过去式是？"
+ },
+ {
+  "t": 1793251625744,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "love",
+  "text": "My brave boy is shining so bright! Notice how 'take' becomes a completely new word in the past? ✨🧚‍♀️💪",
+  "quiz": "\"What is your job?\" 询问？"
+ },
+ {
+  "t": 1793251628022,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "worried",
+  "text": "My brave boy, remember that a question asking 'what' needs an answer about a person's work! 🧚‍♀️📚✨",
+  "quiz": "\"What is your job?\" 询问？"
+ },
+ {
+  "t": 1793251631463,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "proud",
+  "text": "My little hero answered so well! Remember, 'job' asks for what someone does, not who they are or where they live! 🌟✨🧚‍♀️",
+  "quiz": "sit 的过去式是？"
+ },
+ {
+  "t": 1793251633658,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "Oh my darling, look! This verb changes its ending in the past; remember that rule when you choose your answer! ✨🧚‍♀️💕",
+  "quiz": "sit 的过去式是？"
+ },
+ {
+  "t": 1793251637051,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "happy",
+  "text": "Oh my brave boy, you struck true! Remember: some verbs like 'sit' stay the same in spelling for their past form! 🧚‍♀️✨🎉",
+  "quiz": "read 的过去式拼写？"
+ },
+ {
+  "t": 1793251639017,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "worried",
+  "text": "Oh no, a tricky question appeared! Remember, some verbs keep their exact same spelling in the past tense 🧐✨🦋",
+  "quiz": "read 的过去式拼写？"
+ },
+ {
+  "t": 1793251642420,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "love",
+  "text": "My sweet boy, such courage strikes me with pride! See how 'read' keeps its spelling in the past? ✨📚🧚‍♀️",
+  "quiz": "make 的过去式是？"
+ },
+ {
+  "t": 1793251644576,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "Oh my brave boy, watch how some words change their shape in the past, not just adding a small ending! 🧚‍♀️✨📝",
+  "quiz": "make 的过去式是？"
+ },
+ {
+  "t": 1793251647840,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "proud",
+  "text": "My brave boy shines bright like a star! Remember, many verbs just change completely to show the past! ✨🧚‍♀️💖",
+  "quiz": "win 的过去式是？"
+ },
+ {
+  "t": 1793251649926,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "My darling, look for the verb that looks completely different from its present form to find the past! 🧚‍♀️✨🛡️",
+  "quiz": "win 的过去式是？"
+ },
+ {
+  "t": 1793251653980,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "love",
+  "text": "So proud my boy wins with such confidence! Remember, some verbs like 'win' keep a brand new shape in the past tense—no extra letters added! 🏆✨🧚‍♀️",
+  "quiz": "grow 的过去式是？"
+ },
+ {
+  "t": 1793251656553,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "worried",
+  "text": "Oh, my little hero looks puzzled! Remember, some verbs change completely in the past, while others just add \"-ed\". 1-3 ✨🧚‍♀️📖",
+  "quiz": "grow 的过去式是？"
+ },
+ {
+  "t": 1793251660109,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "proud",
+  "text": "Oh, my brave little hero, you struck true! Remember, some verbs like this one change completely to become their past form! 🌟🧚‍♀️✨❤️",
+  "quiz": "get 的过去式是？"
+ },
+ {
+  "t": 1793251662730,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "worried",
+  "text": "My dear boy, some verbs change their shape completely in the past; look for the one that isn't just adding an \"ed\" to the end! 🧚‍♀️🔍✨",
+  "quiz": "get 的过去式是？"
+ },
+ {
+  "t": 1793251666234,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "proud",
+  "text": "My brave boy strikes true and wins! Remember, some verbs have a completely new past form that looks nothing like the present one! ✨🧚‍♀️🎯",
+  "quiz": "buy 的过去式是？"
+ },
+ {
+  "t": 1793251668494,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "Oh, my brave boy looks focused! Notice how some words are just different on their own without a tiny helper? 🧚‍♀️✨📖",
+  "quiz": "buy 的过去式是？"
+ },
+ {
+  "t": 1793251671394,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "proud",
+  "text": "So brave, my little hero! Notice how some verbs change completely in the past tense? ✨🧚‍♀️📚",
+  "quiz": "buy 的过去式是？"
+ },
+ {
+  "t": 1793251673747,
+  "ev": "Your boy just defeated Mushroom Imp! Praise him proudly and tell him to rest before the next fight.",
+  "mood": "proud",
+  "text": "My brave boy won! But remember, some verbs get a new sound in the past, not just a \"-d\" at the end! 🦋✨🛡️",
+  "quiz": "find 的过去式是？"
+ },
+ {
+  "t": 1793251676635,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "worried",
+  "text": "Oh dear, a new question arrives just as the Slime King looms! Look for that special, different spelling some verbs use in the past—like a magic costume change! 🧚‍♀️✨🧪",
+  "quiz": "find 的过去式是？"
+ },
+ {
+  "t": 1793251679835,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "proud",
+  "text": "My brave boy learned well! Some verbs change completely in the past, look for that new form! 🦸‍♂️✨📚",
+  "quiz": "tell 的过去式是？"
+ },
+ {
+  "t": 1793251682511,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "worried",
+  "text": "Oh dear, the Slime King is huge! Remember, some words skip a step and jump straight to their past form without adding -ed! 🧚‍♀️🎈😰",
+  "quiz": "tell 的过去式是？"
+ },
+ {
+  "t": 1793251685885,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "proud",
+  "text": "My sweet boy wins again because some words simply change their sound instead of adding extra letters! ✨🧚‍♀️💖",
+  "quiz": "show 的过去式是？"
+ },
+ {
+  "t": 1793251688458,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "worried",
+  "text": "My brave boy, notice how some verbs keep their spelling for the past tense? Let's find that rule before he gets hit! 🧚‍♀️🛡️⏱️",
+  "quiz": "show 的过去式是？"
+ },
+ {
+  "t": 1793251693865,
+  "ev": "Your boy just picked a WRONG answer (\"showed\") and his attack missed! Be sad but supportive, then teach the RULE behind this quiz again in EASIER English — describe the rule only, never name any option word or the correct form.",
+  "mood": "sad",
+  "text": "Oh dear, my love, that choice didn't work; remember the rule about past tense forms before you try again! 😢✨🧚‍♀️",
+  "quiz": "show 的过去式是？"
+ },
+ {
+  "t": 1793251700803,
+  "ev": "Your boy just picked a WRONG answer (\"shown\") and his attack missed! Be sad but supportive, then teach the RULE behind this quiz again in EASIER English — describe the rule only, never name any option word or the correct form.",
+  "mood": "panic",
+  "text": "Oh my little hero, you missed! Remember, some words stay the same when we add \"-ed\" instead of changing their shape entirely! 💔✨🧚‍♀️",
+  "quiz": "show 的过去式是？"
+ },
+ {
+  "t": 1793251706010,
+  "ev": "DANGER! The enemy Slime King (BOSS) is CHARGING a special skill: Acid Swallow! Protect your boy instinct — warn him what to expect!",
+  "mood": "panic",
+  "text": "Oh no, the Slime King's acid is coming! Remember, some verbs change completely in the past tense; don't just add 'ed' blindly! 🛡️🐉✨",
+  "quiz": "keep 的过去式是？"
+ },
+ {
+  "t": 1793251708306,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "panic",
+  "text": "Oh, my sweet boy feels weak from the poison! Some verbs stay safe while others change their whole shape! 🧚‍♀️🩹✨",
+  "quiz": "keep 的过去式是？"
+ },
+ {
+  "t": 1793251711710,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "love",
+  "text": "My brave boy strikes true, but remember some verbs like 'keep' change completely in the past! ❤️✨🧚‍♀️",
+  "quiz": "forget 的过去式是？"
+ },
+ {
+  "t": 1793251714522,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "panic",
+  "text": "Oh, my sweet boy is poisoned! But look—this question tests a special rule: some verbs have an entirely new past form, not just \"add -ed\"! 🧚‍♀️🛡️❤️",
+  "quiz": "forget 的过去式是？"
+ },
+ {
+  "t": 1793251718358,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "proud",
+  "text": "My brave boy strikes true! Notice how 'forgot' is all we need; some verbs keep their full past form, no extra letters! 🧚‍♀️✨🎉",
+  "quiz": "throw 的过去式是？"
+ },
+ {
+  "t": 1793251720747,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "worried",
+  "text": "Oh, Slime King is close! Remember, some verbs have a completely new past form; think carefully about the spelling change! 🧚‍♀️📝✨",
+  "quiz": "throw 的过去式是？"
+ },
+ {
+  "t": 1793251724509,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "happy",
+  "text": "Oh, my brave boy strikes again! Notice how some verbs change completely in the past, while others stay the same—what a clever rule! 🌟🧚‍♀️✨",
+  "quiz": "sell 的过去式是？"
+ },
+ {
+  "t": 1793251727123,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "proud",
+  "text": "My brave boy faces the Slime King! Remember, some verbs keep their spelling in the past form—just look for the one that feels completely new! 🧚‍♀️✨🛡️",
+  "quiz": "sell 的过去式是？"
+ },
+ {
+  "t": 1793251730799,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "proud",
+  "text": "You struck the Slime King with perfect grammar! Remember, many verbs just add '-ed' or change their spelling entirely to show the past tense! 🧚‍♀️✨📚",
+  "quiz": "\"Can you see it?\" 属于？"
+ },
+ {
+  "t": 1793251733496,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "worried",
+  "text": "Oh, that Slime King is low on health! Remember: a question starting with \"Can\" asks about ability, not the speaker's opinion. 🧚‍♀️⚡🛡️",
+  "quiz": "\"Can you see it?\" 属于？"
+ },
+ {
+  "t": 1793251737093,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "proud",
+  "text": "Oh, my brave little hero struck the big slime! Remember: a yes/no question like \"Can you...\" is an open door for answers! 🌟✨🧚‍♀️",
+  "quiz": "\"Can you see it?\" 属于？"
+ },
+ {
+  "t": 1793251739597,
+  "ev": "YOUR BOY JUST DEFEATED THE BOSS Slime King (BOSS)!! Burst with motherly pride and joy! 🎉",
+  "mood": "love",
+  "text": "My brave boy wins! Look: \"Can you...\" starts a Yes/No question, so choose the simple one! 🎉✨🧚‍♀️",
+  "quiz": "eat 的过去分词是？"
+ },
+ {
+  "t": 1793251741592,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "My sweet boy, watch how some verbs keep a new shape entirely in the past! ✨🍎🧠",
+  "quiz": "eat 的过去分词是？"
+ },
+ {
+  "t": 1793251745898,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "proud",
+  "text": "Oh my brave boy, you soared past the cave bat with your heart full of love! Remember, some verbs keep their spelling in the present but gain a new form when spoken of completed actions! 🧚‍♀️✨🦋",
+  "quiz": "\"What is the matter with him?\" 询问？"
+ },
+ {
+  "t": 1793251748125,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "My sweet boy faces a new puzzle! Remember, 'matter' asks about his state or condition right now. 🧚‍♀️🤔✨",
+  "quiz": "\"What is the matter with him?\" 询问？"
+ },
+ {
+  "t": 1793251751282,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "love",
+  "text": "My brave boy strikes true again! Remember, to ask about health we use 'matter', not 'name'! 🧚‍♀️💖✨",
+  "quiz": "\"How long have you lived here?\" 询问？"
+ },
+ {
+  "t": 1793251753402,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "My boy is safe, so let's learn that 'How long' asks for time, not place or people! ⏳🏡💕",
+  "quiz": "\"How long have you lived here?\" 询问？"
+ },
+ {
+  "t": 1793251757134,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "happy",
+  "text": "Oh my little hero, your heart is so brave! Remember: questions ending in 's' ask about *duration*, not place or size ✨🧚‍♀️❤️🎯",
+  "quiz": "\"What about the cinema?\" 属于？"
+ },
+ {
+  "t": 1793251759558,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "That question asks for a category, my dear hero! Remember: always pick the option that names the whole sentence's job, not just one word inside it 🧚✨🎬",
+  "quiz": "\"What about the cinema?\" 属于？"
+ },
+ {
+  "t": 1793251765421,
+  "ev": "Your boy just picked a WRONG answer (\"特殊疑问句\") and his attack missed! Be sad but supportive, then teach the RULE behind this quiz again in EASIER English — describe the rule only, never name any option word or the correct form.",
+  "mood": "worried",
+  "text": "Oh no, that answer was wrong and missed! Remember: always ask what the question type IS before choosing your path 🌧️🛑🧠",
+  "quiz": "\"What about the cinema?\" 属于？"
+ },
+ {
+  "t": 1793251771335,
+  "ev": "Your boy just picked a WRONG answer (\"问候寒暄\") and his attack missed! Be sad but supportive, then teach the RULE behind this quiz again in EASIER English — describe the rule only, never name any option word or the correct form.",
+  "mood": "panic",
+  "text": "Oh, my sweet boy missed his hit! Remember: a question starting with 'What' asks for info, not a greeting! 🌪️🎬💔",
+  "quiz": "\"What about the cinema?\" 属于？"
+ },
+ {
+  "t": 1793251778189,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "love",
+  "text": "Oh my brave boy, you nailed it! Notice how \"What\" starts a question asking about details? 🌟🎬✨ That's the special signal word we look for first!",
+  "quiz": "find — found · found 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251783691,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "🧚‍♀️ Don't worry, my brave boy! Just remember: some verbs keep the same spelling in all three forms like a steady friend. ❤️📚✨",
+  "quiz": "find — found · found 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251788436,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "happy",
+  "text": "So brave, my little hero! Notice how some verbs keep their shape for the past tense and participle? ✨🧚‍♀️🦇",
+  "quiz": "\"Whose pen is that?\" 询问？"
+ },
+ {
+  "t": 1793251791253,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "worried",
+  "text": "Oh my dear, don't panic! Look for the word asking about ownership, not place or time, to find the right choice 🧚🏻‍♀️📜✏️",
+  "quiz": "\"Whose pen is that?\" 询问？"
+ },
+ {
+  "t": 1793251794624,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "proud",
+  "text": "🎉 My darling boy strikes true! Remember, words like 'whose' ask about belonging, not place or time! 🪄✨📚",
+  "quiz": "wear — wore · worn 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251796927,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "My boy, \"wear-🚫\" shows the past and past participle match, so choose 🚫! 💖🧚‍♀️📚",
+  "quiz": "wear — wore · worn 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251803374,
+  "ev": "Your boy just picked a WRONG answer (\"ABB（过去式=过去分词）\") and his attack missed! Be sad but supportive, then teach the RULE behind this quiz again in EASIER English — describe the rule only, never name any option word or the correct form.",
+  "mood": "worried",
+  "text": "Oh no, my brave boy missed! Don't fear; some verbs share their past and past-participle forms, but wear is one of the special ones that changes twice! 🧚‍♀️💔✨",
+  "quiz": "wear — wore · worn 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251809298,
+  "ev": "Your boy just picked a WRONG answer (\"ABA（原形=过去分词）\") and his attack missed! Be sad but supportive, then teach the RULE behind this quiz again in EASIER English — describe the rule only, never name any option word or the correct form.",
+  "mood": "worried",
+  "text": "Oh dear, my little one missed the shot! Remember: look for a completely new past form when the spelling changes! 🧚‍♀️💔👀",
+  "quiz": "wear — wore · worn 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251813330,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "happy",
+  "text": "Oh my brave boy, you struck the Rock Golem! Some verbs like \"wear\" change shape every time we use them; look for that new past form! ✨👖💪",
+  "quiz": "stand — stood · stood 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251815706,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "Stand, 🚫, 🚫? Oh my dear, that's the rare AAA pattern where a verb keeps its shape through time! ✨🧚‍♀️💖",
+  "quiz": "stand — stood · stood 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251822105,
+  "ev": "Your boy just picked a WRONG answer (\"AAA（三形同形）\") and his attack missed! Be sad but supportive, then teach the RULE behind this quiz again in EASIER English — describe the rule only, never name any option word or the correct form.",
+  "mood": "worried",
+  "text": "Oh, my love is hurt! Did you try to guess the verb's pattern? Look: some verbs stay exactly the same for all three tenses! 🧚‍♀️🔥📖",
+  "quiz": "stand — stood · stood 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251826122,
+  "ev": "The enemy Rock Golem just ATTACKED your boy for -18 HP (now 82/100).",
+  "mood": "panic",
+  "text": "Oh, my brave boy! Rock Golem hit you—breathe deeply and remember: some verbs keep the same spelling in all three forms! 🛡️💖📚",
+  "quiz": "stand — stood · stood 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251831429,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "happy",
+  "text": "Oh my brave boy, you struck the Rock Golem! Remember: some verbs keep their exact spelling for past and past participle forms! 🌟✨🧚‍♀️",
+  "quiz": "make — made · made 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251833809,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "worried",
+  "text": "Oh, my dear boy, stay calm! Notice how some verbs keep the same shape in all three forms, like a perfect circle? 🌪️💫🧒",
+  "quiz": "make — made · made 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251837373,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "proud",
+  "text": "My hero strikes true! Notice how some verbs keep one spelling for all three forms, just like your courage shines through! ✨🧚‍♀️💖",
+  "quiz": "shine — shone · shone 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251839831,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "worried",
+  "text": "My brave boy, shine's past forms are identical! Remember: look for verbs where the second and third shapes are the SAME, just like here! 🌟📚✨",
+  "quiz": "shine — shone · shone 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251843454,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "happy",
+  "text": "Oh my darling boy, you struck true! Notice how 'shine' became 'shone', but the past and past participle look alike? That's the 🚫 pattern! ✨🧚‍♀️❤️",
+  "quiz": "meet — met · met 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251845546,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "My brave boy, some special verbs wear the same coat for their past and perfect tides! ✨🧚‍♀️📝",
+  "quiz": "meet — met · met 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251849152,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "love",
+  "text": "So proud of my brave boy! Remember, some verbs like this one keep the same spelling for all three forms. 🧚‍♀️✨🎉",
+  "quiz": "fly — flew · flown 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251851177,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "Fly is special; some verbs keep the same spelling for past and past participle! 🧚‍♀️✨📚",
+  "quiz": "fly — flew · flown 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251857050,
+  "ev": "Your boy just picked a WRONG answer (\"ABB（过去式=过去分词）\") and his attack missed! Be sad but supportive, then teach the RULE behind this quiz again in EASIER English — describe the rule only, never name any option word or the correct form.",
+  "mood": "panic",
+  "text": "Oh no, my love missed! Remember: look if the past and part are truly the same or just a new shape! 🧐🚫✨",
+  "quiz": "fly — flew · flown 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251860444,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "love",
+  "text": "Oh my sweet boy, you soared right past the rock golem! See how some verbs keep their shape like a steady rock? 🪨✨🧚‍♀️",
+  "quiz": "\"Can I have the key to the front door?\" 中 can 表示？"
+ },
+ {
+  "t": 1793251862795,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "Oh my dear boy, look at that sentence; remember how \"can\" here softens the request to ask for permission? 🧚‍♀️🗝️✨",
+  "quiz": "\"Can I have the key to the front door?\" 中 can 表示？"
+ },
+ {
+  "t": 1793251866062,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "love",
+  "text": "My brave boy learned it asks for permission, and your kindness is already winning this fight! 🥰✨🔑",
+  "quiz": "speak 的过去分词是？"
+ },
+ {
+  "t": 1793251868243,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "My brave boy faces the Lava Giant! Remember, some verbs keep a special new shape for their past and past participle forms! 🧠✨🛡️",
+  "quiz": "speak 的过去分词是？"
+ },
+ {
+  "t": 1793251871961,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "proud",
+  "text": "Look, you struck true! Some verbs keep their base form in the past participle, while others need a totally new shape like 'sung'. 🦋✨🎯",
+  "quiz": "sit — sat · sat 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251874018,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "Look closely, my dear boy; notice how \"🚫\" stays exactly the same as before and after! ✨🧠📚",
+  "quiz": "sit — sat · sat 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251877868,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "proud",
+  "text": "🌟 My brave boy answered correctly and struck hard! Some verbs keep their spellings exactly the same in all three forms, just like a steady heart. ❤️✨🧚‍♀️",
+  "quiz": "rise — rose · risen 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251880427,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "worried",
+  "text": "Watch out for the lava giant! Notice how some verbs keep their exact same spelling in all three forms, just like this one? 🌋🧚‍♀️✨📝",
+  "quiz": "rise — rose · risen 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251886446,
+  "ev": "Your boy just picked a WRONG answer (\"AAA（三形同形）\") and his attack missed! Be sad but supportive, then teach the RULE behind this quiz again in EASIER English — describe the rule only, never name any option word or the correct form.",
+  "mood": "worried",
+  "text": "Oh no, my dear! That missed hit hurts me; remember the rule: some verbs change every form, never stay the same like AAA! 🦋💔📚",
+  "quiz": "rise — rose · risen 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251892682,
+  "ev": "Your boy just picked a WRONG answer (\"ABB（过去式=过去分词）\") and his attack missed! Be sad but supportive, then teach the RULE behind this quiz again in EASIER English — describe the rule only, never name any option word or the correct form.",
+  "mood": "panic",
+  "text": "Oh no, that missed! Remember, some verbs change their middle form but share the last one with the past participle. 🧚‍♀️🤔💥",
+  "quiz": "rise — rose · risen 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251896442,
+  "ev": "The enemy Lava Giant (BOSS) just ATTACKED your boy for -15 HP (now 85/100).",
+  "mood": "proud",
+  "text": "Oh my brave boy, your heart is strong even after that hit! Remember: some verbs keep their very first shape as their final one, just like a loyal friend! ✨🧚‍♀️❤️🔥",
+  "quiz": "rise — rose · risen 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251902859,
+  "ev": "Your boy just picked a WRONG answer (\"ABA（原形=过去分词）\") and his attack missed! Be sad but supportive, then teach the RULE behind this quiz again in EASIER English — describe the rule only, never name any option word or the correct form.",
+  "mood": "love",
+  "text": "Oh, my sweet boy! Even when you miss, remember: some verbs change in all three forms just like a new path. 🧚‍♀️✨🌋",
+  "quiz": "rise — rose · risen 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251907188,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "love",
+  "text": "Oh, my brave boy, you struck the Lava Giant down! Well done! Note that some verbs keep their third form identical to the first, just like your clever answer did! 🧚‍♀️✨🔥",
+  "quiz": "know — knew · known 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251909489,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "proud",
+  "text": "See how \"know\" changed to a new shape for the past, then stayed same for the participle? That's pattern B! ✨🧠📚",
+  "quiz": "know — knew · known 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251915506,
+  "ev": "Your boy just picked a WRONG answer (\"ABB（过去式=过去分词）\") and his attack missed! Be sad but supportive, then teach the RULE behind this quiz again in EASIER English — describe the rule only, never name any option word or the correct form.",
+  "mood": "panic",
+  "text": "Oh my boy, your potion missed! Remember, some verbs keep their middle form the same as their last one, so don't pick that pattern just because it looks tidy! 😿🧪✨",
+  "quiz": "know — knew · known 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251919675,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "love",
+  "text": "Oh my brave boy! That perfect strike makes Mommy's heart soar—remember, when two forms match but differ from the first, 🚫 special irregular pattern! ✨🧚‍♀️🔥",
+  "quiz": "take — took · taken 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251922017,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "Oh, my brave boy looks strong! Notice how the answer choice shows three different forms; many verbs change shape for past and past participle! ✨🧠💖",
+  "quiz": "take — took · taken 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793251925366,
+  "ev": "Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!",
+  "mood": "happy",
+  "text": "My brave boy struck true! Some verbs like 'take' change every single step, unlike the ones we just learned! 🎉✨🧚‍♀️",
+  "quiz": "think 的过去式是？"
+ },
+ {
+  "t": 1793251928162,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "worried",
+  "text": "🧚‍♀️⚠️ My dear, look closely; when a verb changes to past time, its spelling often becomes entirely new! Think carefully about the rule of transformation! 💡📝❤️",
+  "quiz": "think 的过去式是？"
+ },
+ {
+  "t": 1793251931388,
+  "ev": "DANGER! The enemy Lava Giant (BOSS) is CHARGING a special skill: Lava Rain! Protect your boy instinct — warn him what to expect!",
+  "mood": "panic",
+  "text": "Oh my sweet boy, dodge that Lava Rain while remembering some verbs have unique past forms entirely different from their present! 🌋💦🧠",
+  "quiz": "think 的过去式是？"
+ },
+ {
+  "t": 1793251934018,
+  "ev": "The enemy Lava Giant (BOSS) just ATTACKED your boy for -21 HP (now 64/100).",
+  "mood": "worried",
+  "text": "Oh, my little hero took a hit! Look at \"think\"—it changes completely in the past; some words do, but others just stay the same! 🧐💥🔥",
+  "quiz": "think 的过去式是？"
+ },
+ {
+  "t": 1793251948489,
+  "ev": "DANGER! The enemy Lava Giant (BOSS) is CHARGING a special skill: Lava Rain! Protect your boy instinct — warn him what to expect!",
+  "mood": "panic",
+  "text": "🌋 Oh no, that Lava Rain is coming! Remember, some verbs don't just add -ed; look for their totally new shape like a magic spell! ✨📖⚡",
+  "quiz": "think 的过去式是？"
+ },
+ {
+  "t": 1793251950738,
+  "ev": "The enemy Lava Giant (BOSS) just ATTACKED your boy for -20 HP (now 44/100). He is badly hurt — worry about him!",
+  "mood": "panic",
+  "text": "My sweet boy is hurt, but look how his mind shines: some verbs have a completely new past form! 🧚‍♀️❤️🌋",
+  "quiz": "think 的过去式是？"
+ },
+ {
+  "t": 1793251964765,
+  "ev": "The enemy Lava Giant (BOSS) just ATTACKED your boy for -16 HP (now 28/100). He is badly hurt — worry about him!",
+  "mood": "panic",
+  "text": "My poor darling! Watch how verbs change their shape in the past, not just by adding -ed! 🧚‍♀️💥📖",
+  "quiz": "think 的过去式是？"
+ },
+ {
+  "t": 1793251979058,
+  "ev": "The enemy Lava Giant (BOSS) just ATTACKED your boy for -16 HP (now 12/100). He is CRITICAL — panic and beg him to heal!",
+  "mood": "worried",
+  "text": "My sweet boy, take a deep breath; even when hurt, remember some verbs keep their spelling but have a totally new past form! 🧚‍♀️✨🫁",
+  "quiz": "think 的过去式是？"
+ },
+ {
+  "t": 1793251993736,
+  "ev": "The enemy Lava Giant (BOSS) just ATTACKED your boy for -16 HP (now 0/100). He is CRITICAL — panic and beg him to heal!",
+  "mood": "panic",
+  "text": "My brave boy must heal first, but remember: some verbs change completely in the past, like 'think' to '🚫'! 🧐💖✨",
+  "quiz": "think 的过去式是？"
+ }
+]

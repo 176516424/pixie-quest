@@ -1,0 +1,16 @@
+# 运行时产物（每次实验自动生成，不入库）
+server.log
+*.log
+log-fairy-live.json
+log-player-live.json
+log-stale.json
+log-fairy-*.json
+log-player-*.json
+log-index.json
+
+# 工作台内部状态
+.workbuddy/
+
+# 系统文件
+Thumbs.db
+.DS_Store
