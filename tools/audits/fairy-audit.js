@@ -99,8 +99,8 @@ function classify(line){
   /* 输出路径参数化：--out <file>，缺省写到仓库根（不再依赖机器专属 D: 盘路径） */
   const outIdx=Math.max(process.argv.indexOf('--out'),process.argv.indexOf('-o'));
   const OUT=outIdx>0?path.resolve(process.argv[outIdx+1]):path.resolve(__dirname,'../../fairy-audit-result.json');
-  fs2.mkdirSync(path.dirname(OUT),{recursive:true});
-  fs2.writeFileSync(OUT, JSON.stringify(out,null,1));
+  fs.mkdirSync(path.dirname(OUT),{recursive:true});
+  fs.writeFileSync(OUT, JSON.stringify(out,null,1));
   console.log('\n===== 审计汇总 =====');
   console.log('结果已写入: '+OUT);
   console.log('事件数: '+out.length+'  成功应答: '+ok.length);

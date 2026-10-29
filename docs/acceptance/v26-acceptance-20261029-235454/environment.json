@@ -1,0 +1,25 @@
+{
+  "project": "pixie-quest",
+  "version": "v26",
+  "commit": "a89ea9a9850adb61375d989dd9d06ed2c26a4d36",
+  "worktreeClean": false,
+  "startedAt": "2026-10-29T23:54:54+08:00",
+  "finishedAt": "2026-10-30T00:00:12+08:00",
+  "os": "Windows 10 (Git Bash / MSYS2, NTFS)",
+  "node": "v22.22.2",
+  "npm": "10.9.7",
+  "browser": "未使用（本轮在第 6 节服务器用例后因 CMD-06 P1 失败提前收口，页面用例留待修复后新一轮）",
+  "viewport": "",
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8797,
+    "logDir": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\acc-logdir-main（独立临时目录，未污染正式实验数据）"
+  },
+  "llm": {
+    "available": true,
+    "provider": "LM Studio",
+    "model": "qwen/qwen3.5-9b",
+    "timeoutMs": 170000
+  },
+  "notes": "worktreeClean=false 仅因存在未跟踪的验收标准文档与验收包目录（docs/acceptance/），已跟踪文件零改动。SRV-05/06/09 使用独立端口 18797/18798/18799 与模拟上游。"
+}

@@ -1,0 +1,1 @@
+{"ok":false,"err":"log write failed: EISDIR: illegal operation on a directory, open 'C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\acc-logdir-ro\\log-fairy-acc-fail.json'"}
