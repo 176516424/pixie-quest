@@ -1,0 +1,259 @@
+{
+ "executedAt": "2026-10-30T07:33:04.230Z",
+ "base": "http://127.0.0.1:8797",
+ "upstream": "受控 mock 127.0.0.1:15990（OpenAI 兼容；LM Studio 不可用，与 report.md 口径一致）",
+ "driverVersion": "v27-rectified",
+ "results": [
+  {
+   "id": "UI-01",
+   "pass": true,
+   "actual": "地图可见；node0 可点击进入、其余章节锁定（符合空存档）；进入战斗后无脚本异常",
+   "metrics": {
+    "consoleErrors": 0,
+    "levels": 3
+   },
+   "notes": "空存档（localStorage 已清）→ 仅第一章解锁，符合预期",
+   "evidence": [
+    "screenshots/ui01-map.png",
+    "screenshots/ui01-battle.png"
+   ],
+   "consoleErrors": [],
+   "injections": ""
+  },
+  {
+   "id": "UI-02",
+   "pass": true,
+   "actual": "答对结算一次：怪兽 HP 80→55，命中回合伤害 25（18~26 单发区间，仅可能来自一次结算）；MP 每次尝试恰好 +12（封顶 50）；进入下一题且选项 4 个；勇者存活",
+   "metrics": {
+    "dmg": 25,
+    "monHpBefore": 80,
+    "monHpAfter": 55
+   },
+   "notes": "勇者攻击 10% 被闪开为真实机制，驱动以多次尝试排除运气",
+   "evidence": [
+    "screenshots/ui02-before.png",
+    "screenshots/ui02-after.png"
+   ],
+   "consoleErrors": [],
+   "injections": ""
+  },
+  {
+   "id": "UI-03",
+   "pass": true,
+   "actual": "答错仅记录一次：错题本 0→1 条，新记录题干/错误项(slepped)/正确项与实际一致；攻击落空未掉血（HP 100→100）；进入下一题",
+   "metrics": {
+    "wrongBefore": 0,
+    "wrongAfter": 1,
+    "hpBefore": 100,
+    "hpAfter": 100
+   },
+   "notes": "精灵未召唤（无 LLM 分支）",
+   "evidence": [
+    "screenshots/ui03-after-wrong.png"
+   ],
+   "consoleErrors": [],
+   "injections": ""
+  },
+  {
+   "id": "UI-04",
+   "pass": true,
+   "actual": "A: 1 次答题尝试（含 0 次真实闪避）每次 gainXp 恰好 1 次 +8（共 1 次/8），命中回合伤害 24 全在 18~26 单发区间——三连点仅结算一次；B: 换怪空档连点 8 次——canAnswer 守卫 8/8 拒绝，探针仅答题 +8 与击杀 +6 两笔（合计 14），无重复结算",
+   "metrics": {
+    "attempts": 1,
+    "hitDeltas": [
+     24
+    ],
+    "xpCallsA": 1,
+    "xpSumA": 8,
+    "xpCallsB": 2,
+    "xpSumB": 14,
+    "transitionClicks": 8,
+    "guardRejectedAll": true
+   },
+   "notes": "勇者攻击 10% 被闪开为真实机制（可能伤害 0），驱动以多次尝试+XP 探针排除运气；注入：monHP=3 触发击杀",
+   "evidence": [
+    "screenshots/ui04-transition.png"
+   ],
+   "consoleErrors": [],
+   "injections": ""
+  },
+  {
+   "id": "UI-05",
+   "pass": true,
+   "actual": "注入 HP=3 + 中毒后，2.9s 内真实计时结算死亡：HP=0、死亡浮层可见、gameOver=true；死后点击选项无效",
+   "metrics": {
+    "deathAfterMs": 2896,
+    "overlayTitle": "💀 你被 草原史莱姆 击倒了…",
+    "inputLocked": true
+   },
+   "notes": "注入值：heroHP=3, applyPoison(1,5)",
+   "evidence": [
+    "screenshots/ui05-poisoned.png",
+    "screenshots/ui05-dead.png"
+   ],
+   "consoleErrors": [],
+   "injections": ""
+  },
+  {
+   "id": "UI-06",
+   "pass": true,
+   "actual": "a) 中毒返回地图：3.5s 后 HP 仍 100、poison 清空；b) 冻结 60s 返回地图：frozenUntil 归 0；c) 续力中返回地图：4.5s 后 charging=null 且无残留冻结",
+   "metrics": {
+    "poisonHp": 100,
+    "poisonCleared": true,
+    "freezeSet": true,
+    "freezeCleared": true,
+    "reenterFrozen": false,
+    "chargeSet": true,
+    "chargeCleared": true,
+    "skillLandedAfterBack": false
+   },
+   "notes": "注入值：applyPoison(9,3)、doFreeze(60)、startCharge(freeze)",
+   "evidence": [
+    "screenshots/ui06-poison-cleared.png",
+    "screenshots/ui06-freeze-cleared.png",
+    "screenshots/ui06-charge-cleared.png"
+   ],
+   "consoleErrors": [],
+   "injections": ""
+  },
+  {
+   "id": "UI-07",
+   "pass": true,
+   "actual": "续力条 5%→90%；续力期计时走负至 -3（真实普攻 0 次）；大招落地 afterSkillMonTimer(-3) 归位，归位→首次普攻 2084ms（≥1900ms），无立即补刀",
+   "metrics": {
+    "pctStart": 5.025,
+    "pctEnd": 90.325,
+    "monTimerDuringCharge": -3,
+    "resetFrom": -3,
+    "graceGapMs": 2084
+   },
+   "notes": "注入值：startCharge(frost)+monTimer=1",
+   "evidence": [
+    "screenshots/ui07-charge-start.png",
+    "screenshots/ui07-charge-end.png",
+    "screenshots/ui07-after-ult.png"
+   ],
+   "consoleErrors": [],
+   "injections": ""
+  },
+  {
+   "id": "UI-08",
+   "pass": true,
+   "actual": "真实冰霜魔王（怪物名「冰霜魔王 👑BOSS」，非注入技能）：Boss 真实计时轮转后蓄力，精灵事件含「Absolute Freeze」与打断指引、无 undefined。原文片段: DANGER! The enemy Frost Demon King (BOSS) is CHARGING the skill Absolute Freeze for 4 quic…",
+   "metrics": {
+    "monster": "冰霜魔王 👑BOSS",
+    "chargeEvents": 1,
+    "containsFreeze": true,
+    "containsUndefined": false
+   },
+   "notes": "注入仅限：startLevel(2)+monsterIdx=2（直达第三章 Boss）、monTimer=1 加速轮转、heroHP=100 防意外死亡；蓄力/事件/文案全走真实逻辑",
+   "evidence": [
+    "screenshots/ui08-frost-king.png",
+    "screenshots/ui08-frost-king-charge.png",
+    "sessions/ui08-frost-king-events.json"
+   ],
+   "consoleErrors": [],
+   "injections": ""
+  },
+  {
+   "id": "UI-09",
+   "pass": true,
+   "actual": "错题 1 条后回地图点「错题本」：弹窗真实可见（display=flex、尺寸 1258×702、无祖先隐藏、中心点 elementFromPoint 可命中=true，面板同样可命中），计数「共 1 题」含错误项「gived」；关闭后 display=none 真实消失",
+   "metrics": {
+    "display": "flex",
+    "w": 1258,
+    "h": 702,
+    "ancestorHidden": null,
+    "clickable": true,
+    "panelClickable": true,
+    "count": "共 1 题",
+    "closedDisplay": "none"
+   },
+   "notes": "整改：断言升级为 getComputedStyle+祖先链+边界面积+elementFromPoint，不再只查 .show 类；修复弹窗父容器 display:none 后本用例才可能通过",
+   "evidence": [
+    "screenshots/ui09-wrongbook.png"
+   ],
+   "consoleErrors": [],
+   "injections": ""
+  },
+  {
+   "id": "UI-10",
+   "pass": true,
+   "actual": "精灵日志 1 条：弹窗真实可见（display=flex、尺寸 1258×702、无祖先隐藏、中心点可命中=true），计数「（1 条）」、条目 1、心情统计非空；关闭后 display=none 真实消失",
+   "metrics": {
+    "total": 1,
+    "display": "flex",
+    "w": 1258,
+    "h": 702,
+    "ancestorHidden": null,
+    "clickable": true,
+    "panelClickable": true,
+    "items": 1,
+    "closedDisplay": "none"
+   },
+   "notes": "整改：真实可见性断言（同 UI-09）",
+   "evidence": [
+    "screenshots/ui10-fairylog.png"
+   ],
+   "consoleErrors": [],
+   "injections": ""
+  },
+  {
+   "id": "UI-11",
+   "pass": true,
+   "actual": "旧题事件发出后立刻答对切到新题，1.2s 后 mock 响应返回：日志 quiz 字段仍为旧题；该条台词含打码 🚫 且不含旧题答案原文「went」",
+   "metrics": {
+    "logQuizIsOld": true,
+    "masked": true,
+    "leak": false,
+    "qChanged": true,
+    "capturedRequests": 2
+   },
+   "notes": "注入：window.fetch mock（延迟 1.2s）",
+   "evidence": [
+    "screenshots/ui11-snapshot-masked.png",
+    "sessions/ui11-captured-request.json"
+   ],
+   "consoleErrors": [],
+   "injections": ""
+  },
+  {
+   "id": "UI-12",
+   "pass": true,
+   "actual": "模型文本含 <img onerror> 与 <script>：气泡与精灵日志均按纯文本显示，未创建元素、未执行（__pwned 空）；日志弹窗真实可见",
+   "metrics": {
+    "bubbleImgElement": false,
+    "bubbleScriptElement": false,
+    "scriptExecuted": false,
+    "onerrorExecuted": false,
+    "logImgElement": false,
+    "logVisible": true
+   },
+   "notes": "注入：window.fetch mock 返回带 HTML 的受控文本",
+   "evidence": [
+    "screenshots/ui12-bubble-safe.png",
+    "screenshots/ui12-fairylog-safe.png"
+   ],
+   "consoleErrors": [],
+   "injections": ""
+  },
+  {
+   "id": "UI-13",
+   "pass": true,
+   "actual": "未召唤精灵（LLM 上游=受控 mock 127.0.0.1:15990，本机 LM Studio 不可用）：答题对/错各一次、返回地图、错题本弹窗真实可见（display=flex、尺寸 1258×702、可点击=true）并可关闭，全程无未捕获异常",
+   "metrics": {
+    "consoleErrors": 0,
+    "wrongbookVisible": true,
+    "wrongbookCount": "共 1 题",
+    "closedDisplay": "none"
+   },
+   "notes": "环境口径（与 report.md 一致）：本次全部使用受控 mock 上游，非 LM Studio；真实模型表现未验收",
+   "evidence": [
+    "screenshots/ui13-no-llm-flow.png"
+   ],
+   "consoleErrors": [],
+   "injections": ""
+  }
+ ]
+}

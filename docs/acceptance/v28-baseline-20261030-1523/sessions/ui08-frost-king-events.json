@@ -1,0 +1,38 @@
+[
+ {
+  "t": 1793345564182,
+  "model": "qwen/qwen3.5-9b",
+  "sysVer": 2,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "happy",
+  "text": "Read the sentence first. What does the blank need here?",
+  "quiz": "\"That was a good idea, ___?\" 反意部分应填？"
+ },
+ {
+  "t": 1793345565636,
+  "model": "qwen/qwen3.5-9b",
+  "sysVer": 2,
+  "ev": "The monster swung at your boy but he DODGED it completely! Nothing happened! Show your motherly relief and celebrate his agility!",
+  "mood": "worried",
+  "text": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "quiz": "\"That was a good idea, ___?\" 反意部分应填？"
+ },
+ {
+  "t": 1793345566659,
+  "model": "qwen/qwen3.5-9b",
+  "sysVer": 2,
+  "ev": "The enemy Frost Demon King (BOSS) just ATTACKED your boy for -22 HP (now 100/100).",
+  "mood": "worried",
+  "text": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "quiz": "\"That was a good idea, ___?\" 反意部分应填？"
+ },
+ {
+  "t": 1793345567020,
+  "model": "qwen/qwen3.5-9b",
+  "sysVer": 2,
+  "ev": "DANGER! The enemy Frost Demon King (BOSS) is CHARGING the skill Absolute Freeze for 4 quick seconds! Your boy can INTERRUPT it by answering correctly and striking RIGHT NOW! Warn him to hurry!",
+  "mood": "panic",
+  "text": "Watch out! He is charging a skill — get ready to dodge!",
+  "quiz": "\"That was a good idea, ___?\" 反意部分应填？"
+ }
+]
