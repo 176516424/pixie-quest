@@ -131,7 +131,12 @@
   #qdiff{font-size:10px; padding:2px 8px; border:2px solid var(--outline); margin-right:6px;}
   .d1{background:#2e8f3c;} .d2{background:#c96f2c;} .d3{background:#a82e3a;}
   #qsrc{font-size:10px; color:#9fb4d8;}
-  #question{font-size:18px; color:#fff; text-shadow:2px 2px 0 var(--outline); margin-bottom:12px;}
+  #question{font-size:18px; color:#fff; text-shadow:2px 2px 0 var(--outline); margin-bottom:8px;}
+  /* v27 分级提示条：统一显示接口（🧚 LLM / 📘 静态），文本一律 textContent 写入 */
+  #hintBar{display:none; margin:0 0 8px; padding:6px 10px; text-align:left;
+    font-size:13px; line-height:1.5; color:#eaf6ff; background:rgba(44,232,245,.10);
+    border:2px dashed #2ce8f5; border-radius:6px;}
+  #hintBar .hsrc{opacity:.75; margin-right:6px; font-size:11px;}
   #opts{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
   .opt{
     padding:9px 6px; font-size:14px; font-family:inherit; font-weight:bold; color:#fff;
@@ -372,6 +377,7 @@
     </div>
     <div id="frozenLab"></div>
     <div id="question">……</div>
+    <div id="hintBar"><span class="hsrc"></span><span class="htext"></span></div>
     <div id="opts"></div>
   </div>
 
@@ -424,6 +430,7 @@
 
 <script src="nce-shared.js"></script>
 <script src="src/game-core.js"></script>
+<script src="src/hint-engine.js"></script>
 <script>
 /* 前后端分离守卫：本页面必须由游戏服务器(:8797)提供，直开 file:// 无 LLM 后端 */
 if(location.protocol==='file:'){
@@ -1104,6 +1111,8 @@ function nextQuestion(){
     box.appendChild(b);
   });
   if(fairyOn) fairyStart();   /* 🧚 出题即介入：实时渐进式英语提示 */
+  /* v27：新题重置作答进度与提示条 */
+  qAttempt=0; hintClear(); hintStats.questions++;
 }
 async function answer(btn, correct){
   /* 状态机口径：map → battle → charging/transition → gameOver。
@@ -1121,9 +1130,28 @@ async function answer(btn, correct){
   }else{
     recordWrong(curQ, btn.textContent);
     await heroMiss();
-    if(fairyOn && !gameOver && monHP>0){
-      /* 🧚 教学模式：跳下一级提示/定向重讲，勇者对同一题重试（选错的选项保持禁用） */
+    if(gameOver||monHP<=0){ /* 战斗已结束，直接走正常收尾 */ }
+    else if(EXP==='none'){
+      /* 无提示对照组：v26 原规则，答错直接下一题 */
+    }
+    else if(EXP==='static'){
+      /* 静态提示组：零 LLM。答错升级提示级别（L1→L2→L3），错误选项禁用，允许重试 */
       btn.disabled=true;
+      qAttempt++;
+      getHint(curQ, HINT_ENGINE.allowedHintLevel(qAttempt), btn.textContent).then(()=>{
+        if(gameOver||monHP<=0) return;
+        document.querySelectorAll('.opt').forEach(b=>{ if(!b.classList.contains('bad')) b.disabled=false; });
+      });
+      return;
+    }
+    else if(EXP==='llm'){
+      /* 🧚 LLM 提示组：无论精灵是否召唤成功，统一走 getHint——
+         LLM 在线给个性化提示，断链/超时自动降级静态（核心流程不依赖 LLM）。
+         精灵在线时并行触发妈妈陪伴重讲 */
+      btn.disabled=true;
+      qAttempt++;
+      if(fairyOn) getHint(curQ, HINT_ENGINE.allowedHintLevel(qAttempt), btn.textContent);
+      else await getHint(curQ, HINT_ENGINE.allowedHintLevel(qAttempt), btn.textContent);
       fairyWrong(btn.textContent).then(()=>{
         if(gameOver||monHP<=0) return;
         document.querySelectorAll('.opt').forEach(b=>{ if(!b.classList.contains('bad')) b.disabled=false; });
@@ -1176,6 +1204,7 @@ setInterval(()=>{
 function gotoMap(){
   stopFairy(); gameOver=true; hideOverlay();
   clearStatus(); stopCharge();   /* 回地图必须清干净毒/冻结/续力，别让旧战斗的定时器在后台留活口 */
+  hintClear();                   /* v27：旧题的提示条一并清掉 */
   $('gamescreen').style.display='none';
   $('mapscreen').style.display='flex';
   renderMap();
@@ -1431,6 +1460,105 @@ function fairyEvent(evDesc, hold){
   if(fairyOn&&!gameOver) fairyThink(evDesc, BATTLE_CORE.quizSnapshot(curQ), hold);
 }
 
+/* ================================================================
+   📚 v27 分级提示（LLM 定位：可选的教学增强器）
+   - 协议：游戏侧决定 hintLevel（L1 知识点/L2 思考策略/L3 针对错误项），
+     LLM 只组织语言；输出必须是 {mood,hintLevel,teachingPoint,text} JSON，
+     校验不过 → 纯文本兜底 → 静态提示兜底，层层降级全落日志
+   - 统一接口：静态提示与 LLM 提示走同一个 getHint()，LLM 不可用自动回退
+   - 实验组 ?exp=none|static|llm（nohint=1 兼容映射 none；缺省 = v26 原行为）
+================================================================ */
+const EXP=(function(){
+  const m=location.search.match(/[?&]exp=(none|static|llm)/);
+  if(m) return m[1];
+  if(/[?&]nohint=1/.test(location.search)) return 'none';
+  return null;
+})();
+let qAttempt=0;                 /* 当前题作答进度：答错 +1，换题清零 */
+const hintCache={};             /* questionId|attempt|level → 提示对象（同键复用不重复请求） */
+let hintStats={llmCalls:0,cacheHits:0,staticUses:0,llmFallbacks:0,questions:0};
+
+function hintShow(text, src){
+  const bar=$('hintBar');
+  bar.querySelector('.hsrc').textContent = src==='llm' ? '🧚 LLM' : src==='cache' ? '🧚 LLM·缓存' : '📘 静态提示';
+  bar.querySelector('.htext').textContent = text;   /* 模型输出零 innerHTML */
+  bar.style.display='block';
+}
+function hintClear(){ const b=$('hintBar'); b.style.display='none'; }
+
+/* LLM 结构化提示请求：失败/超时/非法输出一律返回 null（上层降级静态），不挂起流程 */
+async function askFairyHint(q, level, wrongChoice){
+  const snap=BATTLE_CORE.quizSnapshot(q);
+  const maskOpts=BATTLE_CORE.buildMaskOpts(snap, NCE_SHARED.VERB_DB);
+  const ctx=HINT_ENGINE.buildHintContext(q, qAttempt, fairyWrongPicks);
+  const sys=HINT_ENGINE.HINT_SYS(level, ctx);
+  const ctl=new AbortController(); const to=setTimeout(()=>{ try{ctl.abort();}catch(e){} },25000);
+  const t0=Date.now();
+  try{
+    const res=await fetch('/llm',{method:'POST',headers:{'Content-Type':'application/json'},
+      signal:ctl.signal,
+      body:JSON.stringify({model:LLM_MODEL,temperature:0.6,max_tokens:150,messages:[
+        {role:'system',content:sys},
+        {role:'user',content:'Current quiz: '+snap.q+'\n'+snap.o.map((o,i)=>String.fromCharCode(65+i)+'. '+o).join('\n')+
+          (wrongChoice?'\nHe already tried and was wrong: "'+wrongChoice+'"':'')+
+          '\nWrite the level-'+level+' hint now. Reply with ONLY the JSON object.'},
+        {role:'assistant',content:'<think>\n\n</think>'}
+      ]})});
+    const d=await res.json();
+    const raw=((d.choices&&d.choices[0]&&d.choices[0].message)||{}).content||'';
+    /* 降级链 ①结构化 JSON → ②纯文本提取，两者都要求过校验 */
+    let v=null, structured=false;
+    const obj=HINT_ENGINE.parseLLMHintOutput(raw);
+    if(obj){ const r=HINT_ENGINE.validateHintOutput(obj,{moods:MOODS}); if(r.ok){ v=r.value; structured=true; } }
+    if(!v){
+      const txt=String(raw).replace(/^\s*\[([a-z]+)\]\s*/i,'').trim();
+      if(txt){ const r=HINT_ENGINE.validateHintOutput({mood:'worried',hintLevel:level,teachingPoint:HINT_ENGINE.HINT_LEVELS[level]||'hint',text:txt},{moods:MOODS}); if(r.ok){ v=r.value; } }
+    }
+    if(!v) return null;
+    v.text=maskLeaks(v.text, maskOpts).replace(/^["']|["']$/g,'').slice(0,220);
+    if(!v.text) return null;
+    v.mood=MOODS[v.mood]?v.mood:'worried';
+    v.hintSource=structured?'llm':'llm-plaintext';
+    v.sec=(Date.now()-t0)/1000;
+    logFairy('HINT L'+level+(wrongChoice?' (after wrong pick)':''), v.mood, v.text, snap?snap.q:'');
+    return v;
+  }catch(e){
+    return null;
+  }finally{ clearTimeout(to); }
+}
+
+/* 统一提示接口：LLM 优先（仅 exp=llm 且精灵在线），静态兜底，同键缓存复用 */
+async function getHint(q, level, wrongChoice){
+  if(!q||!HINT_ENGINE) return null;
+  const key=HINT_ENGINE.hintCacheKey(q.id, qAttempt, level);
+  const cached=hintCache[key];
+  if(cached){
+    hintStats.cacheHits++;
+    hintShow(cached.text, 'cache');
+    plogHint('cache', level, q, cached);
+    return cached;
+  }
+  if(EXP==='llm'&&fairyOn){
+    hintStats.llmCalls++;
+    const h=await askFairyHint(q, level, wrongChoice);
+    if(h){ hintCache[key]=h; hintShow(h.text,'llm'); plogHint(h.hintSource, level, q, h); return h; }
+    hintStats.llmFallbacks++;
+  }
+  const st=HINT_ENGINE.staticHint(q, level, wrongChoice);
+  if(st){ hintStats.staticUses++; hintShow(st.text,'static'); plogHint('static', level, q, st); }
+  return st;
+}
+/* 提示事件日志：autopilot 在线走 player 日志，否则并入精灵日志（都带 hintSource 便于审计） */
+function plogHint(source, level, q, h){
+  const rec={ev:'hint',exp:EXP,questionId:q.id,attempt:qAttempt,hintLevel:level,hintSource:source,
+             teachingPoint:(h&&h.teachingPoint)||'',text:((h&&h.text)||'').slice(0,160),
+             latency:(h&&h.sec)||0,t:Date.now(),model:LLM_MODEL,sysVer:3};
+  try{ const l=JSON.parse(localStorage.getItem('nce_player_log')||'[]');
+    l.push(rec); localStorage.setItem('nce_player_log',JSON.stringify(l.slice(-800))); }catch(e){}
+  console.log('PLAYER_LOG', JSON.stringify(rec));
+}
+
+
 /* 出题即介入 */
 async function fairyStart(){
   fairyWrongPicks=[];
@@ -1544,9 +1672,10 @@ renderMap();
 ================================================================ */
 (function(){
   if(!/[?&]ap=1/.test(location.search)) return;
-  /* nohint=1：无提示对照组。不召唤精灵、不等提示，测勇者「自身能力」；
-     与默认跑法（自身能力 × 提示增益）各跑一趟，才能拆出精灵提示的净贡献 */
-  const NOHINT=/[?&]nohint=1/.test(location.search);
+  /* v27 三组实验：?exp=none（无提示）/ static（静态提示，零 LLM）/ llm（LLM 提示）。
+     nohint=1 兼容映射 none（旧批次日志口径不变）；缺省 null = v26 原行为 */
+  const NOHINT=EXP==='none';
+  const STATIC_ONLY=EXP==='static';   /* 静态提示组：不召唤精灵、不调 LLM，勇者靠 hintBar 的静态提示 */
   if(window.__autopilot) return; window.__autopilot=true;
   try{ if(/[?&]fresh=1/.test(location.search)){ localStorage.removeItem('nce_fairy_log'); localStorage.removeItem('nce_player_log'); } }catch(e){}
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -1556,7 +1685,7 @@ renderMap();
   let lastClick=0;
   window.AP=AP;
   function plog(o){
-    o.t=Date.now(); o.model=LLM_MODEL; o.sysVer=2; o.nohint=NOHINT;   /* 换模型/改 prompt 做 A/B 时两批数据可分 */
+    o.t=Date.now(); o.model=LLM_MODEL; o.sysVer=3; o.nohint=NOHINT; o.exp=EXP||'default';   /* v27：sysVer 3 = 分级提示协议；换模型/改 prompt/换实验组做 A/B 时数据可分 */
     try{ const l=JSON.parse(localStorage.getItem('nce_player_log')||'[]');
       l.push(o); localStorage.setItem('nce_player_log',JSON.stringify(l.slice(-800))); }catch(e){}
     console.log('PLAYER_LOG',JSON.stringify(o));
@@ -1590,8 +1719,12 @@ renderMap();
   }
   async function upload(){
     try{
+      /* v27：附实验组与提示通道指标（每题请求数/缓存命中/静态降级），否则无法判断提速来自模型还是调度 */
+      const hs=hintStats; const qs=Math.max(1,hs.questions);
       const res=await fetch('/savelogs',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({tag:'v2',sid:AP.sid,nohint:NOHINT,model:LLM_MODEL,sysVer:2,fairy:fairyLogAll(),player:(function(){try{return JSON.parse(localStorage.getItem('nce_player_log')||'[]')}catch(e){return []}})()})});
+        body:JSON.stringify({tag:'v3',sid:AP.sid,nohint:NOHINT,exp:EXP||'default',model:LLM_MODEL,sysVer:3,
+          hintStats:{...hs,llmPerQuestion:+(hs.llmCalls/qs).toFixed(3),cacheHitRate:+(hs.cacheHits/Math.max(1,hs.llmCalls+hs.cacheHits+hs.staticUses)).toFixed(3),localFallbackRate:+(hs.llmFallbacks/Math.max(1,hs.llmCalls)).toFixed(3)},
+          fairy:fairyLogAll(),player:(function(){try{return JSON.parse(localStorage.getItem('nce_player_log')||'[]')}catch(e){return []}})()})});
       const d=await res.json(); AP.lastUpload=d;
     }catch(e){}
   }
@@ -1600,12 +1733,12 @@ renderMap();
 
   let lastQ='',lastMon='',healedBattle=false;
   async function loop(){
-    /* 先召唤小精灵（等健康检查通过）；nohint 对照组不召唤，保留勇者裸能力口径 */
-    if(!NOHINT){
+    /* 先召唤小精灵（等健康检查通过）；none/static 对照组不召唤——none 测裸能力，static 测纯静态提示 */
+    if(!NOHINT&&!STATIC_ONLY){
       $('btnFairy').click();
       for(let i=0;i<20&&!fairyOn;i++) await sleep(500);
     }
-    plog({ev:'autopilot-start',fairyOn:fairyOn,nohint:NOHINT});
+    plog({ev:'autopilot-start',fairyOn:fairyOn,nohint:NOHINT,exp:EXP||'default'});
     await sleep(800); startLevel(0);
     while(!AP.stop){
       try{
@@ -1632,7 +1765,7 @@ renderMap();
         /* 同题去重：点击后 6 秒内不重复答；超过 6 秒同题仍可答 = 上次点击被 busy 守卫吞掉，重试 */
         if(!isRetry&&q===lastQ&&Date.now()-lastClick<6000) continue;
         lastQ=q;
-        /* 像真孩子一样先听精灵妈妈把提示说完（nohint 对照组跳过，hint 留空） */
+        /* 像真孩子一样先听提示：llm 组等精灵说完气泡；static 组读 hintBar；none 组 hint 留空 */
         let hint='';
         if(fairyOn){
           let waited=0;
@@ -1641,6 +1774,8 @@ renderMap();
           }
           if(busy||monHP<=0) continue;
           hint=($('fairyBubble').textContent||'').replace(/\s*\(\d+\.\d+s\)\s*$/,'').trim();
+        }else if(STATIC_ONLY&&$('hintBar').style.display==='block'){
+          hint=($('hintBar').querySelector('.htext')||{}).textContent||'';
         }
         if(busy||monHP<=0) continue;
         /* 喝药两级：① 濒死急救 HP≤20——蓝剩多少都点（游戏支持急救换血），不受每场一次限制；

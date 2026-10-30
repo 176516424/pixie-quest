@@ -319,5 +319,5 @@ QUESTIONS.forEach(q=>{
   if(ex) q.explanation=ex;
 });
 
-return {LLM_MODEL, QUESTIONS, VERB_DB, FAIRY_SYS, maskLeaks};
+return {LLM_MODEL, QUESTIONS, VERB_DB, VERB_MAP, FAIRY_SYS, maskLeaks};
 });
