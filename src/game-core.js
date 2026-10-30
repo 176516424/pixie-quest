@@ -78,6 +78,11 @@ function quizSnapshot(q){
 function buildMaskOpts(snap, verbDB){
   const maskOpts=[];
   if(snap&&snap.correct) maskOpts.push(snap.correct);
+  if(snap&&Array.isArray(snap.o)){
+    /* v27 验收 DEF-002：全部选项原文入名单——模型幻觉/恶意引用任何干扰项都必须被掩码，
+       不能只掩正确项（正确项被掩≠安全，引用「goed」这类干扰项同样违反答前不引选项规则） */
+    snap.o.forEach(o=>maskOpts.push(String(o)));
+  }
   if(snap&&snap.q){
     const words=(snap.q+' '+(snap.o||[]).join(' ')).toLowerCase().match(/[a-z][a-z'-]{1,}/g)||[];
     (verbDB||[]).forEach(v=>{

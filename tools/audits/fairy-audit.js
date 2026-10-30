@@ -3,13 +3,8 @@
    重放 16 个典型战场事件，收集她的每句台词并做"教学相关性"分类 */
 const fs=require('fs'), path=require('path'), http=require('http');
 const {VERB_DB, maskLeaks, FAIRY_SYS:sys, LLM_MODEL}=require('../../nce-shared.js');
-
-function buildMaskOpts(quiz, optTexts){
-  let maskOpts=(quiz&&typeof quiz.a==='number')?[String(quiz.o[quiz.a])]:optTexts.slice();
-  const words=((quiz&&quiz.q)||''+' '+(quiz&&quiz.o||[]).join(' ')).toLowerCase().match(/[a-z][a-z'-]{1,}/g)||[];
-  VERB_DB.forEach(v=>{ if(words.indexOf(String(v[0]).toLowerCase())>=0) maskOpts.push(String(v[1]),String(v[2])); });
-  return maskOpts;
-}
+/* 与线上同构的打码名单：直接复用 game-core.buildMaskOps（v27 DEF-002 后含全部选项原文） */
+const buildMaskOpts=require('../../src/game-core.js').buildMaskOpts;
 
 /* 2) 战场速览生成（与页面 battlefield() 同构） */
 function digest(o){
@@ -57,7 +52,7 @@ function ask(o){
       {role:'user',content:digest(o)},
       {role:'assistant',content:'<think>\n\n</think>'}
     ]});
-    const r=http.request({host:'127.0.0.1',port:1234,path:'/v1/chat/completions',method:'POST',
+    const r=http.request({host:'127.0.0.1',port:Number(process.env.LLM_PORT)||1234,path:'/v1/chat/completions',method:'POST',
       headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(body)}},prs=>{
       let b='';prs.on('data',c=>b+=c);prs.on('end',()=>{
         try{const d=JSON.parse(b);const m=d.choices[0].message;

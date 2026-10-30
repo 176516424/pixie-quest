@@ -1,0 +1,65 @@
+{
+ "generatedAt": "2026-10-30T01:47:10.064Z",
+ "seed": 20261030,
+ "questionCount": 60,
+ "studentModel": {
+  "base": {
+   "1": 0.7,
+   "2": 0.5,
+   "3": 0.35
+  },
+  "boostByAttempt": [
+   0.15,
+   0.3,
+   0.45
+  ],
+  "note": "作答概率=hash(qid|attempt)映射，与组别无关；增益为模拟参数"
+ },
+ "groups": [
+  {
+   "exp": "none",
+   "sampleCount": 60,
+   "firstCorrectRate": 45,
+   "retriedCount": 0,
+   "retrySolvedRate": null,
+   "avgAttemptsPerQuestion": 1,
+   "hintStats": {
+    "llmCalls": 0,
+    "cacheHits": 0,
+    "staticUses": 0,
+    "llmFallbacks": 0,
+    "questions": 121
+   }
+  },
+  {
+   "exp": "static",
+   "sampleCount": 60,
+   "firstCorrectRate": 45,
+   "retriedCount": 33,
+   "retrySolvedRate": 100,
+   "avgAttemptsPerQuestion": 2.133,
+   "hintStats": {
+    "llmCalls": 0,
+    "cacheHits": 0,
+    "staticUses": 68,
+    "llmFallbacks": 0,
+    "questions": 121
+   }
+  },
+  {
+   "exp": "llm",
+   "sampleCount": 60,
+   "firstCorrectRate": 45,
+   "retriedCount": 33,
+   "retrySolvedRate": 100,
+   "avgAttemptsPerQuestion": 2.133,
+   "hintStats": {
+    "llmCalls": 68,
+    "cacheHits": 0,
+    "staticUses": 0,
+    "llmFallbacks": 0,
+    "questions": 121
+   }
+  }
+ ]
+}

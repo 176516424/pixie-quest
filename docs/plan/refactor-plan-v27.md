@@ -110,3 +110,14 @@ L4 答后解析     —— 作答结束后才允许完整答案和规则（第 2
   - HINT-07C LLM 上游关闭：hintBar 自动降级 📘 静态提示，重试可用，无崩溃（核心流程不依赖 LLM）
   - HINT-07D exp=none：答错直接下一题，无提示条（v26 原行为保持）
 - 实测中发现并修复：EXP=llm 但精灵未召唤时答错掉出全部分支 → answer 分支改为按 EXP==='llm' 判定，无论精灵在线与否统一走 getHint（在线 LLM、离线静态）
+
+## 正式验收（2026-10-30，验收包 docs/acceptance/v27-acceptance-20261030-085608/）
+
+- **结论：通过**——25 用例 PASS（CMD 4 + SRV 3 + UI 13 + LLM 1 + EXP 4），0 FAIL / 0 BLOCKED / P0-P1 未关闭缺陷 0
+- 自动化：npm test 36/36（exit 0）、check 22 段、audit 六项 0、精灵审计 16/16 应答泄题 0 [mock]
+- LLM 专项（120 样本，mock 上游）：答前泄题 0、非法输出/不可用降级率 100%、最终输出合规率 100%、匹配率 100%、事实准确率 100%、对抗打码 100%、p50=483ms/p95=703ms
+- 三组实验（同种子+固定 60 题逐 qid 零分叉）：none 首答 45% 无重试；static/llm 首答 45%、33 次重试全解决；llm 组 llmCallsPerQuestion=1.13、cacheHit=0、fallback=0 [mock]
+- 核心功能回归：v26 UI 驱动 13/13 PASS（v27 代码复跑）
+- 验收中修复：DEF-001（getHint 残留 fairyOn 条件，llm 组 LLM 永不调用）；DEF-002（buildMaskOpts 不含干扰项，对抗测试暴露）——均附单测/复验证据
+- 口径声明：LM Studio 不可用，LLM 指标为受控 mock（验证管线行为）；教学效果为模拟学生模型（参数公开），真人实验与真实模型复核列后续
+- 详细数据：验收包 report.md / results.json / environment.json / sessions/hint-metrics.json / experiments/

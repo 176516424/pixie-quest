@@ -118,11 +118,13 @@ test('quizSnapshot：非法输入返回 null', ()=>{
   assert.strictEqual(C.quizSnapshot(null),null);
   assert.strictEqual(C.quizSnapshot({q:'x',o:['a'],a:'0'}),null);
 });
-test('buildMaskOpts：正确项 + 题干动词全变形进入名单', ()=>{
+test('buildMaskOpts：正确项 + 全部选项原文 + 题干动词全变形进入名单（DEF-002 修复）', ()=>{
   const snap={q:'buy — ___ · bought 属于哪种不规则变形？',o:['ABB','AAA','ABC','ABA'],correct:'ABB（过去式=过去分词）'};
   const opts=C.buildMaskOpts(snap,[['buy','bought','bought','ABB'],['go','went','gone','ABC']]);
   assert.ok(opts.includes('ABB（过去式=过去分词）'));
   assert.ok(opts.includes('bought'));
+  /* DEF-002：每个干扰项都必须在名单里——模型引用任何选项原文都要被掩码 */
+  snap.o.forEach(o=>assert.ok(opts.includes(o),'干扰项 '+o+' 应入名单'));
   assert.ok(!opts.includes('went'),'go 不在题干里，不应进入名单');
 });
 test('buildMaskOpts：空快照返回空名单（兜底不炸）', ()=>{

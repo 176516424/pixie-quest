@@ -1,0 +1,20 @@
+[
+ {
+  "t": 1793326050710,
+  "model": "qwen/qwen3.5-9b",
+  "sysVer": 2,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "happy",
+  "text": "Read the sentence first. What does the blank need here?",
+  "quiz": "swim 的过去式是？"
+ },
+ {
+  "t": 1793326051049,
+  "model": "qwen/qwen3.5-9b",
+  "sysVer": 2,
+  "ev": "DANGER! The enemy Grass Slime is CHARGING the skill Absolute Freeze for 4 quick seconds! Your boy can INTERRUPT it by answering correctly and striking RIGHT NOW! Warn him to hurry!",
+  "mood": "panic",
+  "text": "Watch out! He is charging a skill — get ready to dodge!",
+  "quiz": "swim 的过去式是？"
+ }
+]

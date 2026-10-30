@@ -1,0 +1,837 @@
+{
+ "exp": "none",
+ "records": [
+  {
+   "qid": "q4uwq8y",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qhd1i76",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "ABC（三形都不同）",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1mxf959",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q17ox1m6",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qqmj8lk",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "特殊疑问句",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qk0i249",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "距离",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q167z9dn",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1t1fbic",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qry0mgi",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "wear — wore — weared",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1igt7lx",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "告别",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1w8zcfg",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "ABB",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q5ycl5w",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "ABA",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q285ohc",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qbk3s9o",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "hared",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q2gkslh",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q5fa1er",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qnbdz4l",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "falling",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1beph7r",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "反意疑问句",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qzdx2a8",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "kepped",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qvu3pj4",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "threw",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1qiljdx",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "paying",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1u322dt",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1lz7z8a",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q17yvusp",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "isn't it",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q15upxlw",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q190hhza",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q19lt7kg",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "does she",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qnp8mro",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1285mt",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qw2xh0l",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "are you",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qga4ry",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qxq56kc",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "ABC（三形都不同）",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1mip8bq",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "时间",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1sxqm8v",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "你确定吗？",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1kl1feo",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "ABA（原形=过去分词）",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qzzgolx",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "问候寒暄",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q5529gi",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "询问天气",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q19803qn",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "ABA（原形=过去分词）",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1il8ioi",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "AAA（三形同形）",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1g5bt0b",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qpy0j43",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qi3xids",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "AAA（三形同形）",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qihmavi",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1suix58",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "AAA（三形同形）",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qak7sho",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "began",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qn7gk17",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qk3t5io",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1jy2w54",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qplqr0x",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "forgotten",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qo3ysc6",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1tr7fm4",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "一般疑问句",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q17qx3oe",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qufrqa5",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "ABA（原形=过去分词）",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1r5qg68",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "都询问价格",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1pap0vb",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qh8mr9y",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q3dbsn1",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "地点",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1hqcplc",
+   "d": 1,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "q1p37kr1",
+   "d": 2,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": true,
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  },
+  {
+   "qid": "qudojh1",
+   "d": 3,
+   "attempts": [
+    {
+     "n": 1,
+     "correct": false,
+     "picked": "ABA（原形=过去分词）",
+     "accepted": true
+    }
+   ],
+   "hints": [],
+   "questionSwitched": false
+  }
+ ],
+ "hintStats": {
+  "llmCalls": 0,
+  "cacheHits": 0,
+  "staticUses": 0,
+  "llmFallbacks": 0,
+  "questions": 121
+ },
+ "playerLogCount": 0,
+ "upload": {
+  "status": 200,
+  "body": {
+   "ok": true,
+   "sid": "v27acc-none-20261030",
+   "at": "2026-10-30T01-38-18",
+   "fairy": 0,
+   "player": 0
+  }
+ },
+ "elapsedMs": 115118
+}

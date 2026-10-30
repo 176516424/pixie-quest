@@ -1,0 +1,3403 @@
+{
+ "generatedAt": "2026-10-30T02:00:53.475Z",
+ "base": "http://127.0.0.1:8797",
+ "model": "qwen/qwen3.5-9b [mock 上游]",
+ "sampleCount": 120,
+ "levelsPerQuestion": 3,
+ "structuredOutputRate": 95,
+ "rawStructuredJsonRate": 95,
+ "finalOutputComplianceRate": 100,
+ "complianceNote": "验收口径＝「输出结构合规率≥99%，其余全部安全降级」：finalOutputComplianceRate 为经校验/降级链后最终呈现的合规提示占比（须 100%）；rawStructuredJsonRate 为模型原始结构化 JSON 占比（取决于模型，mock 配置为 88%，真实模型待复核）",
+ "invalidOutputCount": 6,
+ "invalidOutputFallbackRate": 100,
+ "llmUnavailableProbe": [
+  {
+   "httpStatus": 502,
+   "hasErrorBody": true,
+   "ms": 15
+  },
+  {
+   "httpStatus": 502,
+   "hasErrorBody": true,
+   "ms": 2
+  },
+  {
+   "httpStatus": 502,
+   "hasErrorBody": true,
+   "ms": 2
+  },
+  {
+   "httpStatus": 502,
+   "hasErrorBody": true,
+   "ms": 2
+  },
+  {
+   "httpStatus": 502,
+   "hasErrorBody": true,
+   "ms": 1
+  }
+ ],
+ "llmUnavailableFallbackRate": 100,
+ "preAnswerLeakDisplayCount": 0,
+ "preAnswerLeakRawCount": 0,
+ "optionQuoteDisplayCount": 0,
+ "questionMatchRate": 100,
+ "questionMatchDenominator": "仅计有效输出样本（无效输出无 teachingPoint，不计入匹配分母）",
+ "teachingFactAccuracy": 100,
+ "latencyP50Ms": 483,
+ "latencyP95Ms": 703,
+ "maskDefense": {
+  "cases": 4,
+  "answerLeaked": 0,
+  "optionQuoted": 0,
+  "maskDefenseRate": 100
+ },
+ "method": {
+  "leak": "answerLeak=整词命中正确答案/目标动词三形（验收口径，必须 0）；optionQuote=整词命中干扰项原文（DEF-002 修复后应全部被 maskLeaks 掩码）",
+  "fact": "规则判定：文本声称「过去式是 X / past tense of X is Y」而与正确答案不符计 1 处事实错误；全样本 rawHead 留档供人工复核",
+  "match": "teachingPoint 命中题目 knowledge 标签，或含 hint/pattern/verb 通配视为匹配",
+  "fallback": "invalidOutputFallbackRate = 模型输出非法（非结构化 JSON）的样本中，经纯文本兜底或静态兜底仍产出合规提示的比例"
+ },
+ "samples": [
+  {
+   "qid": "q4uwq8y",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 534,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q4uwq8y",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 485,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q4uwq8y",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 494,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qttdi2k",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 714,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qttdi2k",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 703,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qttdi2k",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 703,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1vopc7h",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 264,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "q1vopc7h",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 278,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "q1vopc7h",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 278,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "q167z9dn",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 266,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "q167z9dn",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 266,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "q167z9dn",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 279,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "q285ohc",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 547,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q285ohc",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 545,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q285ohc",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 547,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q18u6l1e",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 310,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q18u6l1e",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 311,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q18u6l1e",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 313,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1f9nhlk",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 279,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1f9nhlk",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 283,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1f9nhlk",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 280,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qzdx2a8",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 314,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qzdx2a8",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 309,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qzdx2a8",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 298,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qu52pnm",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 500,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "qu52pnm",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 512,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "qu52pnm",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 500,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "qg4js7z",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 624,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qg4js7z",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 622,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qg4js7z",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 625,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q15upxlw",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 466,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q15upxlw",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 469,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q15upxlw",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 467,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qseiba5",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 296,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "qseiba5",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 296,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "qseiba5",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 280,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "qe7j1nk",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 659,
+   "httpStatus": 200,
+   "rawInvalid": true,
+   "plainFallback": false,
+   "fallbackPath": "static",
+   "displayNonEmpty": true,
+   "teachingPoint": "",
+   "match": false,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": ""
+  },
+  {
+   "qid": "qe7j1nk",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 656,
+   "httpStatus": 200,
+   "rawInvalid": true,
+   "plainFallback": false,
+   "fallbackPath": "static",
+   "displayNonEmpty": true,
+   "teachingPoint": "",
+   "match": false,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": ""
+  },
+  {
+   "qid": "qe7j1nk",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 654,
+   "httpStatus": 200,
+   "rawInvalid": true,
+   "plainFallback": false,
+   "fallbackPath": "static",
+   "displayNonEmpty": true,
+   "teachingPoint": "",
+   "match": false,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": ""
+  },
+  {
+   "qid": "q1kwmfjl",
+   "d": 2,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 356,
+   "httpStatus": 200,
+   "rawInvalid": true,
+   "plainFallback": true,
+   "fallbackPath": "plaintext",
+   "displayNonEmpty": true,
+   "teachingPoint": "",
+   "match": false,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "Take it slow — read the sentence first, then decide what kind of word fits the blank. 📘"
+  },
+  {
+   "qid": "q1kwmfjl",
+   "d": 2,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 358,
+   "httpStatus": 200,
+   "rawInvalid": true,
+   "plainFallback": true,
+   "fallbackPath": "plaintext",
+   "displayNonEmpty": true,
+   "teachingPoint": "",
+   "match": false,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "Take it slow — read the sentence first, then decide what kind of word fits the blank. 📘"
+  },
+  {
+   "qid": "q1kwmfjl",
+   "d": 2,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 345,
+   "httpStatus": 200,
+   "rawInvalid": true,
+   "plainFallback": true,
+   "fallbackPath": "plaintext",
+   "displayNonEmpty": true,
+   "teachingPoint": "",
+   "match": false,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "Take it slow — read the sentence first, then decide what kind of word fits the blank. 📘"
+  },
+  {
+   "qid": "q4si8dc",
+   "d": 2,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 487,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q4si8dc",
+   "d": 2,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 484,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q4si8dc",
+   "d": 2,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 486,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1vpt704",
+   "d": 2,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 433,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1vpt704",
+   "d": 2,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 437,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1vpt704",
+   "d": 2,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 438,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1oy734n",
+   "d": 2,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 329,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1oy734n",
+   "d": 2,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 330,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1oy734n",
+   "d": 2,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 341,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qnbdz4l",
+   "d": 2,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 499,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qnbdz4l",
+   "d": 2,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 484,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qnbdz4l",
+   "d": 2,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 483,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "quh42vr",
+   "d": 2,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 406,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "quh42vr",
+   "d": 2,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 406,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "quh42vr",
+   "d": 2,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 409,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qvu3pj4",
+   "d": 2,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 623,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qvu3pj4",
+   "d": 2,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 622,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qvu3pj4",
+   "d": 2,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 625,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1cqjmj0",
+   "d": 3,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 576,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1cqjmj0",
+   "d": 3,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 576,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1cqjmj0",
+   "d": 3,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 579,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qmu6stn",
+   "d": 3,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 264,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qmu6stn",
+   "d": 3,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 264,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qmu6stn",
+   "d": 3,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 264,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qylvtz1",
+   "d": 3,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 265,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "qylvtz1",
+   "d": 3,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 265,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "qylvtz1",
+   "d": 3,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 263,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "q16ik5l4",
+   "d": 3,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 577,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q16ik5l4",
+   "d": 3,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 566,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q16ik5l4",
+   "d": 3,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 576,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1wrkshr",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 641,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "q1wrkshr",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 639,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "q1wrkshr",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 642,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "q1o9x5tr",
+   "d": 3,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 495,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "q1o9x5tr",
+   "d": 3,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 498,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "q1o9x5tr",
+   "d": 3,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past-participle"
+   ],
+   "ms": 496,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully"
+  },
+  {
+   "qid": "q1g5bt0b",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 688,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1g5bt0b",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 685,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q1g5bt0b",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 684,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qeqvp7p",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 264,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qeqvp7p",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 264,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qeqvp7p",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "past"
+   ],
+   "ms": 267,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qtx8b6q",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 327,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":1,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "qtx8b6q",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 328,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":2,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "qtx8b6q",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 327,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":3,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "qqmj8lk",
+   "d": 2,
+   "level": 1,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 671,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "qqmj8lk",
+   "d": 2,
+   "level": 2,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 671,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "qqmj8lk",
+   "d": 2,
+   "level": 3,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 672,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "q7t12zg",
+   "d": 2,
+   "level": 1,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 343,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":1,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "q7t12zg",
+   "d": 2,
+   "level": 2,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 346,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":2,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "q7t12zg",
+   "d": 2,
+   "level": 3,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 344,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":3,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "q5ycl5w",
+   "d": 3,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "pattern-family"
+   ],
+   "ms": 312,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q5ycl5w",
+   "d": 3,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "pattern-family"
+   ],
+   "ms": 312,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q5ycl5w",
+   "d": 3,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "pattern-family"
+   ],
+   "ms": 308,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qw2xh0l",
+   "d": 3,
+   "level": 1,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 310,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "qw2xh0l",
+   "d": 3,
+   "level": 2,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 313,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "qw2xh0l",
+   "d": 3,
+   "level": 3,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 309,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "qac4z2z",
+   "d": 1,
+   "level": 1,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 609,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":1,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the for"
+  },
+  {
+   "qid": "qac4z2z",
+   "d": 1,
+   "level": 2,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 608,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":2,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the for"
+  },
+  {
+   "qid": "qac4z2z",
+   "d": 1,
+   "level": 3,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 595,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"worried\",\"hintLevel\":3,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the for"
+  },
+  {
+   "qid": "qxfrrx5",
+   "d": 2,
+   "level": 1,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 608,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":1,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "qxfrrx5",
+   "d": 2,
+   "level": 2,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 595,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":2,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "qxfrrx5",
+   "d": 2,
+   "level": 3,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 610,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":3,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "qkjkwe0",
+   "d": 3,
+   "level": 1,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 295,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "qkjkwe0",
+   "d": 3,
+   "level": 2,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 294,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "qkjkwe0",
+   "d": 3,
+   "level": 3,
+   "knowledge": [
+    "question-pattern"
+   ],
+   "ms": 296,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "question-pattern",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"question-pattern\",\"text\":\"Think about the pattern here. Compare the forms"
+  },
+  {
+   "qid": "qolgk4q",
+   "d": 3,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "pattern-family"
+   ],
+   "ms": 702,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qolgk4q",
+   "d": 3,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "pattern-family"
+   ],
+   "ms": 698,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qolgk4q",
+   "d": 3,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "pattern-family"
+   ],
+   "ms": 702,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qy758j8",
+   "d": 2,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "pattern-family"
+   ],
+   "ms": 421,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qy758j8",
+   "d": 2,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "pattern-family"
+   ],
+   "ms": 421,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qy758j8",
+   "d": 2,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "pattern-family"
+   ],
+   "ms": 433,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"proud\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q3p69od",
+   "d": 2,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "pattern-family"
+   ],
+   "ms": 578,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q3p69od",
+   "d": 2,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "pattern-family"
+   ],
+   "ms": 590,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "q3p69od",
+   "d": 2,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "pattern-family"
+   ],
+   "ms": 592,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qwzf9ji",
+   "d": 2,
+   "level": 1,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "pattern-family"
+   ],
+   "ms": 718,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":1,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qwzf9ji",
+   "d": 2,
+   "level": 2,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "pattern-family"
+   ],
+   "ms": 733,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":2,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  },
+  {
+   "qid": "qwzf9ji",
+   "d": 2,
+   "level": 3,
+   "knowledge": [
+    "verb",
+    "irregular",
+    "pattern-family"
+   ],
+   "ms": 720,
+   "httpStatus": 200,
+   "rawInvalid": false,
+   "plainFallback": false,
+   "fallbackPath": "structured",
+   "displayNonEmpty": true,
+   "teachingPoint": "verb",
+   "match": true,
+   "rawLeak": {
+    "answer": [],
+    "option": []
+   },
+   "displayLeak": {
+    "answer": [],
+    "option": []
+   },
+   "factErr": [],
+   "rawHead": "{\"mood\":\"happy\",\"hintLevel\":3,\"teachingPoint\":\"verb\",\"text\":\"Think about the pattern here. Compare the forms carefully b"
+  }
+ ],
+ "maskDefenseCases": [
+  {
+   "raw": "The answer is went!",
+   "answerLeak": false,
+   "optionQuote": false
+  },
+  {
+   "raw": "Options are: went / goed / gone / goes",
+   "answerLeak": false,
+   "optionQuote": false
+  },
+  {
+   "raw": "Remember: go → went → gone",
+   "answerLeak": false,
+   "optionQuote": false
+  },
+  {
+   "raw": "He went with \"goed\" but actually went is right",
+   "answerLeak": false,
+   "optionQuote": false
+  }
+ ]
+}

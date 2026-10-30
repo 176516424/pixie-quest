@@ -1,0 +1,146 @@
+[
+ {
+  "name": "出题-动词",
+  "raw": "[thinking] Read the sentence first. What does the blank need here?",
+  "mood": "thinking",
+  "text": "Read the sentence first. What does the blank need here?",
+  "display": "Read the sentence first. What does the blank need here?",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "出题-反意疑问句",
+  "raw": "[thinking] Read the sentence first. What does the blank need here?",
+  "mood": "thinking",
+  "text": "Read the sentence first. What does the blank need here?",
+  "display": "Read the sentence first. What does the blank need here?",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "被打-轻伤",
+  "raw": "[worried] Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "mood": "worried",
+  "text": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "display": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "被打-重伤",
+  "raw": "[worried] Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "mood": "worried",
+  "text": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "display": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "被打-濒危",
+  "raw": "[panic] Your HP is low! Heal now, then focus on the question pattern.",
+  "mood": "panic",
+  "text": "Your HP is low! Heal now, then focus on the question pattern.",
+  "display": "Your HP is low! Heal now, then focus on the question pattern.",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "怪兽蓄力",
+  "raw": "[panic] Watch out! He is charging a skill — get ready to dodge!",
+  "mood": "panic",
+  "text": "Watch out! He is charging a skill — get ready to dodge!",
+  "display": "Watch out! He is charging a skill — get ready to dodge!",
+  "teach": false,
+  "leak": false
+ },
+ {
+  "name": "中毒",
+  "raw": "[worried] You are poisoned! Heal soon and review the verb pattern meanwhile.",
+  "mood": "worried",
+  "text": "You are poisoned! Heal soon and review the verb pattern meanwhile.",
+  "display": "You are poisoned! Heal soon and review the verb pattern meanwhile.",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "被冻结",
+  "raw": "[worried] Stay calm! The quiz is frozen — review the verb forms in your head.",
+  "mood": "worried",
+  "text": "Stay calm! The quiz is frozen — review the verb forms in your head.",
+  "display": "Stay calm! The quiz is frozen — review the verb forms in your head.",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "治疗成功",
+  "raw": "[worried] Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "mood": "worried",
+  "text": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "display": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "答对了",
+  "raw": "[proud] Great job! You remembered the verb form. Keep going!",
+  "mood": "proud",
+  "text": "Great job! You remembered the verb form. Keep going!",
+  "display": "Great job! You remembered the verb form. Keep going!",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "答错了",
+  "raw": "[sad] Good try! Look at the sentence again — think about which verb form fits.",
+  "mood": "sad",
+  "text": "Good try! Look at the sentence again — think about which verb form fits.",
+  "display": "Good try! Look at the sentence again — think about which verb form fits.",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "击杀小怪",
+  "raw": "[worried] Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "mood": "worried",
+  "text": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "display": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "击杀BOSS",
+  "raw": "[proud] You won! Amazing English thinking out there! 🎉",
+  "mood": "proud",
+  "text": "You won! Amazing English thinking out there! 🎉",
+  "display": "You won! Amazing English thinking out there! 🎉",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "心跳-安静",
+  "raw": "[worried] Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "mood": "worried",
+  "text": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "display": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "心跳-拖延",
+  "raw": "[worried] Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "mood": "worried",
+  "text": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "display": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "心跳-残血",
+  "raw": "[panic] Your HP is low! Heal now, then focus on the question pattern.",
+  "mood": "panic",
+  "text": "Your HP is low! Heal now, then focus on the question pattern.",
+  "display": "Your HP is low! Heal now, then focus on the question pattern.",
+  "teach": true,
+  "leak": false
+ }
+]
