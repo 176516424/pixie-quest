@@ -89,7 +89,7 @@
 ```text
 PASS 数：25    FAIL 数：0    BLOCKED 数：0
 P0/P1 未关闭缺陷数：0    验收结论：通过（整改复验后）
-对应 commit：6dc64ae（起点）→ 181141d（首轮修复+验收包）→ 本次整改提交（DEF-003 修复 + 整改驱动 + 本验收包更新）
+对应 commit：6dc64ae（起点）→ 181141d（首轮修复+验收包）→ 39c8658（本次整改：DEF-003 修复 + 整改驱动 + 本验收包更新）
 原始证据目录：docs/acceptance/v27-acceptance-20261030-085608/
   驱动：driver-ui-v27.js（整改版，含真实可见性断言）· 日志 commands/ui-driver-v27.log
   截图：screenshots/（22 张全新，ui09/ui10/ui13/ui08 SHA-256 已验证不同于 v26）
