@@ -1,0 +1,68 @@
+{
+ "executedAt": "2026-10-30T08:25:04.414Z",
+ "pass": 12,
+ "total": 12,
+ "results": [
+  {
+   "id": "T-01 模块加载",
+   "pass": true,
+   "actual": "TEACH_CORE 注入页面，诊断/复习/门禁接口可用"
+  },
+  {
+   "id": "T-02 C1 诊断入库",
+   "pass": true,
+   "actual": "错题条目 qid=q11i88si 类别「拼写混淆」(basis=affix-overgeneralization)；历史 first:false"
+  },
+  {
+   "id": "T-03 C3 答错结算 L4",
+   "pass": true,
+   "actual": "换题边界出「📖 结算讲解」：📖 set 的过去式是不规则变化 set。"
+  },
+  {
+   "id": "T-04 C3 换题清讲解",
+   "pass": true,
+   "actual": "新题出现后上一题讲解已清（hintClear）"
+  },
+  {
+   "id": "T-05 C2 学习者摘要",
+   "pass": true,
+   "actual": "weaknesses=[{\"qid\":\"q11i88si\",\"tag\":\"verb\",\"wrong\":1}]（最近仍错的题进弱点列表）"
+  },
+  {
+   "id": "T-06 static 提示与重试解锁",
+   "pass": true,
+   "actual": "答错后静态提示出现（L1 级）、未错选项重新可用=true"
+  },
+  {
+   "id": "T-07 C2/C3 重试+结算L4",
+   "pass": true,
+   "actual": "同题先错后对：first:miss→retry:ok；结算讲解「📖 go 的过去式是不规则变化 went。」"
+  },
+  {
+   "id": "T-08 答对移出错题本",
+   "pass": true,
+   "actual": "重试答对后该题已掌握移除（剩 0 条）"
+  },
+  {
+   "id": "T-09 C4 复习-答错",
+   "pass": true,
+   "actual": "复习答错：反馈出现、review:false 事件入库（含 L4 式讲解反馈）"
+  },
+  {
+   "id": "T-10 C4 复习-答对移除",
+   "pass": true,
+   "actual": "复习答对：✅ 反馈、错题本清空（0 条）、review:true 事件 1 条"
+  },
+  {
+   "id": "T-11 清空归零不串画像",
+   "pass": true,
+   "actual": "清空后历史 0 条、错题 0 条"
+  },
+  {
+   "id": "T-12 控制台错误",
+   "pass": true,
+   "actual": "全程 0 条未捕获异常"
+  }
+ ],
+ "consoleErrors": []
+}

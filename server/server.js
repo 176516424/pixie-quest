@@ -20,6 +20,7 @@ const HTML=path.join(ROOT,'pixel-battle-ui.html');
 const SHARED=path.join(ROOT,'nce-shared.js');
 const GAME_CORE=path.join(ROOT,'src','game-core.js');
 const HINT_ENGINE=path.join(ROOT,'src','hint-engine.js');
+const TEACHING=path.join(ROOT,'src','teaching.js');
 const PORT=parseInt(process.env.PORT||'8797',10);
 const HOST=process.env.HOST||'127.0.0.1';
 const LLM_HOST=process.env.LLM_HOST||'127.0.0.1';
@@ -76,6 +77,9 @@ http.createServer((req,res)=>{
   if(req.method==='GET'&&req.url==='/src/hint-engine.js'){
     serveFile(res, HINT_ENGINE, 'application/javascript; charset=utf-8'); return;
   }
+  if(req.method==='GET'&&req.url==='/src/teaching.js'){
+    serveFile(res, TEACHING, 'application/javascript; charset=utf-8'); return;
+  }
   if(req.method==='GET'&&req.url.startsWith('/llmhealth')){
     /* 健康检查：不只是「LM Studio 可达」，还要校验所需模型已在列表里。
        ?model=xxx 指定期望模型（子串匹配）；缺省用 LLM_MODEL_EXPECT（默认 qwen） */
@@ -101,8 +105,8 @@ http.createServer((req,res)=>{
       try{
         const d=JSON.parse(buf.toString('utf8'));
         const stamp=new Date().toISOString().replace(/[:.]/g,'-').slice(0,19);
-        /* v3 = v27 分级提示协议（tag 校验随版本扩展；stale 判定只针对更旧批次） */
-        if(d.tag!=='v2'&&d.tag!=='v3'){ /* 旧版自动驾驶（无判定修正）的数据，另存不覆盖正式文件 */
+        /* v4 = v28 教学闭环（错因诊断/L4/复习）；v3 = v27 分级提示（tag 校验随版本扩展；stale 判定只针对更旧批次） */
+        if(d.tag!=='v2'&&d.tag!=='v3'&&d.tag!=='v4'){ /* 旧版自动驾驶（无判定修正）的数据，另存不覆盖正式文件 */
           writeLog('log-stale.json',JSON.stringify(d,null,1));
           res.writeHead(200,{'Content-Type':'application/json'});
           res.end(JSON.stringify({ok:true,stale:true})); return;
@@ -110,7 +114,7 @@ http.createServer((req,res)=>{
         /* sid 只留安全字符，防止拼出路径穿越 */
         const sid=String(d.sid||stamp).replace(/[^A-Za-z0-9_-]/g,'').slice(0,32)||stamp;
         const meta={sid, at:stamp, nohint:!!d.nohint, exp:d.exp||null, model:d.model||null, sysVer:d.sysVer||null,
-                    hintStats:d.hintStats||null,
+                    hintStats:d.hintStats||null, teachStats:d.teachStats||null, diagStats:d.diagStats||null,
                     fairy:(d.fairy||[]).length, player:(d.player||[]).length};
         if(d.fairy) writeLog('log-fairy-'+sid+'.json',JSON.stringify(d.fairy,null,1));
         if(d.player) writeLog('log-player-'+sid+'.json',JSON.stringify(d.player,null,1));

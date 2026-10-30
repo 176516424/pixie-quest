@@ -416,6 +416,7 @@
   <div id="wbtitle">📖 错题本 <span id="wbcount" style="font-size:13px;color:#8a8aa8"></span></div>
   <div id="wblist"></div>
   <div id="wbbtns">
+    <button class="pbtn" id="wbReview">🔁 开始复习</button>
     <button class="pbtn" id="wbExport">⬇ 导出 Markdown 复习清单</button>
     <button class="pbtn" id="wbClear" style="background:#5a2333;">🗑 清空</button>
     <button class="pbtn" id="wbClose">关闭</button>
@@ -435,6 +436,7 @@
 <script src="nce-shared.js"></script>
 <script src="src/game-core.js"></script>
 <script src="src/hint-engine.js"></script>
+<script src="src/teaching.js"></script>
 <script>
 /* ?seed=N：固定全局随机种子（mulberry32）。三组对照实验（?exp=…）必须同种子同题目序列，
    否则「相同样本条件」不成立。种子只影响随机序列，不改变任何规则。 */
@@ -1096,6 +1098,8 @@ function monsterDefeated(){
 
 function heroDown(){
   gameOver=true;
+  if(curQ){ settledFor=curQ.id; }   /* 被击倒的题不再在重开时补讲解（未正常结算） */
+  qHadWrong=false;
   stopCharge();
   showOverlay('💀 你被 '+curMon().name+' 击倒了…',
     [{t:'重试本章',fn:()=>{hideOverlay();startLevel(curLevel);}},{t:'返回地图',fn:gotoMap}]);
@@ -1108,7 +1112,11 @@ function rebuildPool(diff){
   pool=QUESTIONS.map((q,i)=>({q,i})).filter(x=>x.q.d===diff);
   askedIdx=[];
 }
-function nextQuestion(){
+async function nextQuestion(){
+  /* C3 结算边界：上一题答错过 → 先出 L4 讲解（冻结怪兽计时保证公平），
+     再渲染新题。讲解在 hintClear 时被清掉 → 天然满足「换题不显示上一题讲解」 */
+  await settleAndMaybePause();
+  qHadWrong=false;
   if(askedIdx.length>=pool.length) askedIdx=[];
   let pick;
   do{ pick=pool[rnd(0,pool.length-1)]; }while(askedIdx.includes(pick.i)&&askedIdx.length<pool.length);
@@ -1139,13 +1147,16 @@ async function answer(btn, correct){
   document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
   btn.classList.add(correct?'ok':'bad');
   if(correct){
+    pushLearn(qAttempt>0?'retry':'first', true);          /* C2/C4：阶段分记（首答 or 提示后重试） */
     if(masterWrong(curQ)) dmgText(centerOf($('question')),'📖 已掌握','heal');
     heroMP=Math.min(50,heroMP+12+EQUIP_TIERS[equip.helm].mp);
     if(fairyOn) fairyEvent('Your boy answered CORRECTLY and struck the enemy! Be a proud happy mom — praise him warmly!');
     gainXp(8);
     await heroStrike(rnd(18,26)+EQUIP_TIERS[equip.weapon].atk, 'normal');
   }else{
-    recordWrong(curQ, btn.textContent);
+    pushLearn(qAttempt===0?'first':'retry', false);       /* C2/C4：错也分阶段记 */
+    qHadWrong=true;                                       /* 结算时据此出 L4 */
+    recordWrong(curQ, btn.textContent);                   /* C1：收录时同步错因诊断 */
     await heroMiss();
     if(gameOver||monHP<=0){ /* 战斗已结束，直接走正常收尾 */ }
     else if(EXP==='none'){
@@ -1220,6 +1231,9 @@ setInterval(()=>{
 ================================================================ */
 function gotoMap(){
   stopFairy(); gameOver=true; hideOverlay();
+  /* 本题随战斗中止：标记已结算但不触发 L4（换题/退出后不得显示上一题讲解） */
+  if(curQ){ settledFor=curQ.id; }
+  qHadWrong=false;
   clearStatus(); stopCharge();   /* 回地图必须清干净毒/冻结/续力，别让旧战斗的定时器在后台留活口 */
   hintClear();                   /* v27：旧题的提示条一并清掉 */
   $('gamescreen').style.display='none';
@@ -1267,11 +1281,17 @@ function loadWrong(){ try{ return JSON.parse(localStorage.getItem('nce_battle_wr
 function saveWrong(a){ try{ localStorage.setItem('nce_battle_wrong', JSON.stringify(a)); }catch(e){} }
 function recordWrong(q, wrongOpt){
   if(!q) return;
+  /* C1 错因诊断：确定性规则链，受限闭集，证据不足归"未知" */
+  const diag=TEACH_CORE?TEACH_CORE.diagnoseError(q, wrongOpt):null;
   const list=loadWrong();
   const hit=list.find(x=>x.q===q.q);
-  if(hit){ hit.wrong=wrongOpt; hit.count=(hit.count||1)+1; hit.t=Date.now(); }
-  else list.push({q:q.q, s:q.s, ok:q.o[q.a], wrong:wrongOpt, count:1, t:Date.now()});
+  if(hit){ hit.wrong=wrongOpt; hit.count=(hit.count||1)+1; hit.t=Date.now();
+    if(diag){ hit.cat=diag.category; hit.catBasis=diag.basis; } }
+  else list.push({q:q.q, s:q.s, ok:q.o[q.a], wrong:wrongOpt, count:1, t:Date.now(),
+    qid:q.id||null, cat:diag?diag.category:null, catBasis:diag?diag.basis:null,
+    knowledge:Array.isArray(q.knowledge)?q.knowledge.slice():[]});
   saveWrong(list);
+  if(diag){ diagStats.total++; diagStats.byCat[diag.category]=(diagStats.byCat[diag.category]||0)+1; }
 }
 function masterWrong(q){
   if(!q) return false;
@@ -1290,10 +1310,19 @@ function renderWrongBook(){
   if(!list.length){ box.innerHTML='<div class="wbempty">还没有错题，继续保持！</div>'; return; }
   list.slice().sort((a,b)=>b.t-a.t).forEach(e=>{
     const d=new Date(e.t), pad=n=>String(n).padStart(2,'0');
+    const canReview=e.qid&&findQById(e.qid);
     const div=document.createElement('div'); div.className='wbitem';
     div.innerHTML='<div class="wbq">'+e.q+'</div>'+
       '<div>正确答案：<span class="wbok">'+e.ok+'</span>　你答的：<span class="wbwrong">'+e.wrong+'</span>'+(e.count>1?'　<span style="color:#ffd93b">✖'+e.count+' 次</span>':'')+'</div>'+
+      (e.cat?'<div class="wbsrc">🏷 错因：<span style="color:#8fd0ff">'+e.cat+'</span></div>':'')+
       '<div class="wbsrc">出处：'+e.s+' · '+d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'</div>';
+    if(canReview){
+      const rb=document.createElement('button'); rb.className='pbtn';
+      rb.style.cssText='font-size:12px;padding:5px 10px;margin-top:6px;';
+      rb.textContent='🔁 复习这道';
+      rb.onclick=()=>{ reviewSession={queue:[{qid:e.qid,q:e.q,s:e.s,count:e.count||1,days:0,knowledge:e.knowledge||[],t:e.t}],idx:0,lock:false}; renderReviewItem(); };
+      div.appendChild(rb);
+    }
     box.appendChild(div);
   });
 }
@@ -1318,9 +1347,12 @@ function exportWrongBook(){
   setTimeout(()=>URL.revokeObjectURL(a.href),2000);
 }
 $('btnWrong').onclick=openWrongBook;
-$('wbClose').onclick=()=>$('wbwrap').classList.remove('show');
+$('wbClose').onclick=()=>{ reviewSession=null; $('wbwrap').classList.remove('show'); };
 $('wbExport').onclick=exportWrongBook;
-$('wbClear').onclick=()=>{ saveWrong([]); renderWrongBook(); };
+/* 清空 = 全新学习者：错题本、事件历史、三阶段统计一并归零（旧画像绝不串入） */
+$('wbClear').onclick=()=>{ saveWrong([]); saveHist([]); reviewSession=null;
+  teachStats={first:{n:0,ok:0},retry:{n:0,ok:0},review:{n:0,ok:0}}; renderWrongBook(); };
+$('wbReview').onclick=startReview;
 
 /* ================================================================
    初始化
@@ -1497,7 +1529,8 @@ let hintStats={llmCalls:0,cacheHits:0,staticUses:0,llmFallbacks:0,questions:0};
 
 function hintShow(text, src){
   const bar=$('hintBar');
-  bar.querySelector('.hsrc').textContent = src==='llm' ? '🧚 LLM' : src==='cache' ? '🧚 LLM·缓存' : '📘 静态提示';
+  bar.querySelector('.hsrc').textContent = src==='llm' ? '🧚 LLM' : src==='cache' ? '🧚 LLM·缓存'
+    : src==='post' ? '📖 结算讲解' : '📘 静态提示';
   bar.querySelector('.htext').textContent = text;   /* 模型输出零 innerHTML */
   bar.style.display='block';
 }
@@ -1507,7 +1540,10 @@ function hintClear(){ const b=$('hintBar'); b.style.display='none'; }
 async function askFairyHint(q, level, wrongChoice){
   const snap=BATTLE_CORE.quizSnapshot(q);
   const maskOpts=BATTLE_CORE.buildMaskOpts(snap, NCE_SHARED.VERB_DB);
-  const ctx=HINT_ENGINE.buildHintContext(q, qAttempt, fairyWrongPicks);
+  /* C2 学习者摘要：最小结构化上下文进 prompt（可重算历史 → 摘要 → 协议字段） */
+  const learner=TEACH_CORE?TEACH_CORE.buildLearnerSummary(loadHist()):null;
+  const ctx=HINT_ENGINE.buildHintContext(q, qAttempt, fairyWrongPicks,
+    {recentWeaknesses:learner?learner.recentWeaknesses:[],masteredRecently:learner?learner.masteredRecently:[]});
   const sys=HINT_ENGINE.HINT_SYS(level, ctx);
   const ctl=new AbortController(); const to=setTimeout(()=>{ try{ctl.abort();}catch(e){} },25000);
   const t0=Date.now();
@@ -1575,6 +1611,152 @@ function plogHint(source, level, q, h){
     l.push(rec); localStorage.setItem('nce_player_log',JSON.stringify(l.slice(-800))); }catch(e){}
   console.log('PLAYER_LOG', JSON.stringify(rec));
 }
+
+/* ================================================================
+   🎓 V28 批次 C 教学闭环（C1 错因诊断 / C2 学习者摘要 / C3 L4 / C4 复习）
+   - 纯逻辑全部在 src/teaching.js（TEACH_CORE），Node 测试与页面共用
+   - 事件历史 localStorage 'nce_battle_hist'：一切画像可重算，清空即归零
+   - L4 铁律：作答结算前只允许 L1~L3；结算后才展示讲解与正确答案
+================================================================ */
+const TEACH_CORE=window.TEACH_CORE||null;
+let qHadWrong=false;            /* 当前题是否答错过（决定结算时是否出 L4） */
+let settledFor=null;            /* 已结算的题 id（防重复结算） */
+let l4ShownFor=null;            /* 已展示 L4 讲解的题 id（换题守卫） */
+let teachStats={first:{n:0,ok:0},retry:{n:0,ok:0},review:{n:0,ok:0}};  /* 三阶段分开统计 */
+let diagStats={total:0,byCat:{}};                                      /* 错因分布（会话内） */
+
+function loadHist(){ try{ return JSON.parse(localStorage.getItem('nce_battle_hist')||'[]'); }catch(e){ return []; } }
+function saveHist(a){ try{ localStorage.setItem('nce_battle_hist', JSON.stringify(a)); }catch(e){} }
+/* 学习事件上报：首答 / 提示后重试 / 延迟复习 三阶段绝不合并 */
+function pushLearn(phase, ok){
+  if(!curQ||!TEACH_CORE) return;
+  saveHist(TEACH_CORE.pushLearnerEvent(loadHist(),
+    {qid:curQ.id,phase:phase,ok:ok,knowledge:Array.isArray(curQ.knowledge)?curQ.knowledge.slice():[],t:Date.now()}));
+  const b=teachStats[phase]; if(b){ b.n++; if(ok) b.ok++; }
+}
+/* 教学事件日志（与 plogHint 同通道，sysVer 4） */
+function plogTeach(kind, q, extra){
+  const rec=Object.assign({ev:kind,exp:EXP,questionId:q?String(q.id||''):'',
+    t:Date.now(),model:LLM_MODEL,sysVer:4}, extra||{});
+  try{ const l=JSON.parse(localStorage.getItem('nce_player_log')||'[]');
+    l.push(rec); localStorage.setItem('nce_player_log',JSON.stringify(l.slice(-800))); }catch(e){}
+  console.log('PLAYER_LOG', JSON.stringify(rec));
+}
+/* C3 结算：换题边界统一走这里。本题答错过才出 L4（题库审计讲解优先，
+   LLM 仅受控转述补充）；出讲解期间冻结怪兽计时（教学阅读时间公平性）。
+   返回是否发生了讲解暂停（供调用方 await） */
+async function settleAndMaybePause(){
+  if(!curQ||settledFor===curQ.id||!TEACH_CORE) return false;
+  settledFor=curQ.id;
+  if(!qHadWrong) return false;
+  const l4=TEACH_CORE.l4Text(curQ);
+  if(!l4) return false;
+  l4ShownFor=curQ.id;
+  hintShow('📖 '+l4.text,'post');
+  plogTeach('teach-l4',curQ,{l4Source:l4.source,text:l4.text.slice(0,160)});
+  if(EXP==='llm') askL4Supplement(curQ);   /* 受控补充非阻塞；none/static 不调 LLM */
+  if(EXP==='none') return false;           /* 对照组保持 v26 节奏：不留阅读暂停 */
+  freezeTimer=true;
+  await sleep(2400);
+  freezeTimer=false;
+  return true;
+}
+/* L4 的 LLM 受控补充：只允许转述题库已审计讲解（ground truth），
+   不得新增语法事实；换题后丢弃（l4ShownFor/curQ 双守卫） */
+async function askL4Supplement(q){
+  if(!TEACH_CORE) return;
+  try{
+    const l4=TEACH_CORE.l4Text(q);
+    if(!l4||l4.source!=='bank') return;
+    const ctl=new AbortController(); const to=setTimeout(()=>{ try{ctl.abort();}catch(e){} },20000);
+    const res=await fetch('/llm',{method:'POST',headers:{'Content-Type':'application/json'},
+      signal:ctl.signal,
+      body:JSON.stringify({model:LLM_MODEL,temperature:0.5,max_tokens:120,messages:[
+        {role:'system',content:'You are Pixie, a tiny fairy mother. The quiz is SETTLED - revealing the answer is now allowed and encouraged.\n'+
+          'Explain in 1-2 easy English sentences WHY that answer is correct. Use ONLY this ground-truth explanation, add NO new grammar facts: "'+l4.text+'"\n'+
+          'Reply with plain text only, 1 emoji at the start.'},
+        {role:'user',content:'Quiz: '+q.q+'\nCorrect answer: '+q.o[q.a]},
+        {role:'assistant',content:'<think>\n\n</think>'}
+      ]})});
+    const d=await res.json(); clearTimeout(to);
+    const raw=((d.choices&&d.choices[0]&&d.choices[0].message)||{}).content||'';
+    const txt=String(raw).replace(/<think>[\s\S]*?<\/think>/g,'').trim().slice(0,240);
+    if(!txt) return;
+    if(l4ShownFor!==q.id||!curQ||curQ.id!==q.id) return;   /* 已换题：不显示上一题讲解 */
+    hintShow(txt,'post');
+    plogTeach('teach-l4-llm',q,{text:txt});
+  }catch(e){ /* 补充失败静默：静态讲解已在场上 */ }
+}
+
+/* ================================================================
+   C4 延迟复习（本地规则、零 LLM）
+================================================================ */
+let reviewSession=null;    /* {queue:[{qid,...}], idx, lock} */
+function findQById(id){ return (typeof QUESTIONS!=='undefined'?QUESTIONS:[]).find(x=>x.id===id)||null; }
+function startReview(){
+  const queue=TEACH_CORE?TEACH_CORE.buildReviewQueue(loadWrong(),Date.now())
+    .filter(x=>x.qid&&findQById(x.qid)):[];
+  if(!queue.length){ alert('错题本为空（或旧记录缺题目 id），先去战斗吧！'); return; }
+  reviewSession={queue:queue,idx:0,lock:false};
+  renderReviewItem();
+}
+function renderReviewItem(){
+  const item=reviewSession.queue[reviewSession.idx];
+  const q=findQById(item.qid);
+  const box=$('wblist'); box.innerHTML='';
+  $('wbcount').textContent='复习 '+(reviewSession.idx+1)+'/'+reviewSession.queue.length;
+  const wrap=document.createElement('div'); wrap.className='wbitem';
+  wrap.innerHTML='<div class="wbq">🔁 '+q.q+'</div>'+
+    '<div class="wbsrc">出处：'+q.s+' · 错过 '+item.count+' 次 · 搁置 '+item.days+' 天</div>'+
+    '<div id="rvopts" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;"></div>'+
+    '<div id="rvfb" style="margin-top:8px;"></div>';
+  box.appendChild(wrap);
+  const opts=$('rvopts');
+  q.o.forEach((txt,i)=>{
+    const b=document.createElement('button'); b.className='pbtn'; b.textContent=txt;
+    b.style.textAlign='left';
+    b.onclick=()=>reviewAnswer(b,i,q,item);
+    opts.appendChild(b);
+  });
+}
+function reviewAnswer(btn,i,q,item){
+  if(reviewSession.lock) return;
+  reviewSession.lock=true;
+  const ok=(i===q.a);
+  pushLearn('review',ok);                       /* 延迟复习单独计阶段 */
+  const list=loadWrong(); const hit=list.find(x=>x.qid===q.id||x.q===q.q);
+  const fb=$('rvfb');
+  document.querySelectorAll('#rvopts .pbtn').forEach((b,bi)=>{
+    b.disabled=true;
+    if(bi===q.a) b.style.background='#1d4028';
+    else if(b===btn) b.style.background='#5a2333';
+  });
+  if(ok){
+    if(hit){ saveWrong(list.filter(x=>x!==hit)); }   /* 复习答对 → 掌握移除 */
+    fb.innerHTML='<span style="color:#7ddb84">✅ 答对了，移出错题本！</span>'+
+      (q.explanation?('<div class="wbsrc" style="margin-top:4px">📖 '+q.explanation+'</div>'):'');
+    plogTeach('review-ok',q,{});
+  }else{
+    if(hit){ hit.count=(hit.count||1)+1; hit.t=Date.now();
+      const diag=TEACH_CORE.diagnoseError(q,q.o[i]);
+      hit.cat=diag.category; hit.catBasis=diag.basis; saveWrong(list); }
+    const l4=TEACH_CORE.l4Text(q);
+    fb.innerHTML='<span style="color:#ff7b93">❌ 又错了（已记入）。正确答案：'+q.o[q.a]+'</span>'+
+      (l4?('<div class="wbsrc" style="margin-top:4px">📖 '+l4.text+'</div>'):'');
+    plogTeach('review-wrong',q,{wrong:q.o[i],cat:hit&&hit.cat});
+  }
+  setTimeout(()=>{
+    reviewSession.lock=false;
+    reviewSession.idx++;
+    if(reviewSession.idx>=reviewSession.queue.length){
+      $('wblist').innerHTML='<div class="wbempty">🎉 本轮复习完成！错得多的题会再次排到最前。</div>';
+      $('wbcount').textContent='';
+      reviewSession=null; renderWrongBookMeta();
+    }else renderReviewItem();
+  },2200);
+}
+function renderWrongBookMeta(){ $('wbcount').textContent=loadWrong().length?('共 '+loadWrong().length+' 题'):''; }
+
 
 
 /* 出题即介入 */
@@ -1703,7 +1885,7 @@ renderMap();
   let lastClick=0;
   window.AP=AP;
   function plog(o){
-    o.t=Date.now(); o.model=LLM_MODEL; o.sysVer=3; o.nohint=NOHINT; o.exp=EXP||'default';   /* v27：sysVer 3 = 分级提示协议；换模型/改 prompt/换实验组做 A/B 时数据可分 */
+    o.t=Date.now(); o.model=LLM_MODEL; o.sysVer=4; o.nohint=NOHINT; o.exp=EXP||'default';   /* v28：sysVer 4 = 教学闭环（错因诊断/L4/复习）；换模型/改 prompt/换实验组做 A/B 时数据可分 */
     try{ const l=JSON.parse(localStorage.getItem('nce_player_log')||'[]');
       l.push(o); localStorage.setItem('nce_player_log',JSON.stringify(l.slice(-800))); }catch(e){}
     console.log('PLAYER_LOG',JSON.stringify(o));
@@ -1740,8 +1922,9 @@ renderMap();
       /* v27：附实验组与提示通道指标（每题请求数/缓存命中/静态降级），否则无法判断提速来自模型还是调度 */
       const hs=hintStats; const qs=Math.max(1,hs.questions);
       const res=await fetch('/savelogs',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({tag:'v3',sid:AP.sid,nohint:NOHINT,exp:EXP||'default',model:LLM_MODEL,sysVer:3,
+        body:JSON.stringify({tag:'v4',sid:AP.sid,nohint:NOHINT,exp:EXP||'default',model:LLM_MODEL,sysVer:4,
           hintStats:{...hs,llmPerQuestion:+(hs.llmCalls/qs).toFixed(3),cacheHitRate:+(hs.cacheHits/Math.max(1,hs.llmCalls+hs.cacheHits+hs.staticUses)).toFixed(3),localFallbackRate:+(hs.llmFallbacks/Math.max(1,hs.llmCalls)).toFixed(3)},
+          teachStats:teachStats, diagStats:diagStats,
           fairy:fairyLogAll(),player:(function(){try{return JSON.parse(localStorage.getItem('nce_player_log')||'[]')}catch(e){return []}})()})});
       const d=await res.json(); AP.lastUpload=d;
     }catch(e){}
