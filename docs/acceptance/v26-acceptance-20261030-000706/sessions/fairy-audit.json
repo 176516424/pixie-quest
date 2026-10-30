@@ -1,0 +1,146 @@
+[
+ {
+  "name": "出题-动词",
+  "raw": "[worried] My brave boy, watch closely! To find 'went', we must remember that some verbs have a completely new past form unlike 'goed'! ✨🧚‍♀️⏳",
+  "mood": "worried",
+  "text": "My brave boy, watch closely! To find 'went', we must remember that some verbs have a completely new past form unlike 'goed'! ✨🧚‍♀️⏳",
+  "display": "My brave boy, watch closely! To find '🚫', we must remember that some verbs have a completely new past form unlike 'goed'! ✨🧚‍♀️⏳",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "出题-反意疑问句",
+  "raw": "[love] My brave boy needs a tag helper for that negative sentence! 🧚‍♀️✨📚",
+  "mood": "love",
+  "text": "My brave boy needs a tag helper for that negative sentence! 🧚‍♀️✨📚",
+  "display": "My brave boy needs a tag helper for that negative sentence! 🧚‍♀️✨📚",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "被打-轻伤",
+  "raw": "[worried] My dear child, take a breath! Did you notice that \"go\" changed completely to a new word in the past, unlike verbs we know where forms stay similar? 🍃💨",
+  "mood": "worried",
+  "text": "My dear child, take a breath! Did you notice that \"go\" changed completely to a new word in the past, unlike verbs we know where forms stay similar? 🍃💨",
+  "display": "My dear child, take a breath! Did you notice that \"go\" changed completely to a new word in the past, unlike verbs we know where forms stay similar? 🍃💨",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "被打-重伤",
+  "raw": "[panic] My sweet boy needs healing fast, but remember: if the last two forms differ and the first differs too, all three are different! 🧚‍♀️🔥💨",
+  "mood": "panic",
+  "text": "My sweet boy needs healing fast, but remember: if the last two forms differ and the first differs too, all three are different! 🧚‍♀️🔥💨",
+  "display": "My sweet boy needs healing fast, but remember: if the last two forms differ and the first differs too, all three are different! 🧚‍♀️🔥💨",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "被打-濒危",
+  "raw": "[panic] Oh no, my sweet boy took a hit! Remember: a negative statement always needs a positive question helper, so choose the option that makes it positive! 💖✨🏳️",
+  "mood": "panic",
+  "text": "Oh no, my sweet boy took a hit! Remember: a negative statement always needs a positive question helper, so choose the option that makes it positive! 💖✨🏳️",
+  "display": "Oh no, my sweet boy took a hit! Remember: a negative statement always needs a positive question helper, so choose the option that makes it positive! 💖✨🏳️",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "怪兽蓄力",
+  "raw": "[proud] Look, even when hurt, we use the positive 'does' to question a negative sentence—save him and heal now! 🧊🛡️❤️",
+  "mood": "proud",
+  "text": "Look, even when hurt, we use the positive 'does' to question a negative sentence—save him and heal now! 🧊🛡️❤️",
+  "display": "Look, even when hurt, we use the positive 'does' to question a negative sentence—save him and heal now! 🧊🛡️❤️",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "中毒",
+  "raw": "[worried] Oh my dear, you must watch out for those tricky poison spells! Remember, some verbs have a completely new past form that looks nothing like the present one! 🧚‍♀️💨🦠",
+  "mood": "worried",
+  "text": "Oh my dear, you must watch out for those tricky poison spells! Remember, some verbs have a completely new past form that looks nothing like the present one! 🧚‍♀️💨🦠",
+  "display": "Oh my dear, you must watch out for those tricky poison spells! Remember, some verbs have a completely new past form that looks nothing like the present one! 🧚‍♀️💨🦠",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "被冻结",
+  "raw": "[panic] My darling is freezing but remember, after a negative \"doesn't,\" we MUST add a positive question helper to agree! 🥶✨🧊",
+  "mood": "panic",
+  "text": "My darling is freezing but remember, after a negative \"doesn't,\" we MUST add a positive question helper to agree! 🥶✨🧊",
+  "display": "My darling is freezing but remember, after a negative \"doesn't,\" we MUST add a positive question helper to agree! 🥶✨🧊",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "治疗成功",
+  "raw": "[proud] Such great care to heal your strength, my dear boy; remember that when the first and last forms differ, you must check the third form carefully! ✨🧪🛡️",
+  "mood": "proud",
+  "text": "Such great care to heal your strength, my dear boy; remember that when the first and last forms differ, you must check the third form carefully! ✨🧪🛡️",
+  "display": "Such great care to heal your strength, my dear boy; remember that when the first and last forms differ, you must check the third form carefully! ✨🧪🛡️",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "答对了",
+  "raw": "[love] My hero is so brave, he knows 'went' is not built from 'go' but found like a magic gift! 🧚‍♀️✨🎉",
+  "mood": "love",
+  "text": "My hero is so brave, he knows 'went' is not built from 'go' but found like a magic gift! 🧚‍♀️✨🎉",
+  "display": "My hero is so brave, he knows '🚫' is not built from 'go' but found like a magic gift! 🧚‍♀️✨🎉",
+  "teach": false,
+  "leak": false
+ },
+ {
+  "name": "答错了",
+  "raw": "[sad] Oh my love, \"goes\" is present tense, not past! Remember: look for a completely new word for simple past forms like this one! 🥺🧠✨",
+  "mood": "sad",
+  "text": "Oh my love, \"goes\" is present tense, not past! Remember: look for a completely new word for simple past forms like this one! 🥺🧠✨",
+  "display": "Oh my love, \"goes\" is present tense, not past! Remember: look for a completely new word for simple past forms like this one! 🥺🧠✨",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "击杀小怪",
+  "raw": "[love] My little hero shines so brightly after winning, but remember that strong verbs can keep their form unchanged across all three tenses! 🪄✨🧡",
+  "mood": "love",
+  "text": "My little hero shines so brightly after winning, but remember that strong verbs can keep their form unchanged across all three tenses! 🪄✨🧡",
+  "display": "My little hero shines so brightly after winning, but remember that strong verbs can keep their form unchanged across all three tenses! 🪄✨🧡",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "击杀BOSS",
+  "raw": "[proud] My brave boy wins! See how verbs can keep their spelling even when we change the tense? 🦄✨🥰",
+  "mood": "proud",
+  "text": "My brave boy wins! See how verbs can keep their spelling even when we change the tense? 🦄✨🥰",
+  "display": "My brave boy wins! See how verbs can keep their spelling even when we change the tense? 🦄✨🥰",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "心跳-安静",
+  "raw": "[love] Oh my dear boy, take a breath before you choose! Remember, some verbs have a completely new past form, not just adding \"-ed\" like you might expect. ❤️🧚‍♀️✨",
+  "mood": "love",
+  "text": "Oh my dear boy, take a breath before you choose! Remember, some verbs have a completely new past form, not just adding \"-ed\" like you might expect. ❤️🧚‍♀️✨",
+  "display": "Oh my dear boy, take a breath before you choose! Remember, some verbs have a completely new past form, not just adding \"-ed\" like you might expect. ❤️🧚‍♀️✨",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "心跳-拖延",
+  "raw": "[love] My dear boy, stay calm as those Rock Golem boulders gather; remember to check if that last form matches the first one before you decide! ✨🧗‍♂️🔥",
+  "mood": "love",
+  "text": "My dear boy, stay calm as those Rock Golem boulders gather; remember to check if that last form matches the first one before you decide! ✨🧗‍♂️🔥",
+  "display": "My dear boy, stay calm as those Rock Golem boulders gather; remember to check if that last form matches the first one before you decide! ✨🧗‍♂️🔥",
+  "teach": true,
+  "leak": false
+ },
+ {
+  "name": "心跳-残血",
+  "raw": "[panic] Oh my dear heart! That Frost Demon will strike soon, but remember: a negative statement needs a positive tag helper to shine bright! ✨⏰🧝‍♀️",
+  "mood": "panic",
+  "text": "Oh my dear heart! That Frost Demon will strike soon, but remember: a negative statement needs a positive tag helper to shine bright! ✨⏰🧝‍♀️",
+  "display": "Oh my dear heart! That Frost Demon will strike soon, but remember: a negative statement needs a positive tag helper to shine bright! ✨⏰🧝‍♀️",
+  "teach": true,
+  "leak": false
+ }
+]

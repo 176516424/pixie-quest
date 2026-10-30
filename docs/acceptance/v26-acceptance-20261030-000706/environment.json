@@ -1,0 +1,27 @@
+{
+  "project": "pixie-quest",
+  "version": "v26",
+  "commit": "c7b1b683ea63e4996629a8e893958935662ec031",
+  "worktreeClean": true,
+  "worktreeNote": "验收开始时代码全部处于 commit c7b1b68 干净状态；本验收包目录为唯一新增未跟踪内容，项目源码零改动",
+  "round": "第二轮（首轮目录 v26-acceptance-20261029-235454 记录 DEF-001 并修复，c7b1b68 为修复后 commit，本轮全量回归）",
+  "startedAt": "2026-10-30T00:07:06+08:00",
+  "finishedAt": "2026-10-30T08:19:00+08:00",
+  "os": "Windows 10 (win32, bash shell)",
+  "node": "v22.22.2",
+  "npm": "10.9.7",
+  "browser": "Chrome（CDP 驱动，DevTools Protocol 9222）",
+  "viewport": "1280x720",
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8797,
+    "logDir": "docs/acceptance/v26-acceptance-20261030-000706/sessions/srv08-logdir（SRV-08 专用临时 LOG_DIR，独立于正式实验数据）"
+  },
+  "llm": {
+    "available": true,
+    "provider": "LM Studio",
+    "model": "qwen/qwen3.5-9b",
+    "timeoutMs": 170000,
+    "note": "SRV-05/06 使用独立受控上游端口 15999(拒绝)/15998(慢响应)，超时用例临时设 LLM_TIMEOUT_MS=2500"
+  }
+}

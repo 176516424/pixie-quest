@@ -1,0 +1,29 @@
+[
+ {
+  "t": 1793291602968,
+  "model": "qwen/qwen3.5-9b",
+  "sysVer": 2,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "love",
+  "text": "Oh, my dear boy is ready for the past tense! Remember, some verbs keep their very same spelling in all three forms even after time has passed. 🕰️✨🧚‍♀️",
+  "quiz": "set 的过去式是？"
+ },
+ {
+  "t": 1793291606885,
+  "model": "qwen/qwen3.5-9b",
+  "sysVer": 2,
+  "ev": "DANGER! The enemy Grass Slime is CHARGING the skill Absolute Freeze for 4 quick seconds! Your boy can INTERRUPT it by answering correctly and striking RIGHT NOW! Warn him to hurry!",
+  "mood": "panic",
+  "text": "Hurry, my sweet boy! Remember: some verbs keep their original face in all three forms—check the third one before you freeze! 🧊🏃‍♂️💨✨",
+  "quiz": "set 的过去式是？"
+ },
+ {
+  "t": 1793291610179,
+  "model": "qwen/qwen3.5-9b",
+  "sysVer": 2,
+  "ev": "The quiz area just got FROZEN for 6 seconds and the enemy timer keeps running! Warn your boy to stay calm!",
+  "mood": "panic",
+  "text": "Oh my dear, hold still while time freezes so we can calmly check which form stays the same without adding an 'ed'! 🧊🔍✨",
+  "quiz": "set 的过去式是？"
+ }
+]

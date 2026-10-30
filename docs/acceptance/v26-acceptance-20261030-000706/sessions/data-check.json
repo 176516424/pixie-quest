@@ -1,0 +1,100 @@
+{
+ "generatedAt": "2026-10-30T00:17:08.279Z",
+ "rules": {
+  "bracketStripped": "比对前剥离中文括注（如 read（拼写不变）→ read）",
+  "threeFormsExempt": "三形类型题(答案为变形类型代号或三形串)不做动词形式一致性比对"
+ },
+ "DATA01": {
+  "total": 198,
+  "d1": 60,
+  "d2": 90,
+  "d3": 48,
+  "expected": {
+   "total": 198,
+   "d1": 60,
+   "d2": 90,
+   "d3": 48
+  },
+  "pass": true
+ },
+ "DATA02": {
+  "count": 198,
+  "unique": 198,
+  "allNonEmpty": true,
+  "pass": true
+ },
+ "DATA03": {
+  "vocabulary": [
+   "verb",
+   "irregular",
+   "past",
+   "question-pattern",
+   "pattern-family",
+   "past-participle",
+   "three-forms"
+  ],
+  "total": 198,
+  "mismatches": 0,
+  "details": [],
+  "pass": true
+ },
+ "DATA04": {
+  "verbTotal": 142,
+  "missingExplanation": 0,
+  "spot": {
+   "go": {
+    "db": [
+     "go",
+     "went",
+     "gone",
+     "ABC"
+    ],
+    "pastAnswerMatches": true,
+    "ppAnswerMatches": true,
+    "clsAnswerMatches": true,
+    "threeFormsMatches": null,
+    "explanationNonEmpty": true
+   },
+   "buy": {
+    "db": [
+     "buy",
+     "bought",
+     "bought",
+     "ABB"
+    ],
+    "pastAnswerMatches": true,
+    "ppAnswerMatches": null,
+    "clsAnswerMatches": true,
+    "threeFormsMatches": null,
+    "explanationNonEmpty": true
+   },
+   "begin": {
+    "db": [
+     "begin",
+     "began",
+     "begun",
+     "ABC"
+    ],
+    "pastAnswerMatches": true,
+    "ppAnswerMatches": true,
+    "clsAnswerMatches": true,
+    "threeFormsMatches": null,
+    "explanationNonEmpty": true
+   },
+   "wear": {
+    "db": [
+     "wear",
+     "wore",
+     "worn",
+     "ABC"
+    ],
+    "pastAnswerMatches": true,
+    "ppAnswerMatches": true,
+    "clsAnswerMatches": true,
+    "threeFormsMatches": true,
+    "explanationNonEmpty": true
+   }
+  },
+  "pass": true
+ }
+}

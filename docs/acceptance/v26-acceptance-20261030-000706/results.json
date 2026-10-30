@@ -1,0 +1,880 @@
+[
+ {
+  "id": "CMD-01",
+  "title": "单元测试",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-29T23:58:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "干净工作区（commit c7b1b68），依赖已安装",
+  "steps": [
+   "npm test"
+  ],
+  "expected": "退出码 0；fail=0、cancelled=0",
+  "actual": "退出码 0；tests=25、pass=25、fail=0、cancelled=0、duration 177ms",
+  "metrics": {
+   "exitCode": 0,
+   "tests": 25,
+   "pass": 25,
+   "fail": 0,
+   "cancelled": 0
+  },
+  "evidence": [
+   "commands/npm-test.log"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "CMD-02",
+  "title": "语法检查",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-29T23:58:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "干净工作区（commit c7b1b68），依赖已安装",
+  "steps": [
+   "npm run check"
+  ],
+  "expected": "退出码 0；无语法失败",
+  "actual": "退出码 0；语法检查全部通过（13 段）",
+  "metrics": {
+   "exitCode": 0,
+   "segments": 13
+  },
+  "evidence": [
+   "commands/npm-run-check.log"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "CMD-03",
+  "title": "题库审计",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-29T23:58:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "干净工作区（commit c7b1b68），依赖已安装",
+  "steps": [
+   "npm run audit"
+  ],
+  "expected": "退出码 0；结构/语义重复/VERB_DB/答案/拼写/跨难度错误均为 0",
+  "actual": "退出码 0；结构问题 0、语义重复组 0、VERB_DB 错误 0、动词题答案错误 0、拼写不良干扰项 0、跨难度同考点 0；题库 198 题（d1 60 / d2 90 / d3 48）",
+  "metrics": {
+   "exitCode": 0,
+   "total": 198,
+   "d1": 60,
+   "d2": 90,
+   "d3": 48,
+   "structErr": 0,
+   "dupErr": 0,
+   "verbDbErr": 0,
+   "answerErr": 0,
+   "spellErr": 0,
+   "crossDiffErr": 0
+  },
+  "evidence": [
+   "commands/npm-run-audit.log"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "CMD-04",
+  "title": "默认日志分析",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-29T23:58:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "干净工作区（commit c7b1b68），依赖已安装",
+  "steps": [
+   "npm run analyze"
+  ],
+  "expected": "退出码 0；唯一题目分母=当前题库总数；无固定旧阈值文案",
+  "actual": "退出码 0；唯一题目 36 / 198（分母=题库总数）；无旧固定阈值文案",
+  "metrics": {
+   "exitCode": 0,
+   "unique": 36,
+   "denominator": 198
+  },
+  "evidence": [
+   "commands/npm-run-analyze.log"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "CMD-05",
+  "title": "自定义双日志执行分析",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-29T23:58:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "干净工作区（commit c7b1b68），依赖已安装",
+  "steps": [
+   "node tools/analyze-session.js sessions/player-acc-custom.json",
+   "node tools/analyze-session.js sessions/fairy-acc-custom.json"
+  ],
+  "expected": "退出码 0；实际读取指定文件而非默认快照",
+  "actual": "退出码 0；输入为验收包自定义会话日志，唯一题目 47 / 198（默认日志为 36，可区分）；输出含玩家表现/精灵心情统计",
+  "metrics": {
+   "exitCode": 0,
+   "unique": 47,
+   "uniqueDefault": 36
+  },
+  "evidence": [
+   "commands/npm-run-analyze-custom.log",
+   "sessions/player-acc-custom.json",
+   "sessions/fairy-acc-custom.json"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "CMD-06",
+  "title": "精灵审计",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-29T23:58:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "干净工作区（commit c7b1b68），依赖已安装",
+  "steps": [
+   "npm run audit:fairy -- --out sessions/fairy-audit.json"
+  ],
+  "expected": "退出码 0；输出文件存在且合法 JSON；16 事件均有结果",
+  "actual": "退出码 0；sessions/fairy-audit.json 为合法 JSON、16 事件全部有应答文本；心情标签合规 16/16、含教学相关词 15/16（94%）、泄题 0/16",
+  "metrics": {
+   "exitCode": 0,
+   "events": 16,
+   "okReplies": 16,
+   "moodLegal": 16,
+   "teachWords": 15,
+   "leak": 0
+  },
+  "evidence": [
+   "commands/npm-run-audit-fairy.log",
+   "sessions/fairy-audit.json"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "CMD-07",
+  "title": "服务器启动",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-29T23:58:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "干净工作区（commit c7b1b68），依赖已安装",
+  "steps": [
+   "npm start"
+  ],
+  "expected": "成功监听配置地址；启动日志无异常",
+  "actual": "监听 127.0.0.1:8797；启动日志无异常；后续 GET /、POST /savelogs 正常处理",
+  "metrics": {
+   "port": 8797
+  },
+  "evidence": [
+   "commands/npm-start.log"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "SRV-01",
+  "title": "静态资源",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:36:20+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "npm start 运行于 127.0.0.1:8797；SRV-05/06 用独立受控上游；SRV-08/09 用独立临时 LOG_DIR",
+  "steps": [
+   "GET /",
+   "GET /nce-shared.js",
+   "GET /src/game-core.js"
+  ],
+  "expected": "均 200；内容类型正确",
+  "actual": "三项均 200：text/html; charset=utf-8、application/javascript; charset=utf-8 ×2；页面加载无对应 404（UI-01 consoleErrors=0）",
+  "metrics": {
+   "statuses": [
+    200,
+    200,
+    200
+   ]
+  },
+  "evidence": [
+   "http/srv01-root.hdr",
+   "http/srv01-root.body.html",
+   "http/srv01-shared.hdr",
+   "http/srv01-gamecore.hdr"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "SRV-02",
+  "title": "未知路由 404",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:36:20+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "npm start 运行于 127.0.0.1:8797；SRV-05/06 用独立受控上游；SRV-08/09 用独立临时 LOG_DIR",
+  "steps": [
+   "GET /no-such-path-xyz"
+  ],
+  "expected": "404，不返回页面或 500",
+  "actual": "HTTP 404；Content-Type text/plain；响应体纯文本 404 提示，非页面非 500",
+  "metrics": {
+   "status": 404
+  },
+  "evidence": [
+   "http/srv02-404.hdr",
+   "http/srv02-404.body.txt"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "SRV-03",
+  "title": "模型健康检查通过",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:36:20+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "npm start 运行于 127.0.0.1:8797；SRV-05/06 用独立受控上游；SRV-08/09 用独立临时 LOG_DIR",
+  "steps": [
+   "GET /llmhealth（LM Studio 运行 qwen/qwen3.5-9b）"
+  ],
+  "expected": "ok=true、hasModel=true、模型列表含实际模型",
+  "actual": "200；ok=true、hasModel=true、expect=qwen、models 含 qwen/qwen3.5-9b 与 text-embedding-nomic-embed-text-v1.5",
+  "metrics": {
+   "status": 200,
+   "ok": true,
+   "hasModel": true
+  },
+  "evidence": [
+   "http/srv03-health.hdr",
+   "http/srv03-health.body.json"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "SRV-04",
+  "title": "模型健康检查失败",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:36:20+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "npm start 运行于 127.0.0.1:8797；SRV-05/06 用独立受控上游；SRV-08/09 用独立临时 LOG_DIR",
+  "steps": [
+   "以不存在的模型匹配值请求 /llmhealth"
+  ],
+  "expected": "ok=false，不得因上游可达而 true",
+  "actual": "200；ok=false、hasModel=false、expect=definitely-not-a-model-xyz（上游可达但匹配失败仍正确返回 false）",
+  "metrics": {
+   "status": 200,
+   "ok": false,
+   "hasModel": false
+  },
+  "evidence": [
+   "http/srv04-health-bad.hdr",
+   "http/srv04-health-bad.body.json"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "SRV-05",
+  "title": "LLM 不可达 502",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:36:20+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "npm start 运行于 127.0.0.1:8797；SRV-05/06 用独立受控上游；SRV-08/09 用独立临时 LOG_DIR",
+  "steps": [
+   "上游指向未监听端口 15999",
+   "POST /llm"
+  ],
+  "expected": "约定时间内返回 502 + 可解析错误 JSON，不挂起",
+  "actual": "HTTP 502；{\"error\":{\"type\":\"upstream_unreachable\",\"message\":\"LM Studio 不可达: connect ECONNREFUSED 127.0.0.1:15999\"}}，未挂起",
+  "metrics": {
+   "status": 502,
+   "parseable": true
+  },
+  "evidence": [
+   "http/srv05-502.hdr",
+   "http/srv05-502.body.json"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "SRV-06",
+  "title": "LLM 上游超时 504",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:36:20+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "npm start 运行于 127.0.0.1:8797；SRV-05/06 用独立受控上游；SRV-08/09 用独立临时 LOG_DIR",
+  "steps": [
+   "受控慢响应上游（端口 15998）",
+   "LLM_TIMEOUT_MS=2500",
+   "POST /llm"
+  ],
+  "expected": "504 + upstream_timeout；记录实际耗时",
+  "actual": "HTTP 504；{\"error\":{\"type\":\"upstream_timeout\",\"message\":\"LLM upstream timeout after 2500ms (127.0.0.1:15998)\"}}；上游 3s 后才响应、服务 2.5s 即返回",
+  "metrics": {
+   "status": 504,
+   "timeoutMs": 2500
+  },
+  "evidence": [
+   "http/srv06-504.hdr",
+   "http/srv06-504.body.json"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "SRV-07",
+  "title": "请求体超限 413",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:36:20+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "npm start 运行于 127.0.0.1:8797；SRV-05/06 用独立受控上游；SRV-08/09 用独立临时 LOG_DIR",
+  "steps": [
+   "POST /llm，请求体 >1MiB"
+  ],
+  "expected": "413；服务随后仍能处理正常请求",
+  "actual": "HTTP 413 Payload Too Large；{\"ok\":false,\"err\":\"request body too large (>1MB)\"}；随后正常请求继续被处理（SRV-08 成功）",
+  "metrics": {
+   "status": 413
+  },
+  "evidence": [
+   "http/srv07-413.hdr",
+   "http/srv07-413.body.json"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "SRV-08",
+  "title": "按 SID 落盘",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:36:20+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "npm start 运行于 127.0.0.1:8797；SRV-05/06 用独立受控上游；SRV-08/09 用独立临时 LOG_DIR",
+  "steps": [
+   "以 acc-sid-001 / acc-sid-002 分别 POST fairy 与 player 数据",
+   "独立 LOG_DIR=sessions/srv08-logdir"
+  ],
+  "expected": "200；两组文件均存在且内容对应；索引元数据正确",
+  "actual": "均 200；log-fairy-acc-sid-001/002.json 与 log-player-acc-sid-001/002.json 均落盘；log-index.json 含两条 sid、at、model=qwen/qwen3.5-9b、fairy/player 计数与响应体一致（001: fairy 2 player 1；002: fairy 1 player 2）；正式实验数据未被污染",
+  "metrics": {
+   "statuses": [
+    200,
+    200
+   ],
+   "files": 4
+  },
+  "evidence": [
+   "http/srv08-sid1.hdr",
+   "http/srv08-sid1.body.json",
+   "http/srv08-sid2.hdr",
+   "http/srv08-sid2.body.json",
+   "sessions/srv08-logdir/"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "SRV-09",
+  "title": "日志写入失败",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:36:20+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "npm start 运行于 127.0.0.1:8797；SRV-05/06 用独立受控上游；SRV-08/09 用独立临时 LOG_DIR",
+  "steps": [
+   "LOG_DIR 指向不可创建/非法目录（目录占位同名 .json 路径 → EISDIR）",
+   "POST /savelogs"
+  ],
+  "expected": "明确失败，不得 ok:true；服务不崩溃",
+  "actual": "HTTP 500；{\"ok\":false,\"err\":\"log write failed: EISDIR: illegal operation on a directory, open ...log-fairy-acc-fail.json\"}；服务未崩溃（后续请求正常）",
+  "metrics": {
+   "status": 500,
+   "ok": false,
+   "crashed": false
+  },
+  "evidence": [
+   "http/srv09-500.hdr",
+   "http/srv09-500.body.json"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "UI-01",
+  "title": "地图与进入第一章",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:33:54+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP) 打开 http://127.0.0.1:8797；每轮从注入的已知初始状态开始；注入值见 notes",
+  "steps": [
+   "由 docs/acceptance/v26-acceptance-20261030-000706/driver-ui-acceptance.js 驱动执行（真实页面 + 真实计时器）"
+  ],
+  "expected": "页面无脚本错误；第一章可进入；其余章节锁定符合存档",
+  "actual": "地图可见；node0 可点击进入、node1-11 均锁定不可点（符合空存档）；进入战斗后无脚本异常",
+  "metrics": {
+   "consoleErrors": 0,
+   "levels": 3
+  },
+  "evidence": [
+   "screenshots/ui01-map.png",
+   "screenshots/ui01-battle.png"
+  ],
+  "defectId": "",
+  "notes": "空存档（localStorage 已清）→ 仅第一章解锁，符合预期"
+ },
+ {
+  "id": "UI-02",
+  "title": "答对结算",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:33:54+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP) 打开 http://127.0.0.1:8797；每轮从注入的已知初始状态开始；注入值见 notes",
+  "steps": [
+   "由 docs/acceptance/v26-acceptance-20261030-000706/driver-ui-acceptance.js 驱动执行（真实页面 + 真实计时器）"
+  ],
+  "expected": "只结算一次；出现攻击；MP/XP 按规则变化；存活进入下一题",
+  "actual": "答对结算一次：怪兽 HP 80→60（伤害 20，介于 18~26 单发区间）；MP 50→50；进入下一题且选项 4 个；勇者存活",
+  "metrics": {
+   "dmg": 20,
+   "mpGain": 0,
+   "monHpBefore": 80,
+   "monHpAfter": 60
+  },
+  "evidence": [
+   "screenshots/ui02-before.png",
+   "screenshots/ui02-after.png"
+  ],
+  "defectId": "",
+  "notes": "伤害区间依据 rnd(18,26)+武器T0(=0)，仅可能来自一次结算"
+ },
+ {
+  "id": "UI-03",
+  "title": "答错处理",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:33:54+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP) 打开 http://127.0.0.1:8797；每轮从注入的已知初始状态开始；注入值见 notes",
+  "steps": [
+   "由 docs/acceptance/v26-acceptance-20261030-000706/driver-ui-acceptance.js 驱动执行（真实页面 + 真实计时器）"
+  ],
+  "expected": "只记录一次；攻击落空；无 LLM 分支按 v26 规则进入下一题",
+  "actual": "答错仅记录一次：错题本 0→1 条，新记录题干/错误项(特殊疑问句)/正确项与实际一致；攻击落空未掉血（HP 100→100）；按 v26 无 LLM 规则直接进入下一题",
+  "metrics": {
+   "wrongBefore": 0,
+   "wrongAfter": 1,
+   "hpBefore": 100,
+   "hpAfter": 100
+  },
+  "evidence": [
+   "screenshots/ui03-after-wrong.png"
+  ],
+  "defectId": "",
+  "notes": "精灵未召唤（无 LLM 分支）"
+ },
+ {
+  "id": "UI-04",
+  "title": "连续点击与换怪空档输入",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:33:54+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP) 打开 http://127.0.0.1:8797；每轮从注入的已知初始状态开始；注入值见 notes",
+  "steps": [
+   "由 docs/acceptance/v26-acceptance-20261030-000706/driver-ui-acceptance.js 驱动执行（真实页面 + 真实计时器）"
+  ],
+  "expected": "不重复扣血/加经验/跳题；无异常",
+  "actual": "A: 三连点同一选项仅结算一次（HP 80→60，伤害 20 在 18~26 单发区间；gainXp 探针恰好 1 次 +8）；B: 换怪空档连点 8 次旧选项——8 次采样 canAnswer 守卫全部拒绝(8/8)，探针仅 2 笔（答题 +8 + 击杀奖励 +6 = 14），无第三笔经验、勇者未掉血、异常 0",
+  "metrics": {
+   "doubleClickDmg": 20,
+   "xpCallsA": 1,
+   "xpSumA": 8,
+   "xpCallsB": 2,
+   "xpSumB": 14,
+   "transitionClicks": 8,
+   "guardRejectedAll": true
+  },
+  "evidence": [
+   "screenshots/ui04-transition.png"
+  ],
+  "defectId": "",
+  "notes": "注入：monHP=3 触发击杀；gainXp 探针替代 heroXp 直读（升级会重置 heroXp）；击杀奖励 +6 来自 HTML:1044 gainXp(m.boss?15:6)"
+ },
+ {
+  "id": "UI-05",
+  "title": "中毒最后一跳致死",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:33:54+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP) 打开 http://127.0.0.1:8797；每轮从注入的已知初始状态开始；注入值见 notes",
+  "steps": [
+   "由 docs/acceptance/v26-acceptance-20261030-000706/driver-ui-acceptance.js 驱动执行（真实页面 + 真实计时器）"
+  ],
+  "expected": "HP=0；死亡浮层；输入锁定；不继续战斗",
+  "actual": "注入 HP=3 + 中毒 1 回合×5 伤害后，2.9s 内页面实际计时结算死亡：HP=0、死亡浮层「💀 你被 草原史莱姆 击倒了…」可见、gameOver=true；死后点击选项无效（HP 仍 0，战斗不再推进）",
+  "metrics": {
+   "deathAfterMs": 2854,
+   "overlayTitle": "💀 你被 草原史莱姆 击倒了…",
+   "inputLocked": true
+  },
+  "evidence": [
+   "screenshots/ui05-poisoned.png",
+   "screenshots/ui05-dead.png"
+  ],
+  "defectId": "",
+  "notes": "注入值：heroHP=3, applyPoison(1,5)；结算走页面真实 2.8s 毒 tick"
+ },
+ {
+  "id": "UI-06",
+  "title": "返回地图清理状态",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:33:54+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP) 打开 http://127.0.0.1:8797；每轮从注入的已知初始状态开始；注入值见 notes",
+  "steps": [
+   "由 docs/acceptance/v26-acceptance-20261030-000706/driver-ui-acceptance.js 驱动执行（真实页面 + 真实计时器）"
+  ],
+  "expected": "原计时器不再扣血或施法；重进无旧状态",
+  "actual": "a) 中毒中返回地图：3.5s 后 HP 仍 100、poison=null（原 tick 不再扣血）；b) 冻结 60s 返回地图：frozenUntil 归 0，重进战斗答题区无冻结；c) 续力中返回地图：4.5s 后 charging=null 且 frozenUntil=0（原 4s 续力未在大招落地）",
+  "metrics": {
+   "poisonHp": 100,
+   "poisonCleared": true,
+   "freezeSet": true,
+   "freezeCleared": true,
+   "reenterFrozen": false,
+   "chargeSet": true,
+   "chargeCleared": true,
+   "skillLandedAfterBack": false
+  },
+  "evidence": [
+   "screenshots/ui06-poison-cleared.png",
+   "screenshots/ui06-freeze-cleared.png",
+   "screenshots/ui06-charge-cleared.png"
+  ],
+  "defectId": "",
+  "notes": "注入值：applyPoison(9,3)、doFreeze(60)、startCharge(freeze)；返回地图走页面 skMap 按钮"
+ },
+ {
+  "id": "UI-07",
+  "title": "续力与大招计时",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:33:54+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP) 打开 http://127.0.0.1:8797；每轮从注入的已知初始状态开始；注入值见 notes",
+  "steps": [
+   "由 docs/acceptance/v26-acceptance-20261030-000706/driver-ui-acceptance.js 驱动执行（真实页面 + 真实计时器）"
+  ],
+  "expected": "续力条 0→100；大招后无立即补普攻；计时归位符合规则",
+  "actual": "续力条从 5% 涨到 90%（4s 周期）；续力期 monTimer 走负至 -3（真实普攻探针 0 次——charging 守卫全程拦截）；大招落地时 afterSkillMonTimer(-3) 归位 3 个计时 tick，归位→首次普攻间隔 2264ms（≥1900ms 下界；与 tick 相位有关，设计口径 2~3 秒喘息），无「立即补刀」",
+  "metrics": {
+   "pctStart": 5.025,
+   "pctEnd": 90.05,
+   "monTimerDuringCharge": -3,
+   "resetFrom": -3,
+   "graceGapMs": 2264,
+   "realAttacksDuringCharge": 0
+  },
+  "evidence": [
+   "screenshots/ui07-charge-start.png",
+   "screenshots/ui07-charge-end.png",
+   "screenshots/ui07-after-ult.png"
+  ],
+  "defectId": "",
+  "notes": "注入值：startCharge(frost)+monTimer=1（复刻「续力期计时走负→大招后归位」真实路径，跳过 25% RNG）；monsterTurn/afterSkillMonTimer 挂探针计数"
+ },
+ {
+  "id": "UI-08",
+  "title": "最终 Boss freeze 文案",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:33:54+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP) 打开 http://127.0.0.1:8797；每轮从注入的已知初始状态开始；注入值见 notes",
+  "steps": [
+   "由 docs/acceptance/v26-acceptance-20261030-000706/driver-ui-acceptance.js 驱动执行（真实页面 + 真实计时器）"
+  ],
+  "expected": "事件含 Absolute Freeze，无 undefined",
+  "actual": "冰霜魔王蓄力触发精灵事件（检索最近 3 条中的蓄力事件 1 条），文案含「Absolute Freeze」且无 undefined。原文片段: DANGER! The enemy Grass Slime is CHARGING the skill Absolute Freeze for 4 quick seconds! Y…",
+  "metrics": {
+   "chargeEvents": 1,
+   "containsFreeze": true,
+   "containsUndefined": false
+  },
+  "evidence": [
+   "screenshots/ui08-freeze-event.png",
+   "sessions/ui08-fairy-entry.json"
+  ],
+  "defectId": "",
+  "notes": "注入值：startCharge(freeze)（第三 Boss「绝对冰冻」技能，跳过 45% RNG）；大招未被拦截会继续落地产生后续事件，故按事件类型检索而非取末条"
+ },
+ {
+  "id": "UI-09",
+  "title": "错题本入口",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:33:54+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP) 打开 http://127.0.0.1:8797；每轮从注入的已知初始状态开始；注入值见 notes",
+  "steps": [
+   "由 docs/acceptance/v26-acceptance-20261030-000706/driver-ui-acceptance.js 驱动执行（真实页面 + 真实计时器）"
+  ],
+  "expected": "弹窗可见；题目/正确项/错误项/次数正确；可关闭",
+  "actual": "错题 1 条后回地图点「错题本」：弹窗可见（计数「共 1 题」），列表含错误项「showes」；关闭后弹窗隐藏",
+  "metrics": {
+   "visible": true,
+   "count": "共 1 题",
+   "closeWorks": true
+  },
+  "evidence": [
+   "screenshots/ui09-wrongbook.png"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "UI-10",
+  "title": "精灵日志入口",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:33:54+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP) 打开 http://127.0.0.1:8797；每轮从注入的已知初始状态开始；注入值见 notes",
+  "steps": [
+   "由 docs/acceptance/v26-acceptance-20261030-000706/driver-ui-acceptance.js 驱动执行（真实页面 + 真实计时器）"
+  ],
+  "expected": "弹窗可见；事件/心情/文本/题目正确；可关闭",
+  "actual": "精灵日志 1 条：弹窗可见（计数「（1 条）」、条目 1、心情统计「心情分布：🥰×1」）；关闭后隐藏",
+  "metrics": {
+   "total": 1,
+   "visible": true,
+   "items": 1,
+   "closeWorks": true
+  },
+  "evidence": [
+   "screenshots/ui10-fairylog.png"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "UI-11",
+  "title": "精灵事件问题快照",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:33:54+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP) 打开 http://127.0.0.1:8797；每轮从注入的已知初始状态开始；注入值见 notes",
+  "steps": [
+   "由 docs/acceptance/v26-acceptance-20261030-000706/driver-ui-acceptance.js 驱动执行（真实页面 + 真实计时器）"
+  ],
+  "expected": "旧事件仍对应旧题；旧答案按规则打码",
+  "actual": "旧题「go 的过去式是？…」事件发出后立刻答对切到新题，1.2s 后 mock 响应返回：日志 quiz 字段仍为旧题（go 的过去式是？）；该条台词含打码 🚫 且不含旧题答案原文「went」（若误用新题打码则旧答案会原样泄出）",
+  "metrics": {
+   "logQuizIsOld": true,
+   "masked": true,
+   "leak": false,
+   "qChanged": true,
+   "capturedRequests": 2
+  },
+  "evidence": [
+   "screenshots/ui11-snapshot-masked.png",
+   "sessions/ui11-captured-request.json"
+  ],
+  "defectId": "",
+  "notes": "注入：window.fetch mock（延迟 1.2s）返回含旧题答案词的受控文本；事件与切题时序由驱动控制"
+ },
+ {
+  "id": "UI-12",
+  "title": "模型文本安全渲染",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:33:54+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP) 打开 http://127.0.0.1:8797；每轮从注入的已知初始状态开始；注入值见 notes",
+  "steps": [
+   "由 docs/acceptance/v26-acceptance-20261030-000706/driver-ui-acceptance.js 驱动执行（真实页面 + 真实计时器）"
+  ],
+  "expected": "HTML 标记按文本显示，不创建元素、不执行脚本",
+  "actual": "模型文本含 <img onerror> 与 <script>：气泡与精灵日志均按纯文本显示（textContent 含字面 '<img'），未创建元素，onerror/script 均未执行（__pwned/__pwned2 均为空）",
+  "metrics": {
+   "bubbleImgElement": false,
+   "bubbleScriptElement": false,
+   "scriptExecuted": false,
+   "onerrorExecuted": false,
+   "logImgElement": false
+  },
+  "evidence": [
+   "screenshots/ui12-bubble-safe.png",
+   "screenshots/ui12-fairylog-safe.png"
+  ],
+  "defectId": "",
+  "notes": "注入：window.fetch mock 返回带 HTML 的受控文本"
+ },
+ {
+  "id": "UI-13",
+  "title": "无 LLM 基础可玩",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T00:33:54+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP) 打开 http://127.0.0.1:8797；每轮从注入的已知初始状态开始；注入值见 notes",
+  "steps": [
+   "由 docs/acceptance/v26-acceptance-20261030-000706/driver-ui-acceptance.js 驱动执行（真实页面 + 真实计时器）"
+  ],
+  "expected": "核心流程无阻塞、无未捕获异常",
+  "actual": "未召唤精灵（LM Studio 在线但未启用）：答题对/错各一次、返回地图、错题本开合全流程无阻塞、无未捕获异常",
+  "metrics": {
+   "consoleErrors": 0,
+   "wrongbookOpened": true
+  },
+  "evidence": [
+   "screenshots/ui13-no-llm-flow.png"
+  ],
+  "defectId": "",
+  "notes": "不验收阶段 3 静态讲解（标准 1.2）"
+ },
+ {
+  "id": "DATA-01",
+  "title": "题库总量与难度",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T08:16:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "题库数据源 nce-shared.js（commit c7b1b68）；校验器 sessions/data-validator.js",
+  "steps": [
+   "node sessions/data-validator.js"
+  ],
+  "expected": "198 题；d1/d2/d3 = 60/90/48",
+  "actual": "198 题；d1=60、d2=90、d3=48，与契约一致",
+  "metrics": {
+   "total": 198,
+   "d1": 60,
+   "d2": 90,
+   "d3": 48
+  },
+  "evidence": [
+   "sessions/data-check.json"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "DATA-02",
+  "title": "题目 ID 唯一",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T08:16:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "题库数据源 nce-shared.js（commit c7b1b68）；校验器 sessions/data-validator.js",
+  "steps": [
+   "node sessions/data-validator.js"
+  ],
+  "expected": "每题有 ID；全库唯一",
+  "actual": "198/198 ID 非空且唯一（id 由内容哈希生成，未修改题目不受增删重排影响）",
+  "metrics": {
+   "count": 198,
+   "unique": 198
+  },
+  "evidence": [
+   "sessions/data-check.json"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "DATA-03",
+  "title": "knowledge 标签合法且与题意一致",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T08:16:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "题库数据源 nce-shared.js（commit c7b1b68）；校验器 sessions/data-validator.js",
+  "steps": [
+   "node sessions/data-validator.js"
+  ],
+  "expected": "每题至少一个合法标签；动词考点标签与题意一致",
+  "actual": "合法词表 7 项；198 题全部有标签；0 处不匹配（校验规则：比对前剥离答案中的中文括注——如 read 题「read（拼写不变）」语义答案为 read；三形类型题答案为变形代号/三形串，不做动词形式比对）",
+  "metrics": {
+   "legalTags": 7,
+   "mismatches": 0,
+   "total": 198
+  },
+  "evidence": [
+   "sessions/data-check.json",
+   "sessions/data-validator.js"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "DATA-04",
+  "title": "动词题 explanation",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T08:16:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "题库数据源 nce-shared.js（commit c7b1b68）；校验器 sessions/data-validator.js",
+  "steps": [
+   "node sessions/data-validator.js"
+  ],
+  "expected": "所有动词题有非空讲解；go/buy/begin/wear 抽查与三形一致",
+  "actual": "动词题 142 题，缺讲解 0；抽查 go(went/gone/ABC)、buy(bought/bought/ABB)、begin(began/begun/ABC)、wear(wore/worn/ABC) 过去式/分词/分类/三形答案全部与 VERB_DB 一致",
+  "metrics": {
+   "verbTotal": 142,
+   "missingExplanation": 0
+  },
+  "evidence": [
+   "sessions/data-check.json"
+  ],
+  "defectId": "",
+  "notes": ""
+ },
+ {
+  "id": "DATA-05",
+  "title": "审计核心错误为零",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T08:16:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "题库数据源 nce-shared.js（commit c7b1b68）；校验器 sessions/data-validator.js",
+  "steps": [
+   "npm run audit",
+   "npm run audit:fairy -- --out sessions/fairy-audit.json"
+  ],
+  "expected": "结构/重复/答案/拼写等核心错误为 0；刻意 WARN 有说明",
+  "actual": "六项核心错误全 0（见 CMD-03）；刻意 WARN：2 条生成器惯例难度提示（spend/begin 手工难度安排，输出中已注明「若为手工刻意安排可忽略」）；5 条双解风险提示（shine/show/spell/get 英美式差异，均为已知可接受项）；fairy 审计泄题 0/16",
+  "metrics": {
+   "coreErrors": 0,
+   "warns": 7,
+   "doubleAnswers": 5
+  },
+  "evidence": [
+   "commands/npm-run-audit.log",
+   "sessions/fairy-audit.json"
+  ],
+  "defectId": "",
+  "notes": ""
+ }
+]
