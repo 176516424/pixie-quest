@@ -1,0 +1,18 @@
+{
+  "generatedAt": "2026-10-30T21:31+08:00",
+  "commitUnderTest": "350b90d",
+  "os": "Windows (Git Bash)",
+  "node": "v22.x",
+  "browser": "headless Chrome (--headless=new --no-proxy-server)，独立临时 profile",
+  "gameServer": { "port": 8797, "start": "LLM_HOST=127.0.0.1 LLM_PORT=15990 PORT=8797 node server/server.js" },
+  "llmUpstream": {
+    "kind": "mock",
+    "mark": "[mock]",
+    "endpoint": "http://127.0.0.1:15990/v1",
+    "model": "mock-qwen3.5-9b",
+    "runner": "tools/acceptance/mock-upstream.js 15990",
+    "note": "LM Studio 本机不可用：GUI 未安装、lms server start 卡死、~/.lmstudio/models 为 0 字节（无任何模型权重）。真实模型验收（V28 批次 B）标 BLOCKED。"
+  },
+  "proxyCaveat": "本机存在系统代理 HTTP_PROXY=127.0.0.1:64364 且 NO_PROXY 为空，headless Chrome 必须加 --no-proxy-server，否则 127.0.0.1 请求被代理劫持。驱动已内置该参数。",
+  "environmentStatement": "本验收包全部 LLM 结果均来自受控 mock 上游，仅证明管线功能；不证明真实模型的语言质量、教学事实质量与真实延迟。"
+}

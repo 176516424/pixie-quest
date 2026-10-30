@@ -1,5 +1,5 @@
 {
- "executedAt": "2026-10-30T08:25:04.414Z",
+ "executedAt": "2026-10-30T13:30:41.586Z",
  "pass": 12,
  "total": 12,
  "results": [
@@ -11,12 +11,12 @@
   {
    "id": "T-02 C1 诊断入库",
    "pass": true,
-   "actual": "错题条目 qid=q11i88si 类别「拼写混淆」(basis=affix-overgeneralization)；历史 first:false"
+   "actual": "错题条目 qid=q1x977m2 类别「拼写混淆」(basis=affix-overgeneralization)；历史 first:false"
   },
   {
    "id": "T-03 C3 答错结算 L4",
    "pass": true,
-   "actual": "换题边界出「📖 结算讲解」：📖 set 的过去式是不规则变化 set。"
+   "actual": "换题边界出「📖 结算讲解」：📖 show 的过去式是不规则变化 showed。"
   },
   {
    "id": "T-04 C3 换题清讲解",
@@ -26,7 +26,7 @@
   {
    "id": "T-05 C2 学习者摘要",
    "pass": true,
-   "actual": "weaknesses=[{\"qid\":\"q11i88si\",\"tag\":\"verb\",\"wrong\":1}]（最近仍错的题进弱点列表）"
+   "actual": "weaknesses=[{\"qid\":\"q1x977m2\",\"tag\":\"verb\",\"wrong\":1}]（最近仍错的题进弱点列表）"
   },
   {
    "id": "T-06 static 提示与重试解锁",
@@ -36,7 +36,7 @@
   {
    "id": "T-07 C2/C3 重试+结算L4",
    "pass": true,
-   "actual": "同题先错后对：first:miss→retry:ok；结算讲解「📖 go 的过去式是不规则变化 went。」"
+   "actual": "同题先错后对：first:miss→retry:ok；结算讲解「📖 wear 的过去式是不规则变化 wore。」"
   },
   {
    "id": "T-08 答对移出错题本",

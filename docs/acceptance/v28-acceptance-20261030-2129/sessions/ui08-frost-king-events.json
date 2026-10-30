@@ -1,0 +1,29 @@
+[
+ {
+  "t": 1793366991484,
+  "model": "qwen/qwen3.5-9b",
+  "sysVer": 2,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "happy",
+  "text": "Read the sentence first. What does the blank need here?",
+  "quiz": "forget — forgot · forgotten 中哪个是过去分词？"
+ },
+ {
+  "t": 1793366992967,
+  "model": "qwen/qwen3.5-9b",
+  "sysVer": 2,
+  "ev": "The enemy Frost Demon King (BOSS) just ATTACKED your boy for -17 HP (now 83/100).",
+  "mood": "worried",
+  "text": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "quiz": "forget — forgot · forgotten 中哪个是过去分词？"
+ },
+ {
+  "t": 1793366993339,
+  "model": "qwen/qwen3.5-9b",
+  "sysVer": 2,
+  "ev": "DANGER! The enemy Frost Demon King (BOSS) is CHARGING the skill Absolute Freeze for 4 quick seconds! Your boy can INTERRUPT it by answering correctly and striking RIGHT NOW! Warn him to hurry!",
+  "mood": "panic",
+  "text": "Watch out! He is charging a skill — get ready to dodge!",
+  "quiz": "forget — forgot · forgotten 中哪个是过去分词？"
+ }
+]
