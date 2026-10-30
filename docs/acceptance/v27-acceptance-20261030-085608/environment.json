@@ -1,29 +1,42 @@
 {
-  "version": "v27-batch1",
-  "acceptancePackage": "docs/acceptance/v27-acceptance-20261030-085608",
-  "executedAt": "2026-10-30T08:56-09:20 +08:00",
-  "executor": "WorkBuddy Agent（小沫）",
-  "repo": {
-    "commitAtAcceptanceStart": "6dc64ae478753b5f2549db2f2cc3803999e85e5e",
-    "workingTree": "验收中修复 DEF-001/DEF-002 后随验收包一并提交",
-    "github": "https://github.com/176516424/pixie-quest.git"
-  },
-  "runtime": {
-    "os": "Windows (Git Bash + node)",
-    "node": "v22.22.2",
-    "browser": "Chrome headless=new (CDP 驱动)",
-    "gameServer": "127.0.0.1:8797 / :8798（实验） / :8799（不可用探针）",
-    "llmUpstream": "受控 mock 上游（tools/acceptance/mock-upstream.js，OpenAI 兼容）"
-  },
-  "llmAvailability": {
-    "lmStudio": "不可用（lms server start 卡在 Waking up，GUI 未安装；v26 验收时曾用真实 qwen/qwen3.5-9b）",
-    "substitute": "确定性 mock 上游：hint 请求按 questionId 哈希混合 88% 合法 JSON / 6% 纯文本 / 3% 空串 / 3% 缺字段，延迟 250–750ms；fairy 请求按事件关键词回复合规台词",
-    "implication": "所有标注 [mock] 的指标验证的是『管线行为（校验/降级/打码/协议）』而非模型语言质量；真实模型复核列为后续事项"
-  },
-  "experimentDesign": {
-    "seed": 20261030,
-    "questionSequence": "驱动侧固定 60 题（d1/d2/d3 各 20，三组完全一致，逐 qid 核对 0 分叉）",
-    "studentModel": "作答概率 = FNV1a(qid|attempt) 映射，与组别无关；首答基准 d1=0.70/d2=0.50/d3=0.35；重试增益（模拟参数）L1 后 +0.15 / L2 后 +0.30 / L3 后 +0.45，上限 0.95",
-    "note": "教学效果指标为模拟学生数据；真实学习者实验（含延迟复习正确率）需真人数据，列为后续事项"
-  }
+ "version": "v27-batch1",
+ "acceptancePackage": "docs/acceptance/v27-acceptance-20261030-085608",
+ "executedAt": "2026-10-30T08:56-09:20 +08:00",
+ "executor": "WorkBuddy Agent（小沫）",
+ "repo": {
+  "commitAtAcceptanceStart": "6dc64ae478753b5f2549db2f2cc3803999e85e5e",
+  "workingTree": "验收中修复 DEF-001/DEF-002 后随验收包一并提交",
+  "github": "https://github.com/176516424/pixie-quest.git"
+ },
+ "runtime": {
+  "os": "Windows (Git Bash + node)",
+  "node": "v22.22.2",
+  "browser": "Chrome headless=new (CDP 驱动)",
+  "gameServer": "127.0.0.1:8797 / :8798（实验） / :8799（不可用探针）",
+  "llmUpstream": "受控 mock 上游（tools/acceptance/mock-upstream.js，OpenAI 兼容）"
+ },
+ "llmAvailability": {
+  "lmStudio": "不可用（lms server start 卡在 Waking up，GUI 未安装；v26 验收时曾用真实 qwen/qwen3.5-9b）",
+  "substitute": "确定性 mock 上游：hint 请求按 questionId 哈希混合 88% 合法 JSON / 6% 纯文本 / 3% 空串 / 3% 缺字段，延迟 250–750ms；fairy 请求按事件关键词回复合规台词",
+  "implication": "所有标注 [mock] 的指标验证的是『管线行为（校验/降级/打码/协议）』而非模型语言质量；真实模型复核列为后续事项"
+ },
+ "experimentDesign": {
+  "seed": 20261030,
+  "questionSequence": "驱动侧固定 60 题（d1/d2/d3 各 20，三组完全一致，逐 qid 核对 0 分叉）",
+  "studentModel": "作答概率 = FNV1a(qid|attempt) 映射，与组别无关；首答基准 d1=0.70/d2=0.50/d3=0.35；重试增益（模拟参数）L1 后 +0.15 / L2 后 +0.30 / L3 后 +0.45，上限 0.95",
+  "note": "教学效果指标为模拟学生数据；真实学习者实验（含延迟复习正确率）需真人数据，列为后续事项"
+ },
+ "rectification": {
+  "date": "2026-10-30",
+  "trigger": "复核评审判定首轮验收不通过（UI-09/10/13 假阳性、UI-08 对象错误、环境描述矛盾）",
+  "fixed": [
+   "DEF-003 弹窗父容器隐藏（#wbwrap/#flwrap 移至 body 层级）",
+   "驱动真实可见性断言 visInfo/waitVisible（getComputedStyle+祖先链+边界+elementFromPoint）",
+   "UI-09/10/13/UI-08 及全部 22 张截图重新生成（SHA 已验证不同于 v26）",
+   "UI-08 改为真实冰霜魔王 Boss 战证据",
+   "环境描述统一：LM Studio 不可用，全部 mock（ui-driver.log 被 ui-driver-v27.log 取代）"
+  ],
+  "driver": "driver-ui-v27.js (v27-rectified)",
+  "lmStudio": "不可用（GUI 未安装，lms server start 卡死）"
+ }
 }

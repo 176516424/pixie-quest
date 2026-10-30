@@ -1,0 +1,29 @@
+[
+ {
+  "t": 1793341736570,
+  "model": "qwen/qwen3.5-9b",
+  "sysVer": 2,
+  "ev": "A NEW quiz question just appeared. Watch over your boy and start helping him understand it.",
+  "mood": "happy",
+  "text": "🚫 the sentence first. What does the blank need here?",
+  "quiz": "read — read · read 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793341738038,
+  "model": "qwen/qwen3.5-9b",
+  "sysVer": 2,
+  "ev": "The monster swung at your boy but he DODGED it completely! Nothing happened! Show your motherly relief and celebrate his agility!",
+  "mood": "worried",
+  "text": "Keep thinking about the pattern. Notice the timer and choose carefully!",
+  "quiz": "read — read · read 属于哪种不规则变形？"
+ },
+ {
+  "t": 1793341738427,
+  "model": "qwen/qwen3.5-9b",
+  "sysVer": 2,
+  "ev": "DANGER! The enemy Frost Demon King (BOSS) is CHARGING the skill Absolute Freeze for 4 quick seconds! Your boy can INTERRUPT it by answering correctly and striking RIGHT NOW! Warn him to hurry!",
+  "mood": "panic",
+  "text": "Watch out! He is charging a skill — get ready to dodge!",
+  "quiz": "read — read · read 属于哪种不规则变形？"
+ }
+]

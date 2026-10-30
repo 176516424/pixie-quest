@@ -1,90 +1,595 @@
 [
-  {"id":"CMD-01","title":"单元测试","priority":"P0","status":"PASS","executor":"WorkBuddy Agent（小沫）",
-   "steps":["npm test"],"expected":"退出码 0；fail=0、cancelled=0",
-   "actual":"退出码 0；tests=36、pass=36、fail=0、cancelled=0（含 hint-engine 11 用例 + buildMaskOpts DEF-002 新断言）",
-   "metrics":{"exitCode":0,"tests":36,"pass":36,"fail":0,"cancelled":0},
-   "evidence":["commands/npm-test.log"]},
-
-  {"id":"CMD-02","title":"语法检查","priority":"P1","status":"PASS",
-   "steps":["npm run check"],"expected":"全部通过",
-   "actual":"退出码 0；22 段全部通过",
-   "metrics":{"exitCode":0,"segments":22},"evidence":["commands/npm-run-check.log"]},
-
-  {"id":"CMD-03","title":"题库审计","priority":"P0","status":"PASS",
-   "steps":["npm run audit"],"expected":"核心错误均为 0",
-   "actual":"退出码 0；结构问题 0、语义重复组 0、VERB_DB 错误 0、动词题答案错误 0、拼写不良干扰项 0、跨难度同考点 0",
-   "metrics":{"exitCode":0,"coreErrors":0},"evidence":["commands/npm-run-audit.log"]},
-
-  {"id":"CMD-04","title":"精灵审计","priority":"P0","status":"PASS",
-   "steps":["LLM_PORT=15990（mock 上游）npm run audit:fairy -- --out sessions/fairy-audit.json"],
-   "expected":"正常生成 JSON；退出码 0；答前泄题数 0",
-   "actual":"退出码 0；JSON 已生成（16 事件）；成功应答 16/16；心情标签合规 16/16；含教学相关词 15/16（94%）；泄题 0/16。[mock 上游]",
-   "metrics":{"exitCode":0,"events":16,"replies":16,"moodLegal":16,"teachWords":15,"leak":0},
-   "evidence":["commands/npm-run-audit-fairy.log","sessions/fairy-audit.json"]},
-
-  {"id":"SRV-01","title":"savelogs tag v3 上报（v27 新字段 exp/hintStats）","priority":"P0","status":"PASS",
-   "steps":["实验三组各 POST /savelogs {tag:'v3', sid:'v27acc-<exp>-20261030', exp, seed, player[60+], hintStats}"],
-   "expected":"200；文件按 sid 落盘、索引正确",
-   "actual":"三组均 200 ok:true（player 68/68/68 条）；logdir 内 log-player/log-fairy/log-index 齐全；hintStats 随日志落盘",
-   "metrics":{"statuses":[200,200,200]},"evidence":["experiments/logdir/","experiments/llm-run.json"]},
-
-  {"id":"SRV-02","title":"hint-engine 静态白名单（v27 新路由）","priority":"P0","status":"PASS",
-   "steps":["浏览器加载 http://127.0.0.1:8797/（页面引用 /src/hint-engine.js）"],
-   "expected":"200 且页面无 404/脚本错误",
-   "actual":"页面正常加载，UI-01~13 全程 consoleErrors=0（含 hint-engine 加载）；HINT_ENGINE 在页面内可用（实验组提示条全部渲染）",
-   "metrics":{},"evidence":["commands/ui-driver.log","screenshots/"]},
-
-  {"id":"SRV-03","title":"LLM 上游不可达 → 502","priority":"P0","status":"PASS",
-   "steps":["对 :8799（LLM_PORT=15999 无监听）POST /llm ×5"],
-   "expected":"502 + 可解析错误 JSON，不挂起",
-   "actual":"5/5 返回 502 且含 error 体（耗时 1–13ms，不挂起）",
-   "metrics":{"probe":5,"status":502},"evidence":["sessions/hint-metrics.json → llmUnavailableProbe"]},
-
-  {"id":"UI-01","title":"地图与进入第一章","priority":"P0","status":"PASS",
-   "steps":["复用 v26 驱动（v27 代码）"],"expected":"页面无脚本错误；未通关章节锁定",
-   "actual":"地图可见；node0 可进、node1-11 锁定；无脚本异常","metrics":{},"evidence":["commands/ui-driver.log","screenshots/ui01-*.png"]},
-  {"id":"UI-02","title":"答对结算一次","priority":"P0","status":"PASS",
-   "actual":"怪兽 HP 80→57（单发 23）；进入下一题；勇者存活","metrics":{},"evidence":["commands/ui-driver.log"]},
-  {"id":"UI-03","title":"答错记录一次","priority":"P0","status":"PASS",
-   "actual":"错题本 0→1（题干/错误项/正确项一致）；攻击落空；默认口径直接下一题","metrics":{},"evidence":["commands/ui-driver.log"]},
-  {"id":"UI-04","title":"连续点击与换怪空档","priority":"P0","status":"PASS",
-   "actual":"三连点仅结算一次（gainXp 探针 1 次）；空档 8 连点被 canAnswer 守卫 8/8 拒绝；无第三笔经验","metrics":{},"evidence":["commands/ui-driver.log"]},
-  {"id":"UI-05","title":"中毒最后一跳致死","priority":"P0","status":"PASS",
-   "actual":"HP=0、死亡浮层可见、gameOver=true、输入锁定","metrics":{},"evidence":["commands/ui-driver.log"]},
-  {"id":"UI-06","title":"返回地图清理状态","priority":"P0","status":"PASS",
-   "actual":"中毒/冻结/续力返回地图后全部清零，重进无旧状态","metrics":{},"evidence":["commands/ui-driver.log"]},
-  {"id":"UI-07","title":"续力与大招计时","priority":"P1","status":"PASS",
-   "actual":"续力条 5%→90%；大招落地后计时归位，归位→首次普攻 2119ms（2~3s 喘息口径），无立即补刀","metrics":{"gapMs":2119},"evidence":["commands/ui-driver.log"]},
-  {"id":"UI-08","title":"Boss 蓄力事件含 Absolute Freeze","priority":"P1","status":"PASS",
-   "actual":"蓄力事件文案含 Absolute Freeze，无 undefined","metrics":{},"evidence":["commands/ui-driver.log"]},
-  {"id":"UI-09","title":"错题本入口","priority":"P1","status":"PASS",
-   "actual":"弹窗可见（共 1 题、错误项一致）、可关闭","metrics":{},"evidence":["commands/ui-driver.log"]},
-  {"id":"UI-10","title":"精灵日志入口","priority":"P1","status":"PASS",
-   "actual":"弹窗可见（1 条、心情分布 😊×1）、可关闭","metrics":{},"evidence":["commands/ui-driver.log"]},
-  {"id":"UI-11","title":"旧题事件快照与打码","priority":"P0","status":"PASS",
-   "actual":"旧题事件跨题返回后日志仍对应旧题；台词含打码 🚫 且不含旧题答案原文","metrics":{},"evidence":["commands/ui-driver.log"]},
-  {"id":"UI-12","title":"模型文本安全渲染","priority":"P0","status":"PASS",
-   "actual":"<img onerror>/<script> 按纯文本显示，未创建元素未执行（__pwned 为空）","metrics":{},"evidence":["commands/ui-driver.log"]},
-  {"id":"UI-13","title":"无 LLM 基础可玩","priority":"P0","status":"PASS",
-   "actual":"未召唤精灵全流程（答题/返回地图/错题本）无阻塞无异常","metrics":{},"evidence":["commands/ui-driver.log"]},
-
-  {"id":"LLM-01","title":"LLM 专项指标（120 样本 = 40 题 × L1/L2/L3）","priority":"P0","status":"PASS",
-   "steps":["node tools/acceptance/run-sampler.js <pkg>/sessions/hint-metrics.json 40"],
-   "expected":"答前泄题 0；非法输出与 LLM 不可用降级率 100%；最终输出合规率 ≥99%；题目匹配率 ≥98%；教学事实准确率 ≥95%",
-   "actual":"答前泄题（display/raw）0/0；干扰项引用 0；invalidOutputFallbackRate 100%（6/6 非法样本全部安全降级）；llmUnavailableFallbackRate 100%（5/5 探针 502→静态兜底）；finalOutputComplianceRate 100%；questionMatchRate 100%；teachingFactAccuracy 100%（规则判定）；latency p50=483ms / p95=703ms（mock 延迟主导）；对抗打码 maskDefenseRate 100%（DEF-002 修复后）",
-   "metrics":{"sampleCount":120,"preAnswerLeak":0,"invalidFallbackRate":100,"unavailableFallbackRate":100,"finalComplianceRate":100,"matchRate":100,"factAccuracy":100,"latencyP50Ms":483,"latencyP95Ms":703,"maskDefenseRate":100},
-   "notes":"[mock 上游] rawStructuredJsonRate 95%（mock 混合配置的抽样实现，期望 88%）；语言质量与真实延迟待 LM Studio 真实模型复核",
-   "evidence":["sessions/hint-metrics.json","tools/acceptance/hint-metrics.js"]},
-
-  {"id":"EXP-00","title":"三组同题序列核对","priority":"P0","status":"PASS",
-   "steps":["对比 none/static/llm 三组逐题 qid 序列"],
-   "actual":"60 行逐 qid 完全一致（0 分叉），固定序列文件 fixed-question-sequence.json","metrics":{"mismatches":0},"evidence":["experiments/fixed-question-sequence.json","experiments/*-run.json"]},
-  {"id":"EXP-01","title":"无提示组 exp=none","priority":"P0","status":"PASS",
-   "actual":"样本 60；首答正确率 45%；重试 0 次（v26 行为：答错直接下一题）","metrics":{"n":60,"firstCorrectRate":45,"retried":0},"evidence":["experiments/none-run.json","experiments/logdir/log-player-v27acc-none-20261030.json"]},
-  {"id":"EXP-02","title":"静态提示组 exp=static","priority":"P0","status":"PASS",
-   "actual":"样本 60；首答正确率 45%（同一学生模型）；重试 33 次全部解决（100%）；提示全部 📘 静态、零 LLM 请求","metrics":{"n":60,"firstCorrectRate":45,"retried":33,"retrySolvedRate":100},"evidence":["experiments/static-run.json"]},
-  {"id":"EXP-03","title":"LLM 提示组 exp=llm","priority":"P0","status":"PASS",
-   "actual":"样本 60；首答正确率 45%（同一学生模型）；重试 33 次全部解决（100%）；hintStats：llmCalls=68、cacheHits=0、staticUses=0、llmFallbacks=0；提示来源 🧚×68（66 结构化 + 2 纯文本降级）；延迟 p50=471ms / p95=677ms",
-   "metrics":{"n":60,"firstCorrectRate":45,"retried":33,"retrySolvedRate":100,"llmCalls":68,"llmPerQuestion":1.13,"cacheHitRate":0,"localFallbackRate":0,"latencyP50Ms":471,"latencyP95Ms":677},
-   "evidence":["experiments/llm-run.json","experiments/logdir/log-player-v27acc-llm-20261030.json"]}
+ {
+  "id": "CMD-01",
+  "title": "单元测试",
+  "priority": "P0",
+  "status": "PASS",
+  "executor": "WorkBuddy Agent（小沫）",
+  "steps": [
+   "npm test"
+  ],
+  "expected": "退出码 0；fail=0、cancelled=0",
+  "actual": "退出码 0；tests=36、pass=36、fail=0、cancelled=0（含 hint-engine 11 用例 + buildMaskOpts DEF-002 新断言）",
+  "metrics": {
+   "exitCode": 0,
+   "tests": 36,
+   "pass": 36,
+   "fail": 0,
+   "cancelled": 0
+  },
+  "evidence": [
+   "commands/npm-test.log"
+  ]
+ },
+ {
+  "id": "CMD-02",
+  "title": "语法检查",
+  "priority": "P1",
+  "status": "PASS",
+  "steps": [
+   "npm run check"
+  ],
+  "expected": "全部通过",
+  "actual": "退出码 0；22 段全部通过",
+  "metrics": {
+   "exitCode": 0,
+   "segments": 22
+  },
+  "evidence": [
+   "commands/npm-run-check.log"
+  ]
+ },
+ {
+  "id": "CMD-03",
+  "title": "题库审计",
+  "priority": "P0",
+  "status": "PASS",
+  "steps": [
+   "npm run audit"
+  ],
+  "expected": "核心错误均为 0",
+  "actual": "退出码 0；结构问题 0、语义重复组 0、VERB_DB 错误 0、动词题答案错误 0、拼写不良干扰项 0、跨难度同考点 0",
+  "metrics": {
+   "exitCode": 0,
+   "coreErrors": 0
+  },
+  "evidence": [
+   "commands/npm-run-audit.log"
+  ]
+ },
+ {
+  "id": "CMD-04",
+  "title": "精灵审计",
+  "priority": "P0",
+  "status": "PASS",
+  "steps": [
+   "LLM_PORT=15990（mock 上游）npm run audit:fairy -- --out sessions/fairy-audit.json"
+  ],
+  "expected": "正常生成 JSON；退出码 0；答前泄题数 0",
+  "actual": "退出码 0；JSON 已生成（16 事件）；成功应答 16/16；心情标签合规 16/16；含教学相关词 15/16（94%）；泄题 0/16。[mock 上游]",
+  "metrics": {
+   "exitCode": 0,
+   "events": 16,
+   "replies": 16,
+   "moodLegal": 16,
+   "teachWords": 15,
+   "leak": 0
+  },
+  "evidence": [
+   "commands/npm-run-audit-fairy.log",
+   "sessions/fairy-audit.json"
+  ]
+ },
+ {
+  "id": "SRV-01",
+  "title": "savelogs tag v3 上报（v27 新字段 exp/hintStats）",
+  "priority": "P0",
+  "status": "PASS",
+  "steps": [
+   "实验三组各 POST /savelogs {tag:'v3', sid:'v27acc-<exp>-20261030', exp, seed, player[60+], hintStats}"
+  ],
+  "expected": "200；文件按 sid 落盘、索引正确",
+  "actual": "三组均 200 ok:true（player 68/68/68 条）；logdir 内 log-player/log-fairy/log-index 齐全；hintStats 随日志落盘",
+  "metrics": {
+   "statuses": [
+    200,
+    200,
+    200
+   ]
+  },
+  "evidence": [
+   "experiments/logdir/",
+   "experiments/llm-run.json"
+  ]
+ },
+ {
+  "id": "SRV-02",
+  "title": "hint-engine 静态白名单（v27 新路由）",
+  "priority": "P0",
+  "status": "PASS",
+  "steps": [
+   "浏览器加载 http://127.0.0.1:8797/（页面引用 /src/hint-engine.js）"
+  ],
+  "expected": "200 且页面无 404/脚本错误",
+  "actual": "页面正常加载，UI-01~13 全程 consoleErrors=0（含 hint-engine 加载）；HINT_ENGINE 在页面内可用（实验组提示条全部渲染）",
+  "metrics": {},
+  "evidence": [
+   "commands/ui-driver.log",
+   "screenshots/"
+  ]
+ },
+ {
+  "id": "SRV-03",
+  "title": "LLM 上游不可达 → 502",
+  "priority": "P0",
+  "status": "PASS",
+  "steps": [
+   "对 :8799（LLM_PORT=15999 无监听）POST /llm ×5"
+  ],
+  "expected": "502 + 可解析错误 JSON，不挂起",
+  "actual": "5/5 返回 502 且含 error 体（耗时 1–13ms，不挂起）",
+  "metrics": {
+   "probe": 5,
+   "status": 502
+  },
+  "evidence": [
+   "sessions/hint-metrics.json → llmUnavailableProbe"
+  ]
+ },
+ {
+  "id": "UI-01",
+  "title": "地图与进入第一章",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T14:29:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP, headless) 打开 http://127.0.0.1:8797；LLM 上游=受控 mock 127.0.0.1:15990（LM Studio 不可用，与报告口径一致）",
+  "steps": [
+   "由本验收包 driver-ui-v27.js 驱动执行（真实页面+真实计时器；UI-09/10/13 使用整改后的真实可见性断言）"
+  ],
+  "expected": "页面无脚本错误；第一章可进入；其余章节锁定符合存档",
+  "actual": "地图可见；node0 可点击进入、其余章节锁定（符合空存档）；进入战斗后无脚本异常",
+  "metrics": {
+   "consoleErrors": 0,
+   "levels": 3
+  },
+  "evidence": [
+   "screenshots/ui01-map.png",
+   "screenshots/ui01-battle.png"
+  ],
+  "defectId": "",
+  "notes": "空存档（localStorage 已清）→ 仅第一章解锁，符合预期"
+ },
+ {
+  "id": "UI-02",
+  "title": "答对结算",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T14:29:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP, headless) 打开 http://127.0.0.1:8797；LLM 上游=受控 mock 127.0.0.1:15990（LM Studio 不可用，与报告口径一致）",
+  "steps": [
+   "由本验收包 driver-ui-v27.js 驱动执行（真实页面+真实计时器；UI-09/10/13 使用整改后的真实可见性断言）"
+  ],
+  "expected": "只结算一次；出现攻击；MP/XP 按规则变化；存活进入下一题",
+  "actual": "答对结算一次：怪兽 HP 80→60，命中回合伤害 20（18~26 单发区间，仅可能来自一次结算）；MP 每次尝试恰好 +12（封顶 50）；进入下一题且选项 4 个；勇者存活",
+  "metrics": {
+   "dmg": 20,
+   "monHpBefore": 80,
+   "monHpAfter": 60
+  },
+  "evidence": [
+   "screenshots/ui02-before.png",
+   "screenshots/ui02-after.png"
+  ],
+  "defectId": "",
+  "notes": "勇者攻击 10% 被闪开为真实机制，驱动以多次尝试排除运气"
+ },
+ {
+  "id": "UI-03",
+  "title": "答错处理",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T14:29:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP, headless) 打开 http://127.0.0.1:8797；LLM 上游=受控 mock 127.0.0.1:15990（LM Studio 不可用，与报告口径一致）",
+  "steps": [
+   "由本验收包 driver-ui-v27.js 驱动执行（真实页面+真实计时器；UI-09/10/13 使用整改后的真实可见性断言）"
+  ],
+  "expected": "只记录一次；攻击落空；进入下一题",
+  "actual": "答错仅记录一次：错题本 0→1 条，新记录题干/错误项(wearing)/正确项与实际一致；攻击落空未掉血（HP 100→100）；进入下一题",
+  "metrics": {
+   "wrongBefore": 0,
+   "wrongAfter": 1,
+   "hpBefore": 100,
+   "hpAfter": 100
+  },
+  "evidence": [
+   "screenshots/ui03-after-wrong.png"
+  ],
+  "defectId": "",
+  "notes": "精灵未召唤（无 LLM 分支）"
+ },
+ {
+  "id": "UI-04",
+  "title": "连续点击与换怪空档输入",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T14:29:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP, headless) 打开 http://127.0.0.1:8797；LLM 上游=受控 mock 127.0.0.1:15990（LM Studio 不可用，与报告口径一致）",
+  "steps": [
+   "由本验收包 driver-ui-v27.js 驱动执行（真实页面+真实计时器；UI-09/10/13 使用整改后的真实可见性断言）"
+  ],
+  "expected": "不重复扣血/加经验/跳题；无异常",
+  "actual": "A: 1 次答题尝试（含 0 次真实闪避）每次 gainXp 恰好 1 次 +8（共 1 次/8），命中回合伤害 20 全在 18~26 单发区间——三连点仅结算一次；B: 换怪空档连点 8 次——canAnswer 守卫 8/8 拒绝，探针仅答题 +8 与击杀 +6 两笔（合计 14），无重复结算",
+  "metrics": {
+   "attempts": 1,
+   "hitDeltas": [
+    20
+   ],
+   "xpCallsA": 1,
+   "xpSumA": 8,
+   "xpCallsB": 2,
+   "xpSumB": 14,
+   "transitionClicks": 8,
+   "guardRejectedAll": true
+  },
+  "evidence": [
+   "screenshots/ui04-transition.png"
+  ],
+  "defectId": "",
+  "notes": "勇者攻击 10% 被闪开为真实机制（可能伤害 0），驱动以多次尝试+XP 探针排除运气；注入：monHP=3 触发击杀"
+ },
+ {
+  "id": "UI-05",
+  "title": "中毒最后一跳致死",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T14:29:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP, headless) 打开 http://127.0.0.1:8797；LLM 上游=受控 mock 127.0.0.1:15990（LM Studio 不可用，与报告口径一致）",
+  "steps": [
+   "由本验收包 driver-ui-v27.js 驱动执行（真实页面+真实计时器；UI-09/10/13 使用整改后的真实可见性断言）"
+  ],
+  "expected": "HP=0；死亡浮层；输入锁定",
+  "actual": "注入 HP=3 + 中毒后，2.8s 内真实计时结算死亡：HP=0、死亡浮层可见、gameOver=true；死后点击选项无效",
+  "metrics": {
+   "deathAfterMs": 2844,
+   "overlayTitle": "💀 你被 草原史莱姆 击倒了…",
+   "inputLocked": true
+  },
+  "evidence": [
+   "screenshots/ui05-poisoned.png",
+   "screenshots/ui05-dead.png"
+  ],
+  "defectId": "",
+  "notes": "注入值：heroHP=3, applyPoison(1,5)"
+ },
+ {
+  "id": "UI-06",
+  "title": "返回地图清理状态",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T14:29:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP, headless) 打开 http://127.0.0.1:8797；LLM 上游=受控 mock 127.0.0.1:15990（LM Studio 不可用，与报告口径一致）",
+  "steps": [
+   "由本验收包 driver-ui-v27.js 驱动执行（真实页面+真实计时器；UI-09/10/13 使用整改后的真实可见性断言）"
+  ],
+  "expected": "原计时器不再扣血或施法；重进无旧状态",
+  "actual": "a) 中毒返回地图：3.5s 后 HP 仍 100、poison 清空；b) 冻结 60s 返回地图：frozenUntil 归 0；c) 续力中返回地图：4.5s 后 charging=null 且无残留冻结",
+  "metrics": {
+   "poisonHp": 100,
+   "poisonCleared": true,
+   "freezeSet": true,
+   "freezeCleared": true,
+   "reenterFrozen": false,
+   "chargeSet": true,
+   "chargeCleared": true,
+   "skillLandedAfterBack": false
+  },
+  "evidence": [
+   "screenshots/ui06-poison-cleared.png",
+   "screenshots/ui06-freeze-cleared.png",
+   "screenshots/ui06-charge-cleared.png"
+  ],
+  "defectId": "",
+  "notes": "注入值：applyPoison(9,3)、doFreeze(60)、startCharge(freeze)"
+ },
+ {
+  "id": "UI-07",
+  "title": "续力与大招计时",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T14:29:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP, headless) 打开 http://127.0.0.1:8797；LLM 上游=受控 mock 127.0.0.1:15990（LM Studio 不可用，与报告口径一致）",
+  "steps": [
+   "由本验收包 driver-ui-v27.js 驱动执行（真实页面+真实计时器；UI-09/10/13 使用整改后的真实可见性断言）"
+  ],
+  "expected": "续力条 0→100；大招后无立即补攻；计时归位符合规则",
+  "actual": "续力条 5%→90%；续力期计时走负至 -3（真实普攻 0 次）；大招落地 afterSkillMonTimer(-3) 归位，归位→首次普攻 2061ms（≥1900ms），无立即补刀",
+  "metrics": {
+   "pctStart": 5.075,
+   "pctEnd": 90.2,
+   "monTimerDuringCharge": -3,
+   "resetFrom": -3,
+   "graceGapMs": 2061
+  },
+  "evidence": [
+   "screenshots/ui07-charge-start.png",
+   "screenshots/ui07-charge-end.png",
+   "screenshots/ui07-after-ult.png"
+  ],
+  "defectId": "",
+  "notes": "注入值：startCharge(frost)+monTimer=1"
+ },
+ {
+  "id": "UI-08",
+  "title": "最终 Boss 冰霜魔王蓄力事件（真实 Boss 战）",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T14:29:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP, headless) 打开 http://127.0.0.1:8797；LLM 上游=受控 mock 127.0.0.1:15990（LM Studio 不可用，与报告口径一致）",
+  "steps": [
+   "由本验收包 driver-ui-v27.js 驱动执行（真实页面+真实计时器；UI-09/10/13 使用整改后的真实可见性断言）"
+  ],
+  "expected": "真实冰霜魔王蓄力触发事件含 Absolute Freeze，无 undefined",
+  "actual": "真实冰霜魔王（怪物名「冰霜魔王 👑BOSS」，非注入技能）：Boss 真实计时轮转后蓄力，精灵事件含「Absolute Freeze」与打断指引、无 undefined。原文片段: DANGER! The enemy Frost Demon King (BOSS) is CHARGING the skill Absolute Freeze for 4 quic…",
+  "metrics": {
+   "monster": "冰霜魔王 👑BOSS",
+   "chargeEvents": 1,
+   "containsFreeze": true,
+   "containsUndefined": false
+  },
+  "evidence": [
+   "screenshots/ui08-frost-king.png",
+   "screenshots/ui08-frost-king-charge.png",
+   "sessions/ui08-frost-king-events.json"
+  ],
+  "defectId": "UI-08 旧证据撤回（对象为 Grass Slime），本条为真实冰霜魔王复验",
+  "notes": "注入仅限：startLevel(2)+monsterIdx=2（直达第三章 Boss）、monTimer=1 加速轮转、heroHP=100 防意外死亡；蓄力/事件/文案全走真实逻辑"
+ },
+ {
+  "id": "UI-09",
+  "title": "错题本入口（真实可见性）",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T14:29:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP, headless) 打开 http://127.0.0.1:8797；LLM 上游=受控 mock 127.0.0.1:15990（LM Studio 不可用，与报告口径一致）",
+  "steps": [
+   "由本验收包 driver-ui-v27.js 驱动执行（真实页面+真实计时器；UI-09/10/13 使用整改后的真实可见性断言）"
+  ],
+  "expected": "弹窗真实可见可交互；内容正确；可关闭",
+  "actual": "错题 1 条后回地图点「错题本」：弹窗真实可见（display=flex、尺寸 1258×702、无祖先隐藏、中心点 elementFromPoint 可命中=true，面板同样可命中），计数「共 1 题」含错误项「Yes, I do.」；关闭后 display=none 真实消失",
+  "metrics": {
+   "display": "flex",
+   "w": 1258,
+   "h": 702,
+   "ancestorHidden": null,
+   "clickable": true,
+   "panelClickable": true,
+   "count": "共 1 题",
+   "closedDisplay": "none"
+  },
+  "evidence": [
+   "screenshots/ui09-wrongbook.png"
+  ],
+  "defectId": "DEF-003-v27（已修复，本条为修复后复验）",
+  "notes": "整改：断言升级为 getComputedStyle+祖先链+边界面积+elementFromPoint，不再只查 .show 类；修复弹窗父容器 display:none 后本用例才可能通过"
+ },
+ {
+  "id": "UI-10",
+  "title": "精灵日志入口（真实可见性）",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T14:29:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP, headless) 打开 http://127.0.0.1:8797；LLM 上游=受控 mock 127.0.0.1:15990（LM Studio 不可用，与报告口径一致）",
+  "steps": [
+   "由本验收包 driver-ui-v27.js 驱动执行（真实页面+真实计时器；UI-09/10/13 使用整改后的真实可见性断言）"
+  ],
+  "expected": "弹窗真实可见可交互；事件/心情/文本正确；可关闭",
+  "actual": "精灵日志 1 条：弹窗真实可见（display=flex、尺寸 1258×702、无祖先隐藏、中心点可命中=true），计数「（1 条）」、条目 1、心情统计非空；关闭后 display=none 真实消失",
+  "metrics": {
+   "total": 1,
+   "display": "flex",
+   "w": 1258,
+   "h": 702,
+   "ancestorHidden": null,
+   "clickable": true,
+   "panelClickable": true,
+   "items": 1,
+   "closedDisplay": "none"
+  },
+  "evidence": [
+   "screenshots/ui10-fairylog.png"
+  ],
+  "defectId": "DEF-003-v27（已修复，本条为修复后复验）",
+  "notes": "整改：真实可见性断言（同 UI-09）"
+ },
+ {
+  "id": "UI-11",
+  "title": "精灵事件问题快照",
+  "priority": "P1",
+  "status": "PASS",
+  "executedAt": "2026-10-30T14:29:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP, headless) 打开 http://127.0.0.1:8797；LLM 上游=受控 mock 127.0.0.1:15990（LM Studio 不可用，与报告口径一致）",
+  "steps": [
+   "由本验收包 driver-ui-v27.js 驱动执行（真实页面+真实计时器；UI-09/10/13 使用整改后的真实可见性断言）"
+  ],
+  "expected": "旧事件仍对应旧题；旧答案按规则打码",
+  "actual": "旧题事件发出后立刻答对切到新题，1.2s 后 mock 响应返回：日志 quiz 字段仍为旧题；该条台词含打码 🚫 且不含旧题答案原文「grew」",
+  "metrics": {
+   "logQuizIsOld": true,
+   "masked": true,
+   "leak": false,
+   "qChanged": true,
+   "capturedRequests": 2
+  },
+  "evidence": [
+   "screenshots/ui11-snapshot-masked.png",
+   "sessions/ui11-captured-request.json"
+  ],
+  "defectId": "",
+  "notes": "注入：window.fetch mock（延迟 1.2s）"
+ },
+ {
+  "id": "UI-12",
+  "title": "模型文本安全渲染",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T14:29:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP, headless) 打开 http://127.0.0.1:8797；LLM 上游=受控 mock 127.0.0.1:15990（LM Studio 不可用，与报告口径一致）",
+  "steps": [
+   "由本验收包 driver-ui-v27.js 驱动执行（真实页面+真实计时器；UI-09/10/13 使用整改后的真实可见性断言）"
+  ],
+  "expected": "HTML 标记按文本显示，不创建元素、不执行脚本",
+  "actual": "模型文本含 <img onerror> 与 <script>：气泡与精灵日志均按纯文本显示，未创建元素、未执行（__pwned 空）；日志弹窗真实可见",
+  "metrics": {
+   "bubbleImgElement": false,
+   "bubbleScriptElement": false,
+   "scriptExecuted": false,
+   "onerrorExecuted": false,
+   "logImgElement": false,
+   "logVisible": true
+  },
+  "evidence": [
+   "screenshots/ui12-bubble-safe.png",
+   "screenshots/ui12-fairylog-safe.png"
+  ],
+  "defectId": "",
+  "notes": "注入：window.fetch mock 返回带 HTML 的受控文本"
+ },
+ {
+  "id": "UI-13",
+  "title": "无 LLM 基础可玩（真实可见性）",
+  "priority": "P0",
+  "status": "PASS",
+  "executedAt": "2026-10-30T14:29:00+08:00",
+  "executor": "WorkBuddy Agent（小沫）",
+  "preconditions": "Chrome(CDP, headless) 打开 http://127.0.0.1:8797；LLM 上游=受控 mock 127.0.0.1:15990（LM Studio 不可用，与报告口径一致）",
+  "steps": [
+   "由本验收包 driver-ui-v27.js 驱动执行（真实页面+真实计时器；UI-09/10/13 使用整改后的真实可见性断言）"
+  ],
+  "expected": "核心流程无阻塞；地图页弹窗真实可见；无未捕获异常",
+  "actual": "未召唤精灵（LLM 上游=受控 mock 127.0.0.1:15990，本机 LM Studio 不可用）：答题对/错各一次、返回地图、错题本弹窗真实可见（display=flex、尺寸 1258×702、可点击=true）并可关闭，全程无未捕获异常",
+  "metrics": {
+   "consoleErrors": 0,
+   "wrongbookVisible": true,
+   "wrongbookCount": "共 1 题",
+   "closedDisplay": "none"
+  },
+  "evidence": [
+   "screenshots/ui13-no-llm-flow.png"
+  ],
+  "defectId": "DEF-003-v27（已修复，本条为修复后复验）",
+  "notes": "环境口径（与 report.md 一致）：本次全部使用受控 mock 上游，非 LM Studio；真实模型表现未验收"
+ },
+ {
+  "id": "LLM-01",
+  "title": "LLM 专项指标（120 样本 = 40 题 × L1/L2/L3）",
+  "priority": "P0",
+  "status": "PASS",
+  "steps": [
+   "node tools/acceptance/run-sampler.js <pkg>/sessions/hint-metrics.json 40"
+  ],
+  "expected": "答前泄题 0；非法输出与 LLM 不可用降级率 100%；最终输出合规率 ≥99%；题目匹配率 ≥98%；教学事实准确率 ≥95%",
+  "actual": "答前泄题（display/raw）0/0；干扰项引用 0；invalidOutputFallbackRate 100%（6/6 非法样本全部安全降级）；llmUnavailableFallbackRate 100%（5/5 探针 502→静态兜底）；finalOutputComplianceRate 100%；questionMatchRate 100%；teachingFactAccuracy 100%（规则判定）；latency p50=483ms / p95=703ms（mock 延迟主导）；对抗打码 maskDefenseRate 100%（DEF-002 修复后）",
+  "metrics": {
+   "sampleCount": 120,
+   "preAnswerLeak": 0,
+   "invalidFallbackRate": 100,
+   "unavailableFallbackRate": 100,
+   "finalComplianceRate": 100,
+   "matchRate": 100,
+   "factAccuracy": 100,
+   "latencyP50Ms": 483,
+   "latencyP95Ms": 703,
+   "maskDefenseRate": 100
+  },
+  "notes": "[mock 上游] rawStructuredJsonRate 95%（mock 混合配置的抽样实现，期望 88%）；语言质量与真实延迟待 LM Studio 真实模型复核",
+  "evidence": [
+   "sessions/hint-metrics.json",
+   "tools/acceptance/hint-metrics.js"
+  ]
+ },
+ {
+  "id": "EXP-00",
+  "title": "三组同题序列核对",
+  "priority": "P0",
+  "status": "PASS",
+  "steps": [
+   "对比 none/static/llm 三组逐题 qid 序列"
+  ],
+  "actual": "60 行逐 qid 完全一致（0 分叉），固定序列文件 fixed-question-sequence.json",
+  "metrics": {
+   "mismatches": 0
+  },
+  "evidence": [
+   "experiments/fixed-question-sequence.json",
+   "experiments/*-run.json"
+  ]
+ },
+ {
+  "id": "EXP-01",
+  "title": "无提示组 exp=none",
+  "priority": "P0",
+  "status": "PASS",
+  "actual": "样本 60；首答正确率 45%；重试 0 次（v26 行为：答错直接下一题）",
+  "metrics": {
+   "n": 60,
+   "firstCorrectRate": 45,
+   "retried": 0
+  },
+  "evidence": [
+   "experiments/none-run.json",
+   "experiments/logdir/log-player-v27acc-none-20261030.json"
+  ]
+ },
+ {
+  "id": "EXP-02",
+  "title": "静态提示组 exp=static",
+  "priority": "P0",
+  "status": "PASS",
+  "actual": "样本 60；首答正确率 45%（同一学生模型）；重试 33 次全部解决（100%）；提示全部 📘 静态、零 LLM 请求",
+  "metrics": {
+   "n": 60,
+   "firstCorrectRate": 45,
+   "retried": 33,
+   "retrySolvedRate": 100
+  },
+  "evidence": [
+   "experiments/static-run.json"
+  ]
+ },
+ {
+  "id": "EXP-03",
+  "title": "LLM 提示组 exp=llm",
+  "priority": "P0",
+  "status": "PASS",
+  "actual": "样本 60；首答正确率 45%（同一学生模型）；重试 33 次全部解决（100%）；hintStats：llmCalls=68、cacheHits=0、staticUses=0、llmFallbacks=0；提示来源 🧚×68（66 结构化 + 2 纯文本降级）；延迟 p50=471ms / p95=677ms",
+  "metrics": {
+   "n": 60,
+   "firstCorrectRate": 45,
+   "retried": 33,
+   "retrySolvedRate": 100,
+   "llmCalls": 68,
+   "llmPerQuestion": 1.13,
+   "cacheHitRate": 0,
+   "localFallbackRate": 0,
+   "latencyP50Ms": 471,
+   "latencyP95Ms": 677
+  },
+  "evidence": [
+   "experiments/llm-run.json",
+   "experiments/logdir/log-player-v27acc-llm-20261030.json"
+  ],
+  "notes": "｜整改说明：全部 UI 证据由 driver-ui-v27.js 重新生成，UI-09/10/13 旧 PASS 撤回（DEF-003 假阳性）；UI-08 旧证据撤回（对象为 Grass Slime），改为真实冰霜魔王。"
+ }
 ]

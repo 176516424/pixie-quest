@@ -400,25 +400,6 @@
     </div>
 
     <div id="overlay"><div id="ovtitle"></div><div id="ovbtns"></div></div>
-    <div id="wbwrap"><div id="wbpanel">
-      <div id="wbtitle">📖 错题本 <span id="wbcount" style="font-size:13px;color:#8a8aa8"></span></div>
-      <div id="wblist"></div>
-      <div id="wbbtns">
-        <button class="pbtn" id="wbExport">⬇ 导出 Markdown 复习清单</button>
-        <button class="pbtn" id="wbClear" style="background:#5a2333;">🗑 清空</button>
-        <button class="pbtn" id="wbClose">关闭</button>
-      </div>
-    </div></div>
-    <div id="flwrap"><div id="flpanel">
-      <div id="fltitle">🧚 精灵日志 <span id="flcount" style="font-size:13px;color:#8a8aa8"></span></div>
-      <div id="flstats"></div>
-      <div id="fllist"></div>
-      <div id="flbtns">
-        <button class="pbtn" id="flExport">⬇ 导出 Markdown</button>
-        <button class="pbtn" id="flClear" style="background:#5a2333;">🗑 清空</button>
-        <button class="pbtn" id="flClose">关闭</button>
-      </div>
-    </div></div>
   </div>
 
   <div id="footer">
@@ -427,6 +408,29 @@
   </div>
 </div>
 </div>
+
+<!-- 全局弹窗：必须挂在 body 层级。曾放在 #gamescreen 内，回地图后父容器
+     display:none 连带弹窗一起不可渲染（position:fixed 也救不了），
+     导致地图页点「错题本/精灵日志」看不到任何弹窗（v27 验收 DEF-003） -->
+<div id="wbwrap"><div id="wbpanel">
+  <div id="wbtitle">📖 错题本 <span id="wbcount" style="font-size:13px;color:#8a8aa8"></span></div>
+  <div id="wblist"></div>
+  <div id="wbbtns">
+    <button class="pbtn" id="wbExport">⬇ 导出 Markdown 复习清单</button>
+    <button class="pbtn" id="wbClear" style="background:#5a2333;">🗑 清空</button>
+    <button class="pbtn" id="wbClose">关闭</button>
+  </div>
+</div></div>
+<div id="flwrap"><div id="flpanel">
+  <div id="fltitle">🧚 精灵日志 <span id="flcount" style="font-size:13px;color:#8a8aa8"></span></div>
+  <div id="flstats"></div>
+  <div id="fllist"></div>
+  <div id="flbtns">
+    <button class="pbtn" id="flExport">⬇ 导出 Markdown</button>
+    <button class="pbtn" id="flClear" style="background:#5a2333;">🗑 清空</button>
+    <button class="pbtn" id="flClose">关闭</button>
+  </div>
+</div></div>
 
 <script src="nce-shared.js"></script>
 <script src="src/game-core.js"></script>
