@@ -1,0 +1,31 @@
+启动 Chrome headless…
+PASS UI-01 — 地图可见；node0 可点击进入、其余章节锁定（符合空存档）；进入战斗后无脚本异常
+PASS UI-02 — 答对结算一次：怪兽 HP 80→55，命中回合伤害 25（18~26 单发区间，仅可能来自一次结算）；MP 每次尝试恰好 +12（封顶 50）；进入下一题且选项 4 个；勇者存活
+PASS UI-03 — 答错仅记录一次：错题本 0→1 条，新记录题干/错误项(slepped)/正确项与实际一致；攻击落空未掉血（HP 100→100）；进入下一题
+PASS UI-04 — A: 1 次答题尝试（含 0 次真实闪避）每次 gainXp 恰好 1 次 +8（共 1 次/8），命中回合伤害 24 全在 18~26 单发区间——三连点仅结算一次；B: 换怪空档连点 8 次——canAnswer 守卫 8/8 拒绝，探针仅答题 +8 与击杀 +6 两笔（合计 14），无重复结算
+PASS UI-05 — 注入 HP=3 + 中毒后，2.9s 内真实计时结算死亡：HP=0、死亡浮层可见、gameOver=true；死后点击选项无效
+PASS UI-06 — a) 中毒返回地图：3.5s 后 HP 仍 100、poison 清空；b) 冻结 60s 返回地图：frozenUntil 归 0；c) 续力中返回地图：4.5s 后 charging=null 且无残留冻结
+PASS UI-07 — 续力条 5%→90%；续力期计时走负至 -3（真实普攻 0 次）；大招落地 afterSkillMonTimer(-3) 归位，归位→首次普攻 2084ms（≥1900ms），无立即补刀
+PASS UI-08 — 真实冰霜魔王（怪物名「冰霜魔王 👑BOSS」，非注入技能）：Boss 真实计时轮转后蓄力，精灵事件含「Absolute Freeze」与打断指引、无 undefined。原文片段: DANGER! The enemy Frost Demon King (BOSS) is CHARGING the skill Absolute Freeze for 4 quic…
+PASS UI-09 — 错题 1 条后回地图点「错题本」：弹窗真实可见（display=flex、尺寸 1258×702、无祖先隐藏、中心点 elementFromPoint 可命中=true，面板同样可命中），计数「共 1 题」含错误项「gived」；关闭后 display=none 真实消失
+PASS UI-10 — 精灵日志 1 条：弹窗真实可见（display=flex、尺寸 1258×702、无祖先隐藏、中心点可命中=true），计数「（1 条）」、条目 1、心情统计非空；关闭后 display=none 真实消失
+PASS UI-11 — 旧题事件发出后立刻答对切到新题，1.2s 后 mock 响应返回：日志 quiz 字段仍为旧题；该条台词含打码 🚫 且不含旧题答案原文「went」
+PASS UI-12 — 模型文本含 <img onerror> 与 <script>：气泡与精灵日志均按纯文本显示，未创建元素、未执行（__pwned 空）；日志弹窗真实可见
+PASS UI-13 — 未召唤精灵（LLM 上游=受控 mock 127.0.0.1:15990，本机 LM Studio 不可用）：答题对/错各一次、返回地图、错题本弹窗真实可见（display=flex、尺寸 1258×702、可点击=true）并可关闭，全程无未捕获异常
+
+=== 驱动汇总 ===
+PASS UI-01
+PASS UI-02
+PASS UI-03
+PASS UI-04
+PASS UI-05
+PASS UI-06
+PASS UI-07
+PASS UI-08
+PASS UI-09
+PASS UI-10
+PASS UI-11
+PASS UI-12
+PASS UI-13
+13/13 PASS
+DRIVER_EXIT=0
